@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TenderSystem</title>
+
+    <!-- Consolidated CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BidNetra.styles.css" asp-append-version="true" />
+    <link href="~/lib/flowbite/flowbite.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom styles to fix navbar issues -->
+    <style>
+        /* Fix for navbar shifting */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Navbar styles */
+        .navbar-fixed {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .dropdown-menu {
+            transform-origin: top right;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        /* Profile image */
+        .profile-image {
+            border: 2px solid #3b82f6;
+            transition: all 0.2s;
+        }
+
+            .profile-image:hover {
+                transform: scale(1.05);
+            }
+
+        .mobile-menu.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar-fixed bg-white dark:bg-gray-900">
+        <nav class="container mx-auto">
+            <div class="flex flex-wrap items-center justify-between py-3">
+                <!-- Logo -->
+                <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="~/Images/Logo.png" class="h-12 w-auto" alt="BidNetra Logo" />
+                </a>
+
+                <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <a asp-action="Login" asp-controller="Account" class="py-2 px-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out">
+                        Login
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden w-full md:block md:w-auto md:order-1" id="navbar-user">
+                    <ul class="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:font-medium">
+                        <li>
+                            <a asp-action="Index" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="About" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="BlogList" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                Blog
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mobile Navigation Menu -->
+                <div class="mobile-menu w-full md:hidden mt-3 border-t border-gray-200 pt-3 hidden" id="mobile-menu">
+                    <ul class="flex flex-col space-y-2">
+                        <li>
+                            <a asp-action="Index" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="About" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="BlogList" asp-controller="Static"
+                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                Blog
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-gray-600 py-8 px- border-t-4 border-blue-600 ">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="container mx-auto flex flex-row justify-between items-center space-y-4 lg:space-y-0">
+
+                <!-- Left Side (Address, Phone, Fax, Social Media) -->
+                <div class="w-full  space-y-4 pl-0 ">
+
+                    <!-- First Row: Address -->
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-xl text-blue-600"></i>
+                        <p class="text-sm">BidNetra, Sunsari, Itahari, Halgada Chowk</p>
+                    </div>
+
+                    <!-- Second Row: Phone & Fax -->
+                    <div class="flex flex-col md:flex-row md:space-x-8 space-y-2 md:space-y-0">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone-alt text-xl text-blue-600"></i>
+                            <p class="text-sm">+9779812345670</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-fax text-xl text-blue-600"></i>
+                            <p class="text-sm">(123) 456-7890</p>
+                        </div>
+                    </div>
+
+                    <!-- Third Row: Social Media -->
+                    <div class="flex items-center space-x-4">
+                        <p class="text-sm">Social Media:</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-facebook-f text-lg"></i></a>
+                        <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-twitter text-lg"></i></a>
+                        <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-linkedin-in text-lg"></i></a>
+                        <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-youtube text-lg"></i></a>
+                        <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-google-plus-g text-lg"></i></a>
+                    </div>
+                </div>
+                <!-- Right Side (Logo & Text) -->
+                <div class="flex flex-col items-center justify-center  w-full ">
+                    <div class="flex justify-center items-center">
+                        <img class="w-1/3" src="~/Images/Logo.png" alt="BidNetra Logo">
+                    </div>
+                    <p class="text-xs text-center font-medium  mt-2">Bidnetra is your trusted platform for managing tenders and bids effectively, ensuring transparency and seamless collaboration.</p>
+                </div>
+            </div>
+
+            <!-- Footer Bottom Links -->
+            <div class="mt-6 flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-4 ">
+                <div class="flex flex-wrap justify-center md:justify-start space-x-4 text-sm text-blue-600 mb-2 md:mb-0">
+                    <a href="#" class="hover:underline">ABOUT US</a>
+                    <a href="#" class="hover:underline">CONTACT US</a>
+                    <a href="#" class="hover:underline">PRIVACY POLICY</a>
+                    <a href="#" class="hover:underline">DISCLAIMER</a>
+                </div>
+
+                <!-- Copyright -->
+                <div class="text-xs text-gray-500">
+                    <p>Copyright © 2022 - BidNetra.</p>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- Consolidated Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/flowbite/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+    <!-- Validation Scripts -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

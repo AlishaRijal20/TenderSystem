@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TenderSystem</title>
+
+    <!-- Consolidated CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TenderSystem.styles.css" asp-append-version="true" />
+    <link href="~/lib/flowbite/flowbite.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom styles to fix navbar issues -->
+    <style>
+        /* Fix for navbar shifting */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Navbar styles */
+        .navbar-fixed {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .dropdown-menu {
+            transform-origin: top right;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        /* Profile image */
+        .profile-image {
+            border: 2px solid #3b82f6;
+            transition: all 0.2s;
+        }
+
+            .profile-image:hover {
+                transform: scale(1.05);
+            }
+
+        .mobile-menu.open {
+            max-height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <header class="navbar-fixed bg-white dark:bg-gray-900">
+            <nav class="container mx-auto">
+                <div class="flex flex-wrap items-center justify-between py-3">
+                    <!-- Logo -->
+                    <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
+                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt="BidNetra Logo" />
+                    </a>
+
+                    <!-- Mobile menu button and profile -->
+                    <div class="flex items-center md:order-2">
+                        <!-- Profile Image Ajax Link -->
+                        <a data-ajax="true" data-ajax-method="get" data-ajax-update="#profile-img" class="btn-profile-img hidden" asp-action="ProfileImage" asp-controller="Home"></a>
+
+                        <!-- Profile Dropdown -->
+                        <div class="relative ml-3">
+                            <button id="profile-img" type="button" class="profile-image flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                                <span class="sr-only">Open user menu</span>
+                                <!-- Profile image will be loaded here via Ajax -->
+                            </button>
+
+                            <!-- Dropdown menu -->
+                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-50 border border-gray-200 dark:bg-gray-700 dark:border-gray-600" id="user-dropdown">
+                                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">@User.FindFirst("FullName")?.Value</p>
+                                    <p class="text-xs text-gray-500 truncate dark:text-gray-400">@User.FindFirst("email")?.Value</p>
+                                </div>
+                                <ul class="py-1" aria-labelledby="user-menu-button">
+                                    <li>
+                                        <a asp-action="ProfilePage" asp-controller="Home" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Profile
+                                        </a>
+                                    </li>
+                                    @if (User.IsInRole("Bidder"))
+                                    {
+                                        <li>
+                                            <a asp-action="KycDetails" asp-controller="Kyc" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                Kyc Details
+                                            </a>
+                                        </li>
+                                    }
+                                    <li>
+                                        <a asp-action="ChangePassword" asp-controller="Account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Change Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-action="Index" asp-controller="Transaction" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Earnings
+                                        </a>
+                                    </li>
+                                    <li class="border-t border-gray-200 dark:border-gray-600">
+                                        <a asp-action="Logout" asp-controller="Account" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600 dark:hover:text-red-300">
+                                            Sign out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Mobile menu toggle -->
+                        <button id="mobile-menu-button" type="button" class="ml-2 md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Desktop Navigation Menu -->
+                    <div class="hidden w-full md:block md:w-auto md:order-1" id="navbar-user">
+                        <ul class="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:font-medium">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="Admin"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderList" asp-controller="Admin"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Tender
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Publisher"))
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="PublisherTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Tender
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="BidTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Tender
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Mobile Navigation Menu -->
+                    <div class="mobile-menu w-full md:hidden mt-3 border-t border-gray-200 pt-3 hidden" id="mobile-menu">
+                        <ul class="flex flex-col space-y-2">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="Admin"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderList" asp-controller="Admin"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Tender
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Publisher"))
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="PublisherTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Tender
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a asp-action="Index" asp-controller="BidTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Tender
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
+                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
+                                        Blog
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container mx-auto px-4 py-6">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white text-gray-600 py-8 px- border-t-4 border-blue-600 ">
+            <div class="max-w-7xl mx-auto">
+
+                <div class="container mx-auto flex flex-row justify-between items-center space-y-4 lg:space-y-0">
+
+                    <!-- Left Side (Address, Phone, Fax, Social Media) -->
+                    <div class="w-full  space-y-4 pl-0 ">
+
+                        <!-- First Row: Address -->
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt text-xl text-blue-600"></i>
+                            <p class="text-sm">BidNetra, Sunsari, Itahari, Halgada Chowk</p>
+                        </div>
+
+                        <!-- Second Row: Phone & Fax -->
+                        <div class="flex flex-col md:flex-row md:space-x-8 space-y-2 md:space-y-0">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-phone-alt text-xl text-blue-600"></i>
+                                <p class="text-sm">+9779812345670</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-fax text-xl text-blue-600"></i>
+                                <p class="text-sm">(123) 456-7890</p>
+                            </div>
+                        </div>
+
+                        <!-- Third Row: Social Media -->
+                        <div class="flex items-center space-x-4">
+                            <p class="text-sm">Social Media:</p>
+                            <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-facebook-f text-lg"></i></a>
+                            <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-twitter text-lg"></i></a>
+                            <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-linkedin-in text-lg"></i></a>
+                            <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-youtube text-lg"></i></a>
+                            <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-google-plus-g text-lg"></i></a>
+                        </div>
+                    </div>
+                    <!-- Right Side (Logo & Text) -->
+                    <div class="flex flex-col items-center justify-center  w-full ">
+                        <div class="flex justify-center items-center">
+                            <img class="w-1/3" src="~/Images/Logo.png" alt="BidNetra Logo">
+                        </div>
+                        <p class="text-xs text-center font-medium  mt-2">Bidnetra is your trusted platform for managing tenders and bids effectively, ensuring transparency and seamless collaboration.</p>
+                    </div>
+                </div>
+
+                <!-- Footer Bottom Links -->
+                <div class="mt-6 flex flex-col md:flex-row justify-between items-center border-t border-gray-200 pt-4 ">
+                    <div class="flex flex-wrap justify-center md:justify-start space-x-4 text-sm text-blue-600 mb-2 md:mb-0">
+                        <a asp-action="About" asp-controller="Static"
+                           class="hover:underline">
+                            ABOUT US
+                        </a>
+                        <a href="#" class="hover:underline">CONTACT US</a>
+                        <a href="#" class="hover:underline">PRIVACY POLICY</a>
+                        <a href="#" class="hover:underline">DISCLAIMER</a>
+                    </div>
+
+                    <!-- Copyright -->
+                    <div class="text-xs text-gray-500">
+                        <p>Copyright © 2022 - BidNetra.</p>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+    }
+
+    <!-- Consolidated Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/flowbite/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+    <!-- Validation Scripts -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script>
+        $(document).ready(function () {
+            // Load profile image
+            $('.btn-profile-img')[0].click();
+
+            // Handle mobile menu toggle
+            $('#mobile-menu-button').on('click', function () {
+                $('#mobile-menu').toggleClass('hidden');
+
+                // Update aria-expanded attribute
+                const expanded = $(this).attr('aria-expanded') === 'true' || false;
+                $(this).attr('aria-expanded', !expanded);
+            });
+
+
+        });
+    </script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
