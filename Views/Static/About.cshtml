@@ -1,0 +1,1446 @@
+﻿@{
+    ViewBag.Title = "About Us - Web Based Public Tender System";
+    Layout = "_StaticLayout";
+}
+
+<!-- FontAwesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+
+<style>
+    /* ══════════════════════════════════════════════════════════
+           CSS VARIABLES
+           ══════════════════════════════════════════════════════════ */
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --navy-light: #1a3560;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --gold-pale: #f5e6c4;
+        --ivory: #F7F3EC;
+        --ivory-dark: #EDE7DC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted-fg: #5a6a80;
+        --font-body: 'DM Sans', system-ui, sans-serif;
+        --font-heading: 'Playfair Display', Georgia, serif;
+    }
+
+    body {
+        overflow-x: hidden;
+        font-family: var(--font-body);
+    }
+
+    /* ═══════════════ ANIMATIONS ═══════════════ */
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translate(0, 0);
+        }
+
+        33% {
+            transform: translate(15px, -20px);
+        }
+
+        66% {
+            transform: translate(-10px, 10px);
+        }
+    }
+
+    @@keyframes pulse-dot {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+    }
+
+    @@keyframes pulse-ring {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        50% {
+            transform: scale(1.08);
+            opacity: 0.2;
+        }
+    }
+
+    /* ═══════════════ HERO ═══════════════ */
+    .about-hero {
+        min-height: 80vh;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 8rem 6vw 5rem;
+        position: relative;
+        overflow: hidden;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+    }
+
+    .about-hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(200,150,12,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.04) 1px, transparent 1px);
+        background-size: 80px 80px;
+        pointer-events: none;
+    }
+
+    .about-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -40%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 900px;
+        background: radial-gradient(circle, rgba(200,150,12,.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--gold);
+        opacity: 0.08;
+    }
+
+    .particle-1 {
+        width: 400px;
+        height: 400px;
+        top: 10%;
+        right: 5%;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    .particle-2 {
+        width: 200px;
+        height: 200px;
+        bottom: 20%;
+        right: 25%;
+        animation: float 15s ease-in-out infinite reverse;
+    }
+
+    .particle-3 {
+        width: 120px;
+        height: 120px;
+        top: 40%;
+        right: 40%;
+        animation: float 12s ease-in-out infinite 3s;
+    }
+
+    .about-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 750px;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 2rem;
+        animation: fadeUp 0.7s ease both;
+    }
+
+    .eyebrow-line {
+        display: inline-block;
+        width: 36px;
+        height: 1px;
+        background: var(--gold);
+    }
+
+    .eyebrow-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .about-hero-title {
+        font-family: var(--font-heading);
+        font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        color: var(--white);
+        letter-spacing: -0.02em;
+        animation: fadeUp 0.7s 0.12s ease both;
+    }
+
+        .about-hero-title em {
+            font-style: normal;
+            color: var(--gold-lt);
+            position: relative;
+        }
+
+            .about-hero-title em::after {
+                content: '';
+                position: absolute;
+                bottom: 4px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, var(--gold), transparent);
+                opacity: 0.4;
+            }
+
+    .about-hero-sub {
+        margin-top: 2rem;
+        font-size: 1.05rem;
+        font-weight: 300;
+        color: var(--slate);
+        line-height: 1.8;
+        animation: fadeUp 0.7s 0.24s ease both;
+    }
+
+    .about-hero-badges {
+        margin-top: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        animation: fadeUp 0.7s 0.36s ease both;
+    }
+
+    .about-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        border: 1px solid rgba(200,150,12,0.25);
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--gold-lt);
+        letter-spacing: 0.04em;
+        transition: all 0.3s;
+    }
+
+        .about-badge:hover {
+            background: rgba(200,150,12,0.08);
+            border-color: rgba(200,150,12,0.5);
+        }
+
+    /* ═══════════════ STORY ═══════════════ */
+    .story-section {
+        padding: 7rem 6vw;
+        background: var(--ivory);
+    }
+
+    .story-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        gap: 4rem;
+        align-items: flex-start;
+    }
+
+    .story-left {
+        flex: 0 0 360px;
+        position: sticky;
+        top: 6rem;
+    }
+
+    .story-right {
+        flex: 1;
+    }
+
+    .section-label {
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .section-label--light {
+        color: var(--gold-lt);
+    }
+
+    .label-line {
+        display: inline-block;
+        width: 28px;
+        height: 1px;
+        background: var(--gold);
+    }
+
+    .label-line--light {
+        background: var(--gold-lt);
+    }
+
+    .section-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+        .section-title em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+    .section-title--light {
+        color: var(--white);
+    }
+
+        .section-title--light em {
+            color: var(--gold-lt);
+        }
+
+    .section-desc {
+        font-size: 1rem;
+        color: var(--muted-fg);
+        line-height: 1.7;
+        font-weight: 300;
+    }
+
+    .story-text {
+        font-size: 1rem;
+        color: var(--muted-fg);
+        line-height: 1.85;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+    }
+
+    /* ═══════════════ VALUES ═══════════════ */
+    .values-section {
+        background: var(--navy);
+        padding: 7rem 6vw;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .values-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+    .values-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .values-header {
+        margin-bottom: 3.5rem;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .value-card {
+        padding: 2rem;
+        border: 1px solid rgba(200,150,12,0.1);
+        border-radius: 10px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(255,255,255,0.02);
+    }
+
+        .value-card:hover {
+            background: rgba(200,150,12,0.06);
+            border-color: rgba(200,150,12,0.25);
+            transform: translateY(-4px);
+        }
+
+    .value-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: rgba(200,150,12,0.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
+        transition: background 0.3s;
+    }
+
+    .value-card:hover .value-icon {
+        background: rgba(200,150,12,0.18);
+    }
+
+    .value-title {
+        font-family: var(--font-heading);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 0.6rem;
+    }
+
+    .value-desc {
+        font-size: 0.85rem;
+        color: var(--slate);
+        line-height: 1.75;
+        font-weight: 300;
+    }
+
+    /* ═══════════════ TEAM ═══════════════ */
+    .team-section {
+        padding: 7rem 6vw;
+        background: var(--ivory);
+    }
+
+    .team-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .team-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+        .team-header .section-label {
+            justify-content: center;
+        }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .team-card {
+        background: var(--white);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(11,31,58,0.06);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(11,31,58,0.12);
+            border-color: transparent;
+        }
+
+    .team-card-img {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 5/6;
+    }
+
+    .team-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .team-card:hover .team-photo {
+        transform: scale(1.05);
+    }
+
+    .team-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(11,31,58,0.85) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.4s;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 1.5rem;
+    }
+
+    .team-card:hover .team-card-overlay {
+        opacity: 1;
+    }
+
+    .team-socials {
+        display: flex;
+        gap: 0.8rem;
+    }
+
+    .team-social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(4px);
+        text-decoration: none;
+    }
+
+        .team-social-icon:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+    .team-card-body {
+        padding: 1.8rem;
+    }
+
+    .team-role-badge {
+        display: inline-block;
+        padding: 0.3rem 0.9rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.8rem;
+    }
+
+    .team-role-badge--gold {
+        background: rgba(200,150,12,0.12);
+        color: var(--gold);
+    }
+
+    .team-role-badge--blue {
+        background: rgba(59,130,246,0.1);
+        color: #3b82f6;
+    }
+
+    .team-role-badge--teal {
+        background: rgba(20,184,166,0.1);
+        color: #14b8a6;
+    }
+
+    .team-name {
+        font-family: var(--font-heading);
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 0.6rem;
+    }
+
+    .team-desc {
+        font-size: 0.88rem;
+        color: var(--muted-fg);
+        line-height: 1.75;
+        font-weight: 300;
+    }
+
+    /* ═══════════════ MESSAGES ═══════════════ */
+    .messages-section {
+        background: var(--navy);
+        padding: 7rem 6vw;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .messages-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+    .messages-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .messages-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+        .messages-header .section-label {
+            justify-content: center;
+        }
+
+    .message-block {
+        display: flex;
+        gap: 3rem;
+        align-items: flex-start;
+        margin-bottom: 4rem;
+        padding: 3rem;
+        border: 1px solid rgba(200,150,12,0.1);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        transition: all 0.4s;
+    }
+
+        .message-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-block:hover {
+            background: rgba(200,150,12,0.04);
+            border-color: rgba(200,150,12,0.2);
+        }
+
+    .message-avatar-col {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .message-avatar-wrapper {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+
+    .message-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--gold);
+    }
+
+    .message-avatar-ring {
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 1px solid rgba(200,150,12,0.25);
+        animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    .message-name {
+        font-family: var(--font-heading);
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--white);
+        text-align: center;
+    }
+
+    .message-role {
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+    }
+
+    .message-content {
+        flex: 1;
+        position: relative;
+    }
+
+    .message-quote-mark {
+        color: var(--gold);
+        margin-bottom: 0.8rem;
+    }
+
+    .message-text {
+        font-size: 1rem;
+        color: var(--slate);
+        line-height: 1.85;
+        font-weight: 300;
+        font-style: italic;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .message-signature {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .message-sig-line {
+        width: 32px;
+        height: 1px;
+        background: var(--gold);
+    }
+
+    .message-signature span {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--gold-lt);
+        letter-spacing: 0.03em;
+    }
+
+    /* ═══════════════ EMPOWERMENT ═══════════════ */
+    .empowerment-section {
+        background: linear-gradient(135deg, var(--ivory) 0%, var(--ivory-dark) 100%);
+        padding: 6rem 6vw;
+        text-align: center;
+    }
+
+    .empowerment-inner {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .empowerment-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(200,150,12,0.1);
+        color: var(--gold);
+        margin-bottom: 2rem;
+    }
+
+    .empowerment-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 1.2rem;
+    }
+
+    .empowerment-desc {
+        font-size: 1rem;
+        color: var(--muted-fg);
+        line-height: 1.85;
+        font-weight: 300;
+        margin-bottom: 3rem;
+    }
+
+    .empowerment-stats {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .empowerment-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .empowerment-stat-num {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .empowerment-stat-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted-fg);
+        font-weight: 500;
+    }
+
+    .empowerment-divider {
+        width: 1px;
+        height: 40px;
+        background: rgba(11,31,58,0.12);
+    }
+
+    /* ═══════════════ CTA ═══════════════ */
+    .cta-section {
+        background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%);
+        padding: 7rem 6vw;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(200,150,12,0.08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .cta-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cta-badge {
+        display: inline-block;
+        padding: 0.4rem 1.2rem;
+        border: 1px solid rgba(200,150,12,0.3);
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--gold-lt);
+        margin-bottom: 2rem;
+    }
+
+    .cta-section h2 {
+        font-family: var(--font-heading);
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--white);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .cta-section p {
+        color: var(--slate);
+        font-size: 1.05rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+        font-weight: 300;
+    }
+
+    .cta-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* ═══════════════ BUTTONS ═══════════════ */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.9rem 2.2rem;
+        background: var(--gold);
+        color: var(--navy);
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.02em;
+        box-shadow: 0 4px 20px rgba(200,150,12,0.25);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-primary:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(200,150,12,0.35);
+            color: var(--navy);
+            text-decoration: none;
+        }
+
+    .btn-primary--lg {
+        padding: 1.05rem 2.6rem;
+        font-size: 1rem;
+    }
+
+    .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.9rem 2rem;
+        background: transparent;
+        color: var(--slate);
+        font-weight: 500;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+        .btn-ghost:hover {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    /* ═══════════════ FOOTER ═══════════════ */
+    .site-footer {
+        background: var(--navy);
+        border-top: 1px solid rgba(200,150,12,0.1);
+        padding: 2.5rem 6vw;
+    }
+
+    .footer-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--white);
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+        .footer-logo i {
+            color: var(--gold);
+        }
+
+    .footer-tagline {
+        font-size: 0.78rem;
+        color: var(--slate);
+        font-weight: 300;
+        letter-spacing: 0.05em;
+    }
+
+    .footer-copy {
+        font-size: 0.78rem;
+        color: rgba(138,155,181,0.5);
+    }
+
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @@media (max-width: 1024px) {
+        .values-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .team-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+            .team-grid .team-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 400px;
+                justify-self: center;
+            }
+
+        .story-inner {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .story-left {
+            flex: 0 0 auto;
+            position: static;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .message-block {
+            flex-direction: column !important;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            gap: 1.5rem;
+        }
+
+        .message-signature {
+            justify-content: center;
+        }
+
+        .message-quote-mark {
+            display: flex;
+            justify-content: center;
+        }
+
+        .empowerment-stats {
+            gap: 1.5rem;
+        }
+
+        .empowerment-divider {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .about-hero {
+            padding: 7rem 5vw 4rem;
+            min-height: 70vh;
+        }
+
+        .about-hero-title {
+            font-size: 2.2rem;
+        }
+
+        .about-hero-badges {
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .values-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
+
+            .team-grid .team-card:last-child {
+                max-width: none;
+            }
+
+        .empowerment-stats {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .footer-inner {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     ABOUT HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="about-hero">
+    <div class="about-hero-bg"></div>
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+    </div>
+    <div class="about-hero-content">
+        <p class="hero-eyebrow">
+            <span class="eyebrow-line"></span>
+            About Us
+            <span class="eyebrow-dot"></span>
+        </p>
+        <h1 class="about-hero-title">
+            Built by <em>Visionaries</em>,<br />
+            Driven by <em>Purpose</em>
+        </h1>
+        <p class="about-hero-sub">
+            The Web Based Public Tender System was born from the ambition of three extraordinary students
+            from Damak, Eastern Nepal, who dared to reimagine public procurement. Founded in 2026 at
+            Shreeyantra College, our platform stands as a testament to innovation, transparency, and the
+            power of women in technology.
+        </p>
+        <div class="about-hero-badges">
+            <div class="about-badge">
+                <i class="fa-solid fa-location-dot"></i>
+                Damak, Eastern Nepal
+            </div>
+            <div class="about-badge">
+                <i class="fa-solid fa-calendar"></i>
+                Est. 2026
+            </div>
+            <div class="about-badge">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Shreeyantra College
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     OUR STORY
+     ═══════════════════════════════════════════════════════ -->
+<section class="story-section">
+    <div class="story-inner">
+        <div class="story-left">
+            <p class="section-label">
+                <span class="label-line"></span>
+                Our Story
+            </p>
+            <h2 class="section-title">
+                From a <em>Small City</em><br />to a <em>Big Vision</em>
+            </h2>
+        </div>
+        <div class="story-right">
+            <p class="story-text">
+                In the bustling town of Damak in Eastern Nepal, three ambitious students at Shreeyantra College
+                saw a gap in Nepal's procurement ecosystem. Public tenders were opaque, inaccessible, and
+                riddled with inefficiency. They envisioned a digital-first platform that would bring fairness,
+                speed, and accountability to every government procurement process.
+            </p>
+            <p class="story-text">
+                What started as a college project driven by curiosity and passion quickly transformed into
+                the Web Based Public Tender System &mdash; a full-fledged e-procurement platform now serving government agencies and vendors across
+                Nepal. Alisha, Ichha, and Arju combined their strengths in leadership, strategy, and technology to
+                build something that didn't just solve a problem, but redefined an entire system.
+            </p>
+            <p class="story-text">
+                As young women in the tech space, they became a powerful symbol of women empowerment, proving
+                that innovation knows no gender, no age, and no boundary. The Web Based Public Tender
+                System is more than a platform &mdash; it's a movement.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CORE VALUES
+     ═══════════════════════════════════════════════════════ -->
+<section class="values-section">
+    <div class="values-inner">
+        <div class="values-header">
+            <p class="section-label section-label--light">
+                <span class="label-line label-line--light"></span>
+                Our Core Values
+            </p>
+            <h2 class="section-title section-title--light">
+                Principles That <em>Guide Us</em>
+            </h2>
+        </div>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon"><i class="fa-solid fa-shield-halved fa-lg"></i></div>
+                <h3 class="value-title">Transparency</h3>
+                <p class="value-desc">Every bid, every decision, every process is visible and auditable. We believe sunlight is the best disinfectant for corruption.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fa-solid fa-bolt fa-lg"></i></div>
+                <h3 class="value-title">Innovation</h3>
+                <p class="value-desc">We leverage cutting-edge technology to transform how Nepal handles procurement, making it faster, smarter, and more accessible.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fa-solid fa-users fa-lg"></i></div>
+                <h3 class="value-title">Women Empowerment</h3>
+                <p class="value-desc">Founded and led entirely by young women, our platform is living proof that talent and determination transcend barriers of gender and geography.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fa-solid fa-circle-check fa-lg"></i></div>
+                <h3 class="value-title">Integrity</h3>
+                <p class="value-desc">We uphold the highest ethical standards in every interaction, ensuring that public resources are managed with honesty and accountability.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     LEADERSHIP TEAM
+     ═══════════════════════════════════════════════════════ -->
+<section class="team-section">
+    <div class="team-inner">
+        <div class="team-header">
+            <p class="section-label">
+                <span class="label-line"></span>
+                Our Leadership
+            </p>
+            <h2 class="section-title">
+                Meet the <em>Founders</em>
+            </h2>
+            <p class="section-desc">
+                Three visionary women from Shreeyantra College, Damak, who turned a bold idea into
+                Nepal's most promising procurement platform.
+            </p>
+        </div>
+
+        <div class="team-grid">
+            <!-- Alisha Rijal -->
+            <div class="team-card">
+                <div class="team-card-img">
+                    <img src="~/Images/Alisha.jpeg" alt="Alisha Rijal - Chairperson and Founder of Web Based Public Tender System" class="team-photo" />
+                    <div class="team-card-overlay">
+                        <div class="team-socials">
+                            <a href="https://www.linkedin.com/in/alisha-rijal-8b7148376/" class="team-social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/aalisha_rijal?igsh=MWhla3Q5bWZ5ZnNydQ==" class="team-social-icon" target="_blank">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card-body">
+                    <span class="team-role-badge team-role-badge--gold">Chairperson & Founder</span>
+                    <h3 class="team-name">Alisha Rijal</h3>
+                    <p class="team-desc">
+                        The core foundation and visionary leader behind the Web Based Public Tender System.
+                        Alisha's relentless drive and strategic foresight transformed a college idea into a
+                        platform that is reshaping Nepal's procurement landscape.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ichha Chaulagain -->
+            <div class="team-card">
+                <div class="team-card-img">
+                    <img src="~/Images/ichha.jpeg" alt="Ichha Chaulagain - CEO of Web Based Public Tender System" class="team-photo" />
+                    <div class="team-card-overlay">
+                        <div class="team-socials">
+                            <a href="https://www.linkedin.com/in/ichha-chamlagain-3686b237a/" class="team-social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/ikxaa155?igsh=bjAzNTR5aWM4NGo2" class="team-social-icon" target="_blank">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card-body">
+                    <span class="team-role-badge team-role-badge--blue">Chief Executive Officer</span>
+                    <h3 class="team-name">Ichha Chaulagain</h3>
+                    <p class="team-desc">
+                        As CEO, Ichha brings operational excellence and business acumen to the platform.
+                        Her ability to forge partnerships and drive growth has been instrumental in
+                        scaling the platform across multiple government agencies.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Arju Thapa -->
+            <div class="team-card">
+                <div class="team-card-img">
+                    <img src="~/Images/arju-thapa.jpg" alt="Arju Thapa - CTO of Web Based Public Tender System" class="team-photo" />
+                    <div class="team-card-overlay">
+                        <div class="team-socials">
+                            <a href="#" class="team-social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="#" class="team-social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card-body">
+                    <span class="team-role-badge team-role-badge--teal">Chief Technology Officer</span>
+                    <h3 class="team-name">Arju Thapa</h3>
+                    <p class="team-desc">
+                        The technical powerhouse behind the system. Arju architects the platform's robust
+                        infrastructure, ensuring security, scalability, and a seamless user experience
+                        for thousands of bidders and agencies.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MESSAGES FROM LEADERSHIP
+     ═══════════════════════════════════════════════════════ -->
+<section class="messages-section">
+    <div class="messages-inner">
+        <div class="messages-header">
+            <p class="section-label section-label--light">
+                <span class="label-line label-line--light"></span>
+                Leadership Messages
+            </p>
+            <h2 class="section-title section-title--light">
+                Words From Our <em>Leaders</em>
+            </h2>
+        </div>
+
+        <!-- Message from Chairperson -->
+        <div class="message-block">
+            <div class="message-avatar-col">
+                <div class="message-avatar-wrapper">
+                    <img src="~/Images/Alisha.jpeg" alt="Alisha Rijal" class="message-avatar" />
+                    <div class="message-avatar-ring"></div>
+                </div>
+                <span class="message-name">Alisha Rijal</span>
+                <span class="message-role">Chairperson</span>
+            </div>
+            <div class="message-content">
+                <div class="message-quote-mark">
+                    <i class="fa-solid fa-quote-left fa-2x" style="opacity: 0.15;"></i>
+                </div>
+                <blockquote class="message-text">
+                    The Web Based Public Tender System was born from a simple belief: that every citizen
+                    deserves a government that spends transparently. When we started this journey as students
+                    in Damak, people told us it was too ambitious. But we saw a broken system and refused to
+                    look away. Today, our platform is not just a tool &mdash; it's a promise to Nepal that
+                    procurement can be fair, digital, and
+                    accessible to all. As young women leading this change, we want to inspire every girl in
+                    every small town to dream without limits.
+                </blockquote>
+                <div class="message-signature">
+                    <div class="message-sig-line"></div>
+                    <span>Alisha Rijal, Chairperson & Founder</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message from CEO -->
+        <div class="message-block" style="flex-direction: row-reverse;">
+            <div class="message-avatar-col">
+                <div class="message-avatar-wrapper">
+                    <img src="~/Images/ichha.jpeg" alt="Ichha Chaulagain" class="message-avatar" />
+                    <div class="message-avatar-ring"></div>
+                </div>
+                <span class="message-name">Ichha Chaulagain</span>
+                <span class="message-role">CEO</span>
+            </div>
+            <div class="message-content">
+                <div class="message-quote-mark">
+                    <i class="fa-solid fa-quote-left fa-2x" style="opacity: 0.15;"></i>
+                </div>
+                <blockquote class="message-text">
+                    Running a technology company is about more than code and servers &mdash; it's about people.
+                    Every vendor who finds a fair opportunity, every agency that saves taxpayer money, every
+                    process that becomes a little more honest &mdash; that's what drives us. At our platform, we measure
+                    success not in revenue, but in the trust we build. Damak gave us roots, but our vision is
+                    for all of Nepal. Together with Alisha and Arju, we are building the future of public
+                    procurement, one transparent bid at a time.
+                </blockquote>
+                <div class="message-signature">
+                    <div class="message-sig-line"></div>
+                    <span>Ichha Chaulagain, Chief Executive Officer</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message from CTO -->
+        <div class="message-block">
+            <div class="message-avatar-col">
+                <div class="message-avatar-wrapper">
+                    <img src="~/Images/arju-thapa.jpg" alt="Arju Thapa" class="message-avatar" />
+                    <div class="message-avatar-ring"></div>
+                </div>
+                <span class="message-name">Arju Thapa</span>
+                <span class="message-role">CTO</span>
+            </div>
+            <div class="message-content">
+                <div class="message-quote-mark">
+                    <i class="fa-solid fa-quote-left fa-2x" style="opacity: 0.15;"></i>
+                </div>
+                <blockquote class="message-text">
+                    Technology should serve the people, not the other way around. When I write code for
+                    this system, I think about the vendor in a remote district who finally has equal access to
+                    government opportunities. I think about the auditor who can now trace every rupee with a
+                    click. Security, performance, and user experience are not just technical goals for us &mdash;
+                    they are moral obligations. As a woman in technology from a small city, I want to
+                    show that the next great innovation can come from anywhere.
+                </blockquote>
+                <div class="message-signature">
+                    <div class="message-sig-line"></div>
+                    <span>Arju Thapa, Chief Technology Officer</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     WOMEN EMPOWERMENT BANNER
+     ═══════════════════════════════════════════════════════ -->
+<section class="empowerment-section">
+    <div class="empowerment-inner">
+        <div class="empowerment-icon">
+            <i class="fa-solid fa-venus fa-2x"></i>
+        </div>
+        <h2 class="empowerment-title">Proudly Women-Led</h2>
+        <p class="empowerment-desc">
+            The Web Based Public Tender System is a living testament to women empowerment in Nepal's technology sector.
+            Three young women from Shreeyantra College, Damak, have proven that with courage, skill,
+            and unwavering determination, women can lead, innovate, and transform entire industries.
+            We stand as an inspiration for every aspiring woman in tech across Nepal and beyond.
+        </p>
+        <div class="empowerment-stats">
+            <div class="empowerment-stat">
+                <span class="empowerment-stat-num">3</span>
+                <span class="empowerment-stat-label">Women Founders</span>
+            </div>
+            <div class="empowerment-divider"></div>
+            <div class="empowerment-stat">
+                <span class="empowerment-stat-num">2026</span>
+                <span class="empowerment-stat-label">Year Founded</span>
+            </div>
+            <div class="empowerment-divider"></div>
+            <div class="empowerment-stat">
+                <span class="empowerment-stat-num">Damak</span>
+                <span class="empowerment-stat-label">Eastern Nepal</span>
+            </div>
+            <div class="empowerment-divider"></div>
+            <div class="empowerment-stat">
+                <span class="empowerment-stat-num">100%</span>
+                <span class="empowerment-stat-label">Women Leadership</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════════════════════ -->
+<section class="cta-section">
+    <div class="cta-inner">
+        <div class="cta-badge">Join Our Mission</div>
+        <h2>Ready to Be Part of the Change?</h2>
+        <p>
+            Join thousands of vendors and agencies who trust our Web Based Public
+            Tender System for transparent, efficient public procurement.
+        </p>
+        <div class="cta-actions">
+            <a asp-action="Register" asp-controller="Account" class="btn-primary btn-primary--lg">
+                <span>Get Started</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a asp-action="Contact" asp-controller="Home" class="btn-ghost">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Web Based Public Tender System</span>
+            </div>
+            <p class="footer-tagline">Transparent. Efficient. Women-Led.</p>
+        </div>
+        <div class="footer-copy">
+            &copy; Web Based Public Tender System 2026. All rights reserved. Founded in Damak, Nepal.
+        </div>
+    </div>
+</footer>

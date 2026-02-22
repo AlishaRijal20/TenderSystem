@@ -1,162 +1,477 @@
 ﻿@{
-
     Layout = "_StaticLayout";
     ViewData["Title"] = "Home Page";
 }
 
-
 <style>
+    @@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap');
+
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
     body {
+        font-family: 'DM Sans', sans-serif;
+        background-color: var(--ivory);
+        color: var(--navy);
         overflow-x: hidden;
     }
-    /* Custom styles for the header section */
-    .header {
-        padding-top: 120px;
-        padding-bottom: 10px;
-        height: 535px;
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    .hero {
+        min-height: 100vh;
+        background: var(--navy);
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 8rem 6vw 6rem;
         position: relative;
-        color: white;
+        overflow: hidden;
     }
 
-    /* Background styling */
-    .homebg {
-        width: 100%;
-        height: 700px;
-        position: absolute;
-        z-index: -1;
-        top: 0;
-        left: 0;
-    }
-
-    /* Title styling */
-    .header .title h1 {
-        text-wrap: nowrap;
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-    }
-
-    .header .title p {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .image-container {
-        position: relative;
-        left: 160px;
-        width: 384px;
-        height: auto;
-        margin-bottom: 250px;
-        animation: float 6s ease-in-out infinite;
-    }
-
-    /* Base image (Blood Drop) */
-    .bldrop {
-        position: relative;
-        /* left: 10px; */
-        width: 100%; /* Makes the image take full container width */
-        height: auto;
-        object-fit: contain; /* Adjust the image's aspect ratio */
-    }
-
-    /* Overlay image (Hand) with a gap */
-    .hand-img {
-        position: absolute;
-        top: 50px; /* Adjust this to add the gap */
-        /* left: 140px; */
-        width: 100%; /* Makes the hand image take full width */
-        height: auto;
-        object-fit: contain; /* Adjusts the image to fit */
-        opacity: 0.8; /* Optional: Adjust transparency to see both images clearly */
-    }
-
-    /* Button styling */
-    .header .serviceBtn {
-        margin-top: 1.5rem;
-    }
-
-        .header .serviceBtn button {
-            padding: 0.75rem 2rem;
-            cursor: pointer;
-            font-size: 1.25rem;
-            font-weight: bold;
-            text-align: center;
-            color: #ea0000;
-            border: 1px solid #ed0000;
-            border-radius: 0.375rem;
-            background-color: transparent;
-            transition: background-color 0.3s ease;
+        /* decorative grid lines */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.06) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
         }
 
-            .header .serviceBtn button:nth-of-type(1) {
-                background-color: #00ea23a0;
-                color: whitesmoke;
-                border: none;
+        /* radial glow */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(200,150,12,.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+    /* diagonal stripe accent */
+    .hero-stripe {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 45%;
+        height: 100%;
+        background: linear-gradient(135deg, transparent 50%, rgba(200,150,12,.07) 50%);
+        pointer-events: none;
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        font-size: .75rem;
+        font-weight: 500;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.6rem;
+        animation: fadeUp .7s ease both;
+    }
+
+        .hero-eyebrow span {
+            display: inline-block;
+            width: 32px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.8rem, 6vw, 5.2rem);
+        font-weight: 900;
+        line-height: 1.05;
+        color: var(--white);
+        max-width: 740px;
+        animation: fadeUp .7s .15s ease both;
+    }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .hero-sub {
+        margin-top: 1.6rem;
+        font-size: 1.1rem;
+        font-weight: 300;
+        color: var(--slate);
+        max-width: 520px;
+        line-height: 1.7;
+        animation: fadeUp .7s .28s ease both;
+    }
+
+    .hero-actions {
+        margin-top: 2.8rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        animation: fadeUp .7s .4s ease both;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .85rem 2.2rem;
+        background: var(--gold);
+        color: var(--navy);
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background .25s, transform .2s;
+        letter-spacing: .02em;
+    }
+
+        .btn-primary:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+        }
+
+    .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .85rem 2.2rem;
+        background: transparent;
+        color: var(--white);
+        font-weight: 500;
+        font-size: 1rem;
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: border-color .25s, background .25s, transform .2s;
+    }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+    /* ── STATS BAR ────────────────────────────────────────── */
+    .stats-bar {
+        background: var(--navy-mid);
+        border-top: 1px solid rgba(200,150,12,.2);
+        border-bottom: 1px solid rgba(200,150,12,.2);
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        flex-wrap: wrap;
+        animation: fadeUp .7s .55s ease both;
+    }
+
+    .stat-item {
+        flex: 1 1 200px;
+        padding: 2rem 2.5rem;
+        border-right: 1px solid rgba(200,150,12,.12);
+        text-align: center;
+    }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+    }
+
+    .stat-label {
+        font-size: .8rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-top: .3rem;
+    }
+
+    /* ── FEATURES ─────────────────────────────────────────── */
+    .features {
+        padding: 7rem 6vw;
+        background: var(--ivory);
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .section-label {
+        font-size: .72rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .8rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+        font-weight: 700;
+        color: var(--navy);
+        max-width: 500px;
+        line-height: 1.2;
+        margin-bottom: 3.5rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        background: white;
+        border: 1px solid rgba(11,31,58,.08);
+        border-radius: 6px;
+        padding: 2.2rem;
+        transition: box-shadow .3s, transform .3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--gold);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 16px 40px rgba(11,31,58,.1);
+            transform: translateY(-4px);
+        }
+
+            .feature-card:hover::before {
+                opacity: 1;
             }
 
-                .header .serviceBtn button:nth-of-type(1):hover {
-                    background-color: #e06a6a34;
-                }
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(200,150,12,.1);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.3rem;
+        font-size: 1.4rem;
+        color: var(--gold);
+    }
 
-            .header .serviceBtn button:hover:not(:nth-of-type(1)) {
-                background-color: #f4d6d6;
+    .feature-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .6rem;
+    }
+
+    .feature-desc {
+        font-size: .9rem;
+        color: #5a6a80;
+        line-height: 1.65;
+    }
+
+    /* ── CTA ──────────────────────────────────────────────── */
+    .cta-section {
+        background: var(--navy);
+        padding: 6rem 6vw;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            color: var(--white);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .cta-section p {
+            color: var(--slate);
+            font-size: 1.05rem;
+            margin-bottom: 2.2rem;
+            position: relative;
+        }
+
+        .cta-section .btn-primary {
+            position: relative;
+        }
+
+    /* ── ANIMATIONS ───────────────────────────────────────── */
+    @@keyframes fadeUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @@media (max-width: 640px) {
+        .hero {
+            padding: 7rem 5vw 4rem;
+        }
+
+        .stat-item {
+            border-right: none;
+            border-bottom: 1px solid rgba(200,150,12,.12);
+        }
+
+            .stat-item:last-child {
+                border-bottom: none;
             }
-
+    }
 </style>
-<body>
 
-    <div class="mx-auto w-full max-w-7xl">
-        <!-- Header Background -->
-        <svg id="header_bg" class="homebg w-full h-72 absolute top-0 left-0 z-[-1]" viewBox="0 10 500 50" preserveAspectRatio="none">
-            <defs>
-                <radialGradient id="Gradient" cx="0.5" cy="0.5" r="0.5" fx="0.75" fy="0.25">
-                    <stop offset="0%" stop-color="#07365d" />
-                    <stop offset="100%" stop-color="#000717" />
-                </radialGradient>
-            </defs>
-            <path d="M0,0 L500,0 L500,55 L0,55 Z" fill="url(#Gradient)" />
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+    <div class="hero-stripe"></div>
 
-        </svg>
+    <p class="hero-eyebrow"><span></span> Government Procurement Portal</p>
 
-        <!-- Header Section -->
-        <div id="header" class="header flex justify-between items-center relative py-40 px-6 text-white">
-            <!-- Title and Text Section -->
-            <div class="title">
-                <h1>BidNetra: Empowering Transparent Bidding</br> Ecosystem</h1>
-                <p>
-                    From Tenders to Auctions – One Platform, Endless Opportunities
-                </p>
+    <h1>
+        Nepal's Public<br>
+        <em>Tender &amp; Procurement</em><br>
+        Platform
+    </h1>
 
-                <!-- Button Section -->
-                <section class="serviceBtn mt-6">
-                    <a href="donateblood">
-                        <a asp-action="Login" asp-controller="Account" class="service-btn btn btn-danger bg-green font-semibold py-2 px-6 text-lg w-full md:w-auto mb-4">
-                            Explore More &nbsp; &#10095;
-                        </a>
-                    </a>
-                </section>
-            </div>
+    <p class="hero-sub">
+        A unified, transparent gateway for government tenders, e-bidding, and public procurement. Empowering vendors and institutions alike.
+    </p>
 
-            <!-- Image Section -->
-            <div class="flex flex-col items-center">
-                <!-- Image Container for Merged Images -->
-                <div class="image-container">
-                    <!-- Blood Drop Image -->
-                    <img class="bldrop" src="~/Images/HomeLogo.png" alt="Blood Drop Image" />
-                    <!-- Hand Image (overlayed) with small gap -->
-                    <img class="hand-img" src="~/Images/hand.png" alt="Hand Image" />
-                </div>
-            </div>
+    <div class="hero-actions">
+        <a asp-action="Login" asp-controller="Account" class="btn-primary">
+            Browse Tenders &nbsp; &#10095;
+        </a>
+        <a asp-action="Register" asp-controller="Account" class="btn-outline">
+            Register as Bidder
+        </a>
+    </div>
+</section>
+
+<!-- ════════════════ STATS BAR ════════════════ -->
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-number">1,200+</div>
+        <div class="stat-label">Active Tenders</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">340+</div>
+        <div class="stat-label">Gov. Agencies</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">8,500+</div>
+        <div class="stat-label">Registered Bidders</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">Uptime SLA</div>
+    </div>
+</div>
+
+<!-- ══════════════════ FEATURES ══════════════════ -->
+<section class="features">
+    <p class="section-label">What We Offer</p>
+    <h2 class="section-title">Everything You Need for Public Procurement</h2>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-gavel"></i></div>
+            <div class="feature-title">Open Bidding</div>
+            <p class="feature-desc">Participate in fully transparent, time-bound electronic bidding processes for government contracts across all sectors.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-file-contract"></i></div>
+            <div class="feature-title">Tender Management</div>
+            <p class="feature-desc">Publish, track, and manage tender notices with automated workflows, deadline reminders, and document handling.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="feature-title">Compliance &amp; Audit</div>
+            <p class="feature-desc">Every action is logged and traceable. Ensure full regulatory compliance with built-in audit trails.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-bell"></i></div>
+            <div class="feature-title">Real-Time Alerts</div>
+            <p class="feature-desc">Get instant notifications for new tenders matching your category, bid results, and document updates.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-chart-bar"></i></div>
+            <div class="feature-title">Analytics Dashboard</div>
+            <p class="feature-desc">Access procurement analytics, spending reports, and vendor performance data through a powerful dashboard.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="feature-title">Multi-Agency Support</div>
+            <p class="feature-desc">Supports multiple government bodies under a single platform with role-based access and separate workspaces.</p>
         </div>
     </div>
+</section>
 
-   @*  @Html.Partial("~/Views/Static/_KeyServices.cshtml")
-    //@Html.Partial("~/Views/Static/_Work.cshtml")
-    @Html.Partial("~/Views/Static/_Industry.cshtml")
-    @Html.Partial("~/Views/Static/_Testimonial.cshtml")
- *@
-
-</body>
+<!-- ══════════════════ CTA ══════════════════ -->
+<section class="cta-section">
+    <h2>Ready to Submit Your Bid?</h2>
+    <p>Register for free and gain access to all active government tenders today.</p>
+    <a asp-action="Register" asp-controller="Account" class="btn-primary">
+        Create Your Account &nbsp; &#10095;
+    </a>
+</section>
