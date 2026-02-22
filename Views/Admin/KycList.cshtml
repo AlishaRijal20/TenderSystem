@@ -1,0 +1,416 @@
+﻿@model List<KycViewModel>
+@{
+    ViewData["Title"] = "KYC Verification List";
+    Layout = "_Layout";
+}
+
+<!-- Add these script references at the top of your file -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<style>
+    .kyc-container {
+        padding: 1.5rem;
+    }
+
+    .kyc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .kyc-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .kyc-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 10px;
+        margin-right: 12px;
+    }
+
+    .kyc-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+    .kyc-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-pending {
+        background-color: #fef9c3;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .stat-verified {
+        background-color: #dcfce7;
+        border-left: 4px solid #10b981;
+    }
+
+    .stat-icon {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+
+    .pending-icon {
+        color: #f59e0b;
+    }
+
+    .verified-icon {
+        color: #10b981;
+    }
+
+    .stat-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+    }
+
+    .kyc-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    .kyc-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .kyc-table th {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-weight: 600;
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+        }
+
+        .kyc-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+            font-size: 0.875rem;
+            color: #334155;
+        }
+
+        .kyc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .kyc-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+    .user-cell {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #3b82f6;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-email, .user-phone {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.375rem 0.75rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        font-size: 0.75rem;
+    }
+
+    .status-pending {
+        background-color: #fef9c3;
+        color: #854d0e;
+    }
+
+    .status-verified {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .action-cell {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-view {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        background-color: #e0f2fe;
+        color: #0369a1;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+    }
+
+        .btn-view:hover {
+            background-color: #bae6fd;
+        }
+
+    .btn-verify {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        background-color: #d1fae5;
+        color: #047857;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-verify:hover {
+            background-color: #a7f3d0;
+        }
+
+    .btn-icon {
+        margin-right: 0.375rem;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 0;
+        color: #64748b;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-text {
+        font-size: 1rem;
+        color: #64748b;
+    }
+
+</style>
+
+<div class="kyc-container">
+    <!-- Back Button -->
+    <div class="mb-6">
+        <button onclick="history.back()" class="text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center gap-2 hover:translate-x-[-5px]">
+            <i class="fas fa-arrow-left text-xl"></i>
+            <span class="font-medium">Back</span>
+        </button>
+    </div>
+    <div class="kyc-header">
+        <div class="kyc-title">
+            <div class="kyc-icon">
+                <i class="fas fa-id-card"></i>
+            </div>
+            <h1 class="kyc-heading">KYC Verification List</h1>
+        </div>
+
+        <div class="kyc-stats">
+            <div class="stat-card stat-pending">
+                <div class="stat-icon pending-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">@ViewBag.TotalPending</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="kyc-card">
+        <div class="table-responsive">
+            @if (Model != null && Model.Any())
+            {
+                <table class="kyc-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Company</th>
+                            <th>Registration No.</th>
+                            <th>PAN No.</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
+                                        </div>
+                                        <div class="user-info">
+                                            <div class="user-name">@item.FirstName @item.LastName</div>
+                                            <div class="user-email">@item.EmailAddress</div>
+                                            <div class="user-phone">@item.Phone</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@(item.CompanyName ?? "N/A")</td>
+                                <td>@(item.RegistrationNumber ?? "N/A")</td>
+                                <td>@(item.PanNumber ?? "N/A")</td>
+                                <td>
+                                    @if (item.IsVerified)
+                                    {
+                                        <span class="status-badge status-verified">
+                                            <i class="fas fa-check-circle mr-1"></i> Verified
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge status-pending">
+                                            <i class="fas fa-clock mr-1"></i> Pending
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a asp-action="KycDetails" asp-route-id="@item.UserEncId" class="btn-view">
+                                            <i class="fas fa-eye btn-icon"></i> View
+                                        </a>
+                                        @if (!item.IsVerified)
+                                        {
+                                            <button class="btn-verify verify-btn"
+                                                    data-userid="@item.UserId"
+                                                    data-companyid="@item.CompanyId"
+                                                    data-bankid="@item.BankId">
+                                                <i class="fas fa-check btn-icon"></i> Verify
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <p class="empty-text">No KYC verification requests found.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('.verify-btn').click(function () {
+                var userId = $(this).data('userid');
+                var companyId = $(this).data('companyid');
+                var bankId = $(this).data('bankid');
+                var btn = $(this);
+
+                if (confirm('Are you sure you want to verify this KYC?')) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateKycStatus", "Admin")',
+                        type: 'POST',
+                        data: {
+                            userId: userId,
+                            companyId: companyId,
+                            bankId: bankId,
+                            isVerified: true,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                btn.closest('tr').find('td:nth-child(5)').html(
+                                    '<span class="badge badge-success">Verified</span>'
+                                );
+                                btn.remove();
+                                toastr.success('KYC verified successfully');
+                            } else {
+                                toastr.error(response.error || 'Failed to verify KYC');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            toastr.error('An error occurred while verifying KYC: ' + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</div>

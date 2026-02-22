@@ -1,0 +1,483 @@
+﻿@model IEnumerable<TenderEdit>
+@{
+    ViewData["Title"] = "Tender List";
+    Layout = "_Layout";
+}
+
+<!-- Flowbite CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+    /* Base styles */
+    .page-container {
+        animation: fadeIn 0.5s ease-out;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Stats cards */
+    .stats-card {
+        transition: all 0.3s ease;
+        animation: slideInUp 0.6s ease-out;
+        border-left-width: 4px;
+    }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Table styles */
+    .tender-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        .tender-table th {
+            position: sticky;
+            top: 0;
+            background-color: #f9fafb;
+            z-index: 10;
+        }
+
+    .tender-row {
+        transition: all 0.2s ease;
+    }
+
+        .tender-row:hover {
+            background-color: #f3f4f6 !important;
+        }
+
+    /* Status badges */
+    .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: all 0.3s ease;
+    }
+
+        .status-badge:hover {
+            transform: translateY(-2px);
+        }
+
+    /* Action buttons */
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+    /* Search and filter controls */
+    .control-container {
+        transition: all 0.3s ease;
+    }
+
+        .control-container:focus-within {
+            transform: translateY(-2px);
+        }
+
+    /* Empty state */
+    .empty-state {
+        padding: 3rem;
+        text-align: center;
+        background-color: #f9fafb;
+        border-radius: 0.5rem;
+        margin: 2rem 0;
+    }
+</style>
+
+<div class="bg-gray-50 min-h-screen p-4 md:p-8">
+    <div class="page-container">
+
+        <div class="mb-6">
+            <button onclick="history.back()" class="text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center gap-2 hover:translate-x-[-5px]">
+                <i class="fas fa-arrow-left text-xl"></i>
+                <span class="font-medium">Back</span>
+            </button>
+        </div>
+
+        <!-- Page Header -->
+        <div class="mb-8 bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-600">
+            <div>
+
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-file-contract text-blue-600 mr-3"></i>Tender Management
+                </h1>
+                <p class="text-gray-600 mt-1">Monitor and manage all tender listings in one place</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+            <!-- Total Tenders Card -->
+            <div class="stats-card bg-white rounded-lg shadow-md p-5 border-l-blue-500">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 mr-4">
+                        <i class="fas fa-file-signature text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Tenders</p>
+                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.TotalTenders</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Verified Tenders Card -->
+            <div class="stats-card bg-white rounded-lg shadow-md p-5 border-l-green-500">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 mr-4">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Verified Tenders</p>
+                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.VerifiedTenders</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pending Tenders Card -->
+            <div class="stats-card bg-white rounded-lg shadow-md p-5 border-l-yellow-500">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 mr-4">
+                        <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Pending Tenders</p>
+                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.PendingTenders</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Not Verified Tenders Card -->
+            <div class="stats-card bg-white rounded-lg shadow-md p-5 border-l-red-500">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100 mr-4">
+                        <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Not Verified</p>
+                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.NotVerifiedTenders</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Tender List Section -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-list text-blue-600 mr-2"></i>
+                        Tender List
+                    </h2>
+
+                    <!-- Filter Controls -->
+                    <div class="flex flex-wrap gap-4 w-full md:w-auto">
+                        <div class="control-container relative w-full md:w-auto">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-filter text-gray-400"></i>
+                            </div>
+                            <select id="statusFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
+                                <option value="">All Status</option>
+                                <option value="verified">Verified</option>
+                                <option value="not verified">Not Verified</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="control-container relative w-full md:w-auto">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="searchInput" placeholder="Search tenders..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 min-w-[200px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="tender-table text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4">Title</th>
+                            <th class="px-6 py-4">Budget</th>
+                            <th class="px-6 py-4">Issued By</th>
+                            <th class="px-6 py-4">Opening Date</th>
+                            <th class="px-6 py-4">Closing Date</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var tender in Model)
+                            {
+                                <tr class="tender-row bg-white border-b hover:bg-gray-50"
+                                    data-status="@tender.IsVerified.ToLower()">
+                                    <td class="px-6 py-4">
+                                        <div class="font-medium text-gray-900">@tender.Title</div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-xs">
+                                                <i class="fas fa-tag mr-1"></i>
+                                                @tender.TenderType
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 font-medium">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-rupee-sign text-gray-500 mr-1"></i>
+                                            @tender.BudgetEstimation.ToString("N0")
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                                                <i class="fas fa-user text-gray-500"></i>
+                                            </div>
+                                            @tender.IssuedBy
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar-day text-green-500 mr-2"></i>
+                                            @tender.OpeningDate.ToString("MMM dd, yyyy")
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar-times text-red-500 mr-2"></i>
+                                            @tender.ClosingDate.ToString("MMM dd, yyyy")
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @if (tender.IsVerified == "Verified")
+                                        {
+                                            <span class="status-badge bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle"></i>
+                                                Verified
+                                            </span>
+                                        }
+                                        else if (tender.IsVerified == "Pending")
+                                        {
+                                            <span class="status-badge bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-clock"></i>
+                                                Pending
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge bg-red-100 text-red-800">
+                                                <i class="fas fa-times-circle"></i>
+                                                Not Verified
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex gap-2">
+                                            <a asp-action="AdminTenderDetails" asp-controller="Admin" asp-route-id="@tender.EncId"
+                                               class="action-btn bg-blue-50 text-blue-600 hover:bg-blue-100"
+                                               data-tooltip-target="tooltip-view-@tender.TenderId">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <div id="tooltip-view-@tender.TenderId" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                                View Details
+                                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                            </div>
+                                            @if (tender.IsVerified == "Pending")
+                                            {
+                                                <a href="javascript:void(0);"
+                                                   class="action-btn bg-green-50 text-green-600 hover:bg-green-100 verify-btn"
+                                                   data-id="@tender.TenderId" data-status="Verified"
+                                                   data-tooltip-target="tooltip-verify-@tender.TenderId">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </a>
+                                                <div id="tooltip-verify-@tender.TenderId" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                                    Verify Tender
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
+
+                                                <a href="javascript:void(0);"
+                                                   class="action-btn bg-red-50 text-red-600 hover:bg-red-100 verify-btn"
+                                                   data-id="@tender.TenderId" data-status="Not Verified"
+                                                   data-tooltip-target="tooltip-reject-@tender.TenderId">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </a>
+                                                <div id="tooltip-reject-@tender.TenderId" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                                    Reject Tender
+                                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                                </div>
+                                            }
+                                            <!-- Hidden Form for AJAX Submit -->
+                                            <form id="verifyForm_@tender.TenderId" class="hidden" method="POST" asp-action="UpdateVerifiedStatus" asp-controller="Admin">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="TenderId" value="@tender.TenderId" />
+                                                <input type="hidden" name="IsVerified" id="status_@tender.TenderId" />
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center">
+                                    <div class="empty-state">
+                                        <div class="mx-auto w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-blue-100">
+                                            <i class="fas fa-file-alt text-blue-600 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-lg font-medium text-gray-900 mb-1">No tenders found</h3>
+                                        <p class="text-gray-500 mb-6">There are no tenders matching your criteria.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Flowbite JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-tooltip-target]');
+        tooltipTriggerList.forEach(tooltipTriggerEl => {
+            const targetId = tooltipTriggerEl.getAttribute('data-tooltip-target');
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+                tooltipTriggerEl.addEventListener('mouseenter', () => {
+                    targetElement.classList.remove('invisible', 'opacity-0');
+                    targetElement.classList.add('opacity-100');
+
+                    // Position the tooltip
+                    const rect = tooltipTriggerEl.getBoundingClientRect();
+                    targetElement.style.top = `${rect.bottom + 10}px`;
+                    targetElement.style.left = `${rect.left + (rect.width / 2) - (targetElement.offsetWidth / 2)}px`;
+                });
+
+                tooltipTriggerEl.addEventListener('mouseleave', () => {
+                    targetElement.classList.add('invisible', 'opacity-0');
+                    targetElement.classList.remove('opacity-100');
+                });
+            }
+        });
+
+        // Verify/Reject buttons
+        document.querySelectorAll('.verify-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                let tenderId = this.getAttribute('data-id');
+                let status = this.getAttribute('data-status'); // Get the current status (Verified or Not Verified)
+                let form = document.getElementById(`verifyForm_${tenderId}`);
+                form.querySelector('input[name="IsVerified"]').value = status; // Set the correct status in the form
+
+                if (confirm(`Are you sure you want to mark this tender as ${status}?`)) {
+                    // Submit the hidden form via AJAX
+                    fetch(form.action, {
+                        method: form.method,
+                        body: new FormData(form),
+                        headers: {
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert(`Tender ${status} successfully!`);
+                                location.reload(); // Reload page to update status
+                            } else {
+                                alert("Failed to update tender status.");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+            });
+        });
+
+        // Filter by Status
+        const statusFilter = document.getElementById("statusFilter");
+        const searchInput = document.getElementById("searchInput");
+        const tenderRows = document.querySelectorAll(".tender-row");
+
+        // Quick filter links in stats cards
+        document.querySelector('.text-blue-600').addEventListener('click', function() {
+            statusFilter.value = '';
+            filterTenders();
+        });
+
+        document.querySelector('.text-green-600').addEventListener('click', function() {
+            statusFilter.value = 'verified';
+            filterTenders();
+        });
+
+        document.querySelector('.text-yellow-600').addEventListener('click', function() {
+            statusFilter.value = 'pending';
+            filterTenders();
+        });
+
+        document.querySelector('.text-red-600').addEventListener('click', function() {
+            statusFilter.value = 'not verified';
+            filterTenders();
+        });
+
+        // Filter function
+        function filterTenders() {
+            const filterValue = statusFilter.value.toLowerCase();
+            const searchText = searchInput.value.toLowerCase();
+
+            tenderRows.forEach(row => {
+                const tenderStatus = row.getAttribute("data-status");
+                const title = row.querySelector("td:nth-child(1)").textContent.toLowerCase();
+                const budget = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+                const issuedBy = row.querySelector("td:nth-child(3)").textContent.toLowerCase();
+
+                const statusMatch = filterValue === "" || tenderStatus === filterValue;
+                const searchMatch = searchText === "" ||
+                                   title.includes(searchText) ||
+                                   budget.includes(searchText) ||
+                                   issuedBy.includes(searchText);
+
+                if (statusMatch && searchMatch) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Event listeners for filters
+        statusFilter.addEventListener("change", filterTenders);
+        searchInput.addEventListener("input", filterTenders);
+
+        // Initialize filters
+        filterTenders();
+    });
+</script>

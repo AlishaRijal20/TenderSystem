@@ -1,0 +1,606 @@
+﻿@model KycDetailsViewModel
+@{
+    ViewData["Title"] = "KYC Details";
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+    .kyc-details-container {
+        padding: 1.5rem;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .page-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 10px;
+        margin-right: 12px;
+    }
+
+    .page-heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .status-verified {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .verify-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.625rem 1.25rem;
+        background: linear-gradient(45deg, #15803d, #22c55e);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+    .verify-icon {
+        margin-right: 0.5rem;
+    }
+
+    .info-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid #f3f4f6;
+        background: linear-gradient(to right, #f9fafb, white);
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+    .card-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 8px;
+        margin-right: 10px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .user-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #f1f5f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .avatar-placeholder {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 3rem;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .info-item {
+        margin-bottom: 0.75rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .info-value {
+        font-size: 0.875rem;
+        color: #1e293b;
+    }
+
+    .documents-section {
+        margin-top: 1.5rem;
+    }
+
+    .documents-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .documents-icon {
+        color: #3b82f6;
+        margin-right: 0.5rem;
+    }
+
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .document-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .document-header {
+        padding: 0.75rem;
+        background-color: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #475569;
+        display: flex;
+        align-items: center;
+    }
+
+    .document-icon {
+        color: #3b82f6;
+        margin-right: 0.5rem;
+    }
+
+    .document-image-container {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .document-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+        .document-image:hover {
+            transform: scale(1.05);
+        }
+
+    .document-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .document-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        background-color: #e0f2fe;
+        color: #0369a1;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+    }
+
+        .document-button:hover {
+            background-color: #bae6fd;
+        }
+
+    .document-button-icon {
+        margin-right: 0.375rem;
+    }
+
+    .zoom-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+        .zoom-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+    .zoom-image {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+    }
+
+    .zoom-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+</style>
+
+<div class="kyc-details-container">
+    <button onclick="history.back()" class="back-button">
+        <i class="fas fa-arrow-left text-xl"></i>
+        <span class="hidden sm:inline">Back</span>
+    </button>
+    <div class="page-header">
+        <div class="page-title">
+            <div class="page-icon">
+                <i class="fas fa-id-card"></i>
+            </div>
+            <h1 class="page-heading">KYC Details</h1>
+        </div>
+
+        <div>
+            @if (Model.Company.IsVerified)
+            {
+                <span class="status-badge status-verified">
+                    <i class="fas fa-check-circle mr-2"></i> Verified
+                </span>
+            }
+            else
+            {
+
+                <button class="btn-verify verify-btn"
+                        data-userid="@Model.User.UserId"
+                        data-companyid="@Model.Company.CompanyId"
+                        data-bankid="@Model.Bank.BankId">
+                    <i class="fas fa-check btn-icon"></i> Verify
+                </button>
+
+
+            }
+        </div>
+    </div>
+
+    <!-- User Information Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2 class="card-title">User Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="user-profile">
+                <div>
+                    @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
+                    {
+                        <img src="~/UserImage/@Model.User.UserPhoto" class="user-avatar" alt="User Photo">
+                    }
+                    else
+                    {
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    }
+                </div>
+
+                <div class="user-details">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Email Address</span>
+                            <span class="info-value">@Model.User.EmailAddress</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Phone Number</span>
+                            <span class="info-value">@Model.User.Phone</span>
+                        </div>
+
+
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Address</span>
+                        <span class="info-value">@Model.User.City, @Model.User.District, @Model.User.Province</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Information Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h2 class="card-title">Company Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Company Name</span>
+                    <span class="info-value">@Model.Company.CompanyName</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Company Type</span>
+                    <span class="info-value">@Model.Company.CompanyType</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Position</span>
+                    <span class="info-value">@Model.Company.Position</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Registration Number</span>
+                    <span class="info-value">@Model.Company.RegistrationNumber</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">PAN Number</span>
+                    <span class="info-value">@Model.Company.PanNumber</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Office Email</span>
+                    <span class="info-value">@Model.Company.OfficeEmail</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Website</span>
+                    <span class="info-value">
+                        @if (!string.IsNullOrEmpty(Model.Company.CompanyWebsiteUrl))
+                        {
+                            <a href="@Model.Company.CompanyWebsiteUrl" target="_blank" class="text-blue-600 hover:underline">
+                                @Model.Company.CompanyWebsiteUrl
+                            </a>
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        }
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Full Address</span>
+                <span class="info-value">@Model.Company.FullAddress</span>
+            </div>
+
+            <!-- Document Images Section -->
+            <div class="documents-section">
+                <h3 class="documents-title">
+                    <i class="fas fa-file-alt documents-icon"></i>
+                    Verification Documents
+                </h3>
+
+                <div class="documents-grid">
+                    <!-- Registration Document -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <i class="fas fa-file-contract document-icon"></i>
+                            Registration Document
+                        </div>
+                        <div class="document-image-container">
+                            <img src="~/RegisterImage/@Model.Company.RegistrationDocument"
+                                 alt="Registration Document"
+                                 class="document-image"
+                                 onclick="openZoomView(this.src)">
+                        </div>
+
+                    </div>
+
+                    <!-- PAN Document -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <i class="fas fa-id-card document-icon"></i>
+                            PAN Document
+                        </div>
+                        <div class="document-image-container">
+                            <img src="~/PanImage/@Model.Company.PanDocument"
+                                 alt="PAN Document"
+                                 class="document-image"
+                                 onclick="openZoomView(this.src)">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Information Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <h2 class="card-title">Bank Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Bank Name</span>
+                    <span class="info-value">@Model.Bank.BankName</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Account Number</span>
+                    <span class="info-value">
+                        @if (!string.IsNullOrEmpty(Model.Bank.AccountNumber))
+                        {
+                            <span>@(new string('*', Model.Bank.AccountNumber.Length - 4) + Model.Bank.AccountNumber.Substring(Model.Bank.AccountNumber.Length - 4))</span>
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        }
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">@Model.Bank.AccountType</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Account Holder Name</span>
+                    <span class="info-value">@Model.Bank.AccountHolderName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Zoom Overlay -->
+<div id="zoomOverlay" class="zoom-overlay" onclick="closeZoomView()">
+    <img id="zoomImage" class="zoom-image" src="/placeholder.svg" alt="Zoomed Document" />
+    <div class="zoom-close" onclick="closeZoomView()">
+        <i class="fas fa-times"></i>
+    </div>
+</div>
+
+<script>
+    // Function to open the zoom view
+    function openZoomView(imageSrc) {
+        document.getElementById('zoomImage').src = imageSrc;
+        document.getElementById('zoomOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when zoom is active
+    }
+
+    // Function to close the zoom view
+    function closeZoomView() {
+        document.getElementById('zoomOverlay').classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Close zoom view when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeZoomView();
+        }
+    });
+
+    $(document).ready(function () {
+        $('.verify-btn').click(function () {
+            var userId = $(this).data('userid');
+            var companyId = $(this).data('companyid');
+            var bankId = $(this).data('bankid');
+            var btn = $(this);
+
+            if (confirm('Are you sure you want to verify this KYC?')) {
+                $.ajax({
+                    url: '@Url.Action("UpdateKycStatus", "Admin")',
+                    type: 'POST',
+                    data: {
+                        userId: userId,
+                        companyId: companyId,
+                        bankId: bankId,
+                        isVerified: true,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            btn.closest('tr').find('td:nth-child(5)').html(
+                                '<span class="badge badge-success">Verified</span>'
+                            );
+                            btn.remove();
+                            toastr.success('KYC verified successfully');
+                        } else {
+                            toastr.error(response.error || 'Failed to verify KYC');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error('An error occurred while verifying KYC: ' + error);
+                    }
+                });
+            }
+        });
+    });
+</script>
