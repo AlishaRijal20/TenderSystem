@@ -1,0 +1,638 @@
+﻿@model MonitorTenderViewModel
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Tender</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+
+
+        /* Base styles */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        }
+
+        .page-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tender-card {
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            background: white;
+        }
+
+            .tender-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+
+        .tender-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .tender-header::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                transform: translate(30%, -30%);
+            }
+
+        .tender-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+            .info-item:hover {
+                background-color: #f3f4f6;
+                transform: translateX(5px);
+            }
+
+        .info-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .info-icon:hover {
+                transform: scale(1.1);
+            }
+
+            .info-icon.blue {
+                background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+                color: #1e40af;
+            }
+
+            .info-icon.green {
+                background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+                color: #047857;
+            }
+
+            .info-icon.purple {
+                background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+                color: #5b21b6;
+            }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* Applications table */
+        .applications-card {
+            animation: slideInUp 0.8s ease-out;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            background: white;
+        }
+
+        .applications-header {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .applications-count {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .applications-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .applications-table th {
+                background-color: #f9fafb;
+                font-weight: 600;
+                color: #4b5563;
+                text-align: left;
+                padding: 1rem 1.5rem;
+                font-size: 0.875rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .applications-table td {
+                padding: 1rem 1.5rem;
+                border-bottom: 1px solid #f3f4f6;
+                color: #1f2937;
+            }
+
+            .applications-table tr:hover td {
+                background-color: #f9fafb;
+            }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .status-badge:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+        .status-won {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #047857;
+            border: none;
+        }
+
+        .status-lost {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #b91c1c;
+            border: none;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border: none;
+        }
+
+        /* Action buttons */
+        .action-button {
+            width: 2rem;
+            height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background-color: #f3f4f6;
+        }
+
+            .action-button:hover {
+                transform: scale(1.1);
+                background-color: #e5e7eb;
+            }
+
+            .action-button.view {
+                color: #2563eb;
+            }
+
+            .action-button.award {
+                color: #b45309;
+            }
+
+        /* Award dropdown */
+        .award-dropdown {
+            z-index: 10;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            width: 150px;
+            right: 0;
+        }
+
+        .award-btn {
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .award-btn:hover {
+                background-color: #f3f4f6;
+            }
+
+            .award-btn.won:hover {
+                background-color: #d1fae5;
+            }
+
+            .award-btn.lost:hover {
+                background-color: #fee2e2;
+            }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+            border-radius: 0.75rem;
+            border: 2px dashed #e5e7eb;
+            margin: 2rem;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Back button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: #3b82f6;
+            background-color: #eff6ff;
+            transition: all 0.3s ease;
+        }
+
+            .back-button:hover {
+                background-color: #dbeafe;
+                transform: translateX(-5px);
+            }
+
+    </style>
+</head>
+
+<body>
+    <div class="page-container min-h-screen py-8">
+        <div class="container mx-auto px-4 mb-6">
+            <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@Model.Tender.EncId" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Tenders</span>
+            </a>
+        </div>
+
+        <div class="container mx-auto px-4">
+            <!-- Tender Details Card -->
+            <div class="tender-card mb-8">
+                <div class="tender-header">
+                    <h1 class="text-3xl font-bold mb-2">@Model.Tender.Title</h1>
+                    <div class="flex flex-wrap items-center gap-4 text-blue-100">
+                        <span class="flex items-center">
+                            <i class="fas fa-hashtag mr-2"></i>
+                            <span class="opacity-80">Reference ID:</span>
+                            <span class="font-semibold ml-2">@Model.Tender.TenderId</span>
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <span class="opacity-80">Posted:</span>
+                            <span class="font-semibold ml-2">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="tender-info-grid">
+                    <div class="info-item">
+                        <div class="info-icon blue">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Issued By</div>
+                            <div class="info-value">@Model.Tender.IssuedBy</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon blue">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Type</div>
+                            <div class="info-value">@Model.Tender.TenderType</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon blue">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Duration</div>
+                            <div class="info-value">@Model.Tender.ProjectDuration</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon green">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Budget Estimation</div>
+                            <div class="info-value">₹ @Model.Tender.BudgetEstimation.ToString("N2")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Section -->
+            <div class="applications-card">
+                <div class="applications-header">
+                    <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                        <i class="fas fa-file-signature text-blue-600"></i>
+                        Tender Applications
+                    </h2>
+                    <span class="applications-count">
+                        <i class="fas fa-users"></i>
+                        @(Model.Applications?.Count() ?? 0) Applications
+                    </span>
+                </div>
+
+                @if (Model.Applications == null || !Model.Applications.Any())
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Applications Yet</h3>
+                        <p class="text-gray-500 max-w-md mx-auto">There are currently no applications submitted for this tender. Applications will appear here once companies start applying.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-container">
+                        <table class="applications-table">
+                            <thead>
+                                <tr>
+                                    <th>Application ID</th>
+                                    <th>Company Name</th>
+                                    <th>Proposed Budget</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var app in Model.Applications)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="font-medium">#@app.Application.ApplicationId</span>
+                                        </td>
+                                        <td>
+                                            <div class="font-semibold">@app.Company.CompanyName</div>
+                                        </td>
+                                        <td>
+                                            <div class="font-semibold text-green-700">₹ @app.Application.ProposedBudget.ToString("N2")</div>
+                                        </td>
+                                        <td>@app.Application.ProposedDuration</td>
+                                        <td>
+                                            <span class="status-badge @(app.Application.ApplicationStatus.ToLower() == "won" ? "status-won" :
+                                                                                                                    app.Application.ApplicationStatus.ToLower() == "lost" ? "status-lost" :
+                                                                                                                    "status-pending")">
+                                        <i class="fas @(app.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                                                                                   app.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" :
+                                                                                                   "fa-hourglass-half")"></i>
+                                        @app.Application.ApplicationStatus
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a asp-action="ApplicationDetails" asp-controller="PublisherTender" asp-route-id="@app.Application.EncId"
+                                           class="action-button view" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        @if (@app.Application.ApplicationStatus == "Pending")
+                                                {
+                                                    <!-- Award Tender Dropdown -->
+                                                    <div class="relative inline-block">
+                                                        <button class="btn text-blue-600 hover:text-blue-900 award-dropdown-btn" title="Award Tender">
+                                                            <i class="fas fa-trophy"></i>
+                                                        </button>
+                                                        <div class="hidden absolute bg-white shadow-md border rounded-md p-2 mt-2 w-32 award-dropdown">
+                                                            <button class="block w-full text-left px-3 py-1 text-green-600 hover:bg-gray-200 award-btn" data-id="@app.Application.ApplicationId" data-status="Won">🏆 Won</button>
+                                                            <button class="block w-full text-left px-3 py-1 text-red-600 hover:bg-gray-200 award-btn" data-id="@app.Application.ApplicationId" data-status="Lost">❌ Lost</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Hidden Form for AJAX Submission -->
+                                                    <form id="awardForm_@app.Application.ApplicationId" class="hidden" method="POST" asp-action="AwardTender" asp-controller="PublisherTender">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="ApplicationId" value="@app.Application.ApplicationId" />
+                                                        <input type="hidden" name="ApplicationStatus" />
+                                                    </form>
+
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        @if (Model.Applications?.Any(a => a.Application.ApplicationStatus == "Pending") == true)
+        {
+            <!-- Recommendations Section -->
+            <div class="recommendations-card">
+                <div class="recommendations-header">
+                    <h2 class="text-xl font-semibold">Recommended Companies</h2>
+                    <div id="recommendationsCount" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                        Loading...
+                    </div>
+                </div>
+
+                <div id="recommendationsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                    <div class="col-span-full text-center py-12">
+                        <div class="animate-spin text-blue-600 mb-4">
+                            <i class="fas fa-circle-notch text-4xl"></i>
+                        </div>
+                        <p class="text-gray-600">Loading recommendations...</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle dropdown visibility
+            document.querySelectorAll('.award-dropdown-btn').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    let dropdown = this.nextElementSibling;
+                    dropdown.classList.toggle('hidden');
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function (event) {
+                document.querySelectorAll('.award-dropdown').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            });
+
+            // Award Tender Status Update
+            document.querySelectorAll('.award-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    let applicationId = this.getAttribute('data-id');
+                    let applicationStatus = this.getAttribute('data-status');
+                    let form = document.getElementById(`awardForm_${applicationId}`);
+                    let formData = new FormData(form);
+                    formData.set('ApplicationStatus', applicationStatus);
+
+                    if (confirm(`Are you sure you want to mark this tender as '${applicationStatus}'?`)) {
+                        fetch(form.action, {
+                            method: form.method,
+                            body: formData,
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert(`Tender marked as '${applicationStatus}' successfully!`);
+                                    location.reload(); // Update the status dynamically
+                                } else {
+                                    alert("Failed to update award status.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    }
+                });
+            });
+        });
+
+
+        // Add this new code for API monitoring
+        document.addEventListener('DOMContentLoaded', function () {
+            const tenderId = '@Model.Tender.TenderId';
+            console.log('Tender ID:', tenderId);
+
+            // Test Flask API connection
+            fetch('http://127.0.0.1:5000/api/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tender_id: tenderId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.recommended_companies && Array.isArray(data.recommended_companies)) {
+                        // Filter companies based on matching tender_type
+                        const matchingCompanies = data.recommended_companies.filter(
+                            company => company.company_type === data.tender_type
+                        );
+
+                        recommendationsCount.textContent = `${matchingCompanies.length} Companies`;
+
+                        if (matchingCompanies.length === 0) {
+                            recommendationsContainer.innerHTML = `
+                            <div class="col-span-full text-center py-12">
+                                <div class="text-gray-400 mb-4">
+                                    <i class="fas fa-filter text-4xl"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-700">No Matching Companies</h3>
+                                <p class="text-gray-500 mt-2">No companies found matching the tender type: ${data.tender_type}</p>
+                            </div>
+                        `;
+                            return;
+                        }
+
+                        recommendationsContainer.innerHTML = matchingCompanies.map(company => `
+                        <div class="company-card">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-building text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">${company.company_name}</h3>
+                                    <p class="text-sm text-gray-500">${company.company_type}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400 mr-2"></i>
+                                    <span class="font-medium">${company.rating.toFixed(1)} Rating</span>
+                                </div>
+                                <a href="/Company/Profile/${company.company_id}"
+                                   class="text-blue-600 hover:text-blue-800 font-medium">
+                                    View Profile
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                    } else {
+                        throw new Error('Invalid data format');
+                    }
+                })
+                .catch(error => {
+                    console.error('API Error:', error);
+                    recommendationsCount.textContent = '0 Companies';
+                    recommendationsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <div class="text-red-500 mb-4">
+                                <i class="fas fa-exclamation-circle text-4xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-700">Unable to Load Recommendations</h3>
+                            <p class="text-gray-500 mt-2">Please try refreshing the page.</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+</body>

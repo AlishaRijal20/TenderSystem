@@ -566,8 +566,8 @@ namespace TenderSystem.Controllers
                                     </div>
                                 </div>
                                 <div class='footer'>
-                                    <p>This is an automated message from the BidNetra. Please do not reply to this email.</p>
-                                    <p>© 2025 BidNetra. All rights reserved.</p>
+                                    <p>This is an automated message from the Tender System. Please do not reply to this email.</p>
+                                    <p>© 2025 Tender System. All rights reserved.</p>
                                 </div>
                             </div>
                         </body>

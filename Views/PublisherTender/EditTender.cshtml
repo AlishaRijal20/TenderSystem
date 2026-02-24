@@ -1,0 +1,290 @@
+﻿@model TenderEdit
+
+@{
+    Layout = "_Layout";
+}
+
+<style>
+    .form-card {
+        animation: slideIn 0.5s ease-out;
+    }
+
+
+
+    .input-group {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .input-group:focus-within {
+            transform: translateY(-2px);
+        }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+    }
+
+    .icon-input {
+        padding-left: 2.5rem !important;
+    }
+
+    .submit-btn {
+        background: linear-gradient(to right, #2563eb, #3b82f6);
+        transition: all 0.3s ease;
+    }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #1d4ed8, #2563eb);
+            transform: translateY(-2px);
+        }
+
+    .form-section {
+        border-left: 4px solid #3b82f6;
+        padding-left: 1rem;
+        margin-bottom: 2rem;
+    }
+</style>
+
+
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Header Section -->
+        <div class="flex items-center justify-between mb-8">
+            <button onclick="history.back()" class="text-blue-600 hover:text-blue-800 transition-colors duration-300">
+                <i class="fas fa-arrow-left text-2xl"></i>
+            </button>
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+                Edit Tender
+            </h1>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-8">
+                <form asp-action="EditTender" asp-controller="PublisherTender" method="POST" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-50"></div>
+
+                    <input asp-for="TenderId" type="hidden" value="@Model.TenderId" />
+                    <input asp-for="IsVerified" type="hidden" value="@Model.IsVerified" />
+                    <input asp-for="TenderStatus" type="hidden" value="@Model.TenderStatus" />
+                    <input asp-for="AwardStatus" type="hidden" value="@Model.AwardStatus" />
+
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-info-circle mr-2 text-blue-600"></i>Basic Information
+                        </h2>
+
+                        <div class="space-y-6">
+                            <!-- Title -->
+                            <div class="input-group">
+                                <label asp-for="Title" class="block text-sm font-medium text-gray-700 mb-2">Tender Title</label>
+                                <div class="relative">
+                                    <i class="fas fa-heading input-icon"></i>
+                                    <input asp-for="Title" type="text"
+                                           class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
+                                           placeholder="Enter tender title" required>
+                                </div>
+                                <span asp-validation-for="Title" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="input-group">
+                                <label asp-for="TenderDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <div class="relative">
+                                    <textarea asp-for="TenderDescription"
+                                              class="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
+                                              rows="4"
+                                              required
+                                              placeholder="Provide a detailed description"></textarea>
+                                </div>
+                                <span asp-validation-for="TenderDescription" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Details -->
+                    <div class="form-section">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Financial Details
+                        </h2>
+
+                        <div class="input-group">
+                            <label asp-for="BudgetEstimation" class="block text-sm font-medium text-gray-700 mb-2">Budget Estimation</label>
+                            <div class="relative">
+                                <i class="fas fa-rupee-sign input-icon"></i>
+                                <input asp-for="BudgetEstimation" type="number"
+                                       class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
+                                       placeholder="Enter estimated budget"
+                                       required
+                                       step="0.01">
+                            </div>
+                            <span asp-validation-for="BudgetEstimation" class="text-sm text-red-600 mt-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Project Details -->
+                    <div class="form-section">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-project-diagram mr-2 text-blue-600"></i>Project Details
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Issued By -->
+                            <div class="input-group">
+                                <label asp-for="IssuedBy" class="block text-sm font-medium text-gray-700 mb-2">Issued By</label>
+                                <div class="relative">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input asp-for="IssuedBy" type="text"
+                                           class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
+                                           placeholder="Issuer name" required>
+                                </div>
+                                <span asp-validation-for="IssuedBy" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+
+                            <div class="input-group">
+                                <label asp-for="TenderType" class="block text-sm font-medium text-gray-700 mb-2">Tender Type</label>
+                                <div class="relative">
+                                    <i class="fas fa-tags input-icon"></i>
+                                    <select asp-for="TenderType"
+                                            required
+                                            class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="">-- Select Tender Type --</option>
+                                        <option value="Construction">Construction</option>
+                                        <option value="IT Services">IT Services</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Infrastructure">Infrastructure</option>
+                                        <option value="Agriculture">Agriculture</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Energy">Energy & Power</option>
+                                        <option value="Telecommunications">Telecommunications</option>
+                                        <option value="Consulting">Consulting Services</option>
+                                        <option value="Manufacturing">Manufacturing</option>
+                                        <option value="Supply Chain">Supply Chain</option>
+                                        <option value="Waste Management">Waste Management</option>
+                                        <option value="Security Services">Security Services</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="TenderType" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+
+                        </div>
+
+                        <!-- Dates Section -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                            <div class="input-group">
+                                <label asp-for="OpeningDate" class="block text-sm font-medium text-gray-700 mb-2">Opening Date</label>
+                                <div class="relative">
+                                    <i class="far fa-calendar-alt input-icon"></i>
+                                    <input asp-for="OpeningDate" type="date"
+                                           required
+                                           class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <span asp-validation-for="OpeningDate" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+
+                            <div class="input-group">
+                                <label asp-for="ClosingDate" class="block text-sm font-medium text-gray-700 mb-2">Closing Date</label>
+                                <div class="relative">
+                                    <i class="far fa-calendar-alt input-icon"></i>
+                                    <input asp-for="ClosingDate" type="date"
+                                           required
+                                           class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <span asp-validation-for="ClosingDate" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+
+                            <div class="input-group">
+                                <label asp-for="ProjectDuration" class="block text-sm font-medium text-gray-700 mb-2">Project Duration</label>
+                                <div class="relative">
+                                    <i class="fas fa-clock input-icon"></i>
+                                    <input asp-for="ProjectDuration" type="text"
+                                           class="icon-input block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
+                                           required
+                                           placeholder="e.g., 6 months">
+                                </div>
+                                <span asp-validation-for="ProjectDuration" class="text-sm text-red-600 mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                            <i class="fas fa-file-upload mr-2 text-blue-600"></i>Document Upload
+                        </h2>
+
+                        <div class="input-group">
+                            <label asp-for="TenderFile" class="block text-sm font-medium text-gray-700 mb-2">Tender Document</label>
+                            <div class="relative">
+                                <input asp-for="TenderFile" type="file" accept=".pdf"
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                <p class="mt-1 text-xs text-gray-500">Only PDF files accepted (max. 5MB)</p>
+                            </div>
+                            <span asp-validation-for="TenderFile" class="text-sm text-red-600 mt-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn w-full py-4 px-6 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl">
+                        <i class="fas fa-paper-plane mr-2"></i>Publish Tender
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const openingDate = new Date(document.querySelector('[name="OpeningDate"]').value);
+            const closingDate = new Date(document.querySelector('[name="ClosingDate"]').value);
+            const budgetEstimation = parseFloat(document.querySelector('[name="BudgetEstimation"]').value);
+            const fileInput = document.querySelector('[name="TenderFile"]');
+
+            let isValid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll('.validation-error').forEach(el => el.remove());
+
+            // Validate closing date
+            if (closingDate <= openingDate) {
+                e.preventDefault();
+                const closingDateInput = document.querySelector('[name="ClosingDate"]');
+                addErrorMessage(closingDateInput, 'Closing date must be after the opening date');
+                isValid = false;
+            }
+
+            // Validate budget estimation
+            if (budgetEstimation <= 0 || isNaN(budgetEstimation)) {
+                e.preventDefault();
+                const budgetInput = document.querySelector('[name="BudgetEstimation"]');
+                addErrorMessage(budgetInput, 'Budget estimation must be greater than 0');
+                isValid = false;
+            }
+
+            // Validate file if one is selected
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name.toLowerCase();
+                if (!fileName.endsWith('.pdf')) {
+                    e.preventDefault();
+                    addErrorMessage(fileInput, 'Only PDF files are allowed');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        });
+
+        function addErrorMessage(element, message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-error text-sm text-red-600 mt-1';
+            errorDiv.textContent = message;
+            element.parentNode.appendChild(errorDiv);
+        }
+    </script>
+</body>

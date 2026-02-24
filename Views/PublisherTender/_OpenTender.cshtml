@@ -1,0 +1,208 @@
+﻿@model IEnumerable<TenderEdit>
+
+<style>
+    .tender-card {
+        transition: all 0.3s ease;
+    }
+
+        .tender-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+    }
+
+    .status-open {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .status-closed {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .action-button {
+        transition: all 0.3s ease;
+    }
+
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+    .filter-dropdown {
+        backface-visibility: visible;
+        border: none;
+        color: white;
+        padding: 0.5rem 2rem 0.5rem 1rem;
+        border-radius: 0.5rem;
+        appearance: none;
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+        background-color: #2563eb;
+    }
+
+    .table-container {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: #6b7280;
+    }
+</style>
+
+<div class="container mx-auto px-4">
+    <!-- Header Section -->
+    <div class="flex justify-between items-center mb-8">
+        <a asp-action="Index" asp-controller="PublisherTender" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 text-2xl">
+            <i class="fas fa-arrow-left mr-2"></i>
+            <span class="text-lg">Back</span>
+        </a>
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+            Open Tenders
+        </h2>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex gap-4">
+            <select id="typeFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                    onchange="filterByType()">
+                <option value="">All Types</option>
+                @foreach (var type in Model.Select(t => t.TenderType).Distinct())
+
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+
+            <input type="text" id="searchInput" placeholder="Search tenders..."
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                   onkeyup="searchTable()">
+        </div>
+        <div class="text-sm text-gray-600" id="resultCount"></div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden table-container">
+        <div class="overflow-x-auto">
+            <table class="w-full" id="tenderTable">
+                <thead>
+                    <tr class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-hashtag mr-2"></i>Tender ID
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-file-alt mr-2"></i>Title
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-chart-pie mr-2"></i>Type
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-calendar-alt mr-2"></i>Closing Date
+                        </th>
+                        <th class="px-6 py-4 text-center font-semibold">
+                            <i class="fas fa-cogs mr-2"></i>Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tenderTableBody">
+                    @foreach (var tender in Model)
+
+                    {
+                        <tr class="tender-card border-b hover:bg-gray-50"
+                            data-type="@tender.TenderType.ToLower()"
+                            data-title="@tender.Title.ToLower()">
+                            <td class="px-6 py-4 text-center font-medium text-gray-900">
+                                #@tender.TenderId
+                            </td>
+                            <td class="px-6 py-4 text-center text-gray-800">
+                                <div class="flex items-center justify-center">
+                                    <span class="line-clamp-1">@tender.Title</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center text-gray-800">
+                                <div class="flex items-center justify-center">
+                                    <span class="line-clamp-1">@tender.TenderType</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center text-gray-800">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <i class="far fa-calendar-alt text-blue-500"></i>
+                                    <span>@tender.ClosingDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a asp-action="TenderDetails"
+                                   asp-controller="PublisherTender"
+                                   asp-route-id="@tender.EncId"
+                                   class="action-button inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results hidden">
+                <p class="text-lg">No tenders found matching your criteria</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Function to search the table by tender title
+        function searchTable() {
+            const searchValue = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#tenderTable tbody tr");
+
+            rows.forEach(row => {
+                const title = row.cells[1].textContent.toLowerCase();
+                if (title.includes(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function filterByType() {
+            const selectedType = document.getElementById("typeFilter").value;
+            const rows = document.querySelectorAll("#tenderTable tbody tr");
+            const noResults = document.getElementById("noResults");
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const type = row.getAttribute("data-type");
+                if (!selectedType || type === selectedType.toLowerCase()) {
+                    row.style.display = "";
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            // Show/hide no results message
+            noResults.classList.toggle("hidden", visibleCount > 0);
+
+            // Update result count if the element exists
+            const resultCount = document.getElementById("resultCount");
+            if (resultCount) {
+                resultCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
+            }
+        }
+    </script>
+</div>
