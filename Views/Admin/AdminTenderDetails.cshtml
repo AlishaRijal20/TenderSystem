@@ -1,123 +1,245 @@
 ﻿@model TenderDetailsViewModel
 
-<!-- Flowbite CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
-<!-- FontAwesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<!-- PDF.js for document viewing -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
 <style>
-
-    body {
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        background: #f8fafc;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
     }
 
-    .page-container {
-        max-width: 1280px;
-        margin: 0 auto;
+    .td-wrap {
+        background: var(--ivory);
+        min-height: 100vh;
         padding: 2rem;
-        animation: fadeIn 0.5s ease-out;
+        font-family: 'DM Sans', sans-serif;
     }
 
-    /* Tender header */
+    /* ── HEADER ── */
     .tender-header {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        border-radius: 1rem 1rem 0 0;
-        padding: 2.5rem 2rem;
+        background: var(--navy);
+        border-radius: 12px 12px 0 0;
+        padding: 2.4rem 2.5rem 2rem;
         position: relative;
         overflow: hidden;
-        animation: slideInUp 0.6s ease-out;
     }
 
         .tender-header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
 
-    /* Status badges */
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 2rem;
-        font-weight: 600;
-        font-size: 0.875rem;
+        .tender-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(200,150,12,.12) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .tender-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .header-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    /* ── BACK ── */
+    .back-button {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        gap: .5rem;
+        color: rgba(138,155,181,.85);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: .88rem;
+        font-weight: 500;
+        padding: .4rem .6rem;
+        border-radius: 6px;
+        transition: color .2s, background .2s, transform .2s;
+    }
+
+        .back-button:hover {
+            color: var(--white);
+            background: rgba(255,255,255,.08);
+            transform: translateX(-4px);
+        }
+
+    /* ── STATUS BADGES ── */
+    .status-badge {
+        padding: .4rem 1rem;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: .76rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: transform .2s, box-shadow .2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,.15);
     }
 
         .status-badge:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 14px rgba(0,0,0,.2);
         }
 
     .status-open {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, #10b981, #059669);
         color: white;
     }
 
     .status-closed {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
     }
 
     .status-pending {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #f59e0b, #d97706);
         color: white;
     }
 
     .verified {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--gold), #a07010);
+        color: var(--navy);
     }
 
     .not-verified {
-        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        background: linear-gradient(135deg, #6b7280, #4b5563);
         color: white;
     }
 
     .verification-pending {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #f59e0b, #d97706);
         color: white;
     }
 
-    /* Tabs */
+    .tender-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 2.5vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin-bottom: .8rem;
+    }
+
+    .header-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        color: rgba(138,155,181,.9);
+        font-size: .85rem;
+    }
+
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+    /* ── VERIFY ACTIONS BAR ── */
+    .verify-bar {
+        background: var(--white);
+        padding: 1rem 1.6rem;
+        border-bottom: 1px solid rgba(11,31,58,.07);
+        display: flex;
+        justify-content: flex-end;
+        gap: .75rem;
+    }
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .7rem 1.6rem;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: .85rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+    .verify-button {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        box-shadow: 0 4px 14px rgba(5,150,105,.25);
+    }
+
+        .verify-button:hover {
+            box-shadow: 0 6px 18px rgba(5,150,105,.35);
+            color: white;
+        }
+
+    .reject-button {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 4px 14px rgba(220,38,38,.25);
+    }
+
+        .reject-button:hover {
+            box-shadow: 0 6px 18px rgba(220,38,38,.35);
+            color: white;
+        }
+
+    /* ── TABS ── */
     .tabs-container {
-        background: white;
+        background: var(--white);
         padding: 0 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid rgba(11,31,58,.07);
         display: flex;
     }
 
     .tab-button {
-        padding: 1.25rem 1.5rem;
-        color: #64748b;
+        padding: 1.1rem 1.4rem;
+        color: var(--slate);
         font-weight: 600;
+        font-size: .88rem;
         position: relative;
-        transition: all 0.3s ease;
+        transition: color .3s;
         background: none;
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: .5rem;
     }
 
         .tab-button:hover {
-            color: #3b82f6;
+            color: var(--navy);
         }
 
         .tab-button.active {
-            color: #3b82f6;
+            color: var(--gold);
         }
 
             .tab-button.active::after {
@@ -127,190 +249,278 @@
                 left: 0;
                 width: 100%;
                 height: 3px;
-                background: #3b82f6;
+                background: var(--gold);
                 border-radius: 3px 3px 0 0;
             }
 
-    /* Info cards */
-    .info-card {
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s ease;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        animation: slideInUp 0.6s ease-out;
-        border: 1px solid rgba(229, 231, 235, 0.5);
-    }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-    /* Publisher card */
-    .publisher-card {
-        text-align: center;
-        padding: 2rem;
-    }
-
-    .publisher-photo {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        margin: 0 auto 1rem;
-        border: 4px solid #e2e8f0;
-        object-fit: cover;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Timeline */
-    .timeline-container {
-        display: flex;
-        justify-content: space-between;
-        position: relative;
-        padding: 2rem 0;
-    }
-
-    .timeline-item {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #e2e8f0;
-            z-index: 0;
-        }
-
-    .timeline-point {
-        width: 40px;
-        height: 40px;
-        background: white;
-        border: 2px solid #3b82f6;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        z-index: 1;
-        margin: 0 auto 1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .timeline-item:hover .timeline-point {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
-        background: #eff6ff;
-    }
-
-    /* PDF viewer */
-    .pdf-viewer {
-        background: white;
-        border-radius: 1rem;
-        padding: 1.5rem;
-        margin-top: 1.5rem;
-        height: 800px;
-        overflow-y: auto;
-        border: 1px solid #e5e7eb;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Action buttons */
-    .action-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .primary-button {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
-    }
-
-        .primary-button:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(37, 99, 235, 0.3);
-        }
-
-    .verify-button {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        box-shadow: 0 4px 6px rgba(5, 150, 105, 0.25);
-    }
-
-        .verify-button:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(5, 150, 105, 0.3);
-        }
-
-    .reject-button {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: white;
-        box-shadow: 0 4px 6px rgba(220, 38, 38, 0.25);
-    }
-
-        .reject-button:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(220, 38, 38, 0.3);
-        }
-
-    /* Back button */
-    .back-button {
-        color: rgba(255, 255, 255, 0.8);
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-    }
-
-        .back-button:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-5px);
-        }
-
-    /* Tab content */
+    /* ── TAB CONTENT ── */
     .tab-content {
-        animation: fadeIn 0.5s ease-out;
         display: none;
+        animation: fadeInUp .4s ease both;
     }
 
         .tab-content.active {
             display: block;
         }
 
-    /* Info item */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── INFO CARD ── */
+    .info-card {
+        background: var(--white);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.07);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+        transition: transform .3s, box-shadow .3s;
+    }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(11,31,58,.09);
+        }
+
+    .info-card-inner {
+        padding: 1.6rem;
+    }
+
+    .info-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .info-card-title i {
+            color: var(--gold);
+        }
+
+    /* ── PUBLISHER CARD ── */
+    .publisher-card {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .publisher-photo {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        border: 3px solid var(--gold);
+        object-fit: cover;
+        box-shadow: 0 4px 16px rgba(200,150,12,.25);
+    }
+
+    .publisher-photo-placeholder {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        background: rgba(200,150,12,.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid rgba(200,150,12,.25);
+    }
+
+    .publisher-role-badge {
+        display: inline-block;
+        padding: .25rem .85rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+    .pub-contact-item {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        text-align: left;
+        margin-bottom: .75rem;
+        font-size: .88rem;
+        color: var(--muted);
+    }
+
+    .pub-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: rgba(200,150,12,.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        flex-shrink: 0;
+        font-size: .8rem;
+    }
+
+    /* ── INFO ITEM ── */
     .info-item {
         display: flex;
         justify-content: space-between;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #f1f5f9;
+        padding: .75rem 0;
+        border-bottom: 1px solid rgba(11,31,58,.05);
+        font-size: .88rem;
     }
 
         .info-item:last-child {
             border-bottom: none;
         }
 
-    /* PDF container */
+    .info-item-label {
+        color: var(--slate);
+        font-weight: 500;
+    }
+
+    .info-item-value {
+        color: var(--navy);
+        font-weight: 600;
+        text-align: right;
+    }
+
+    /* ── MESSAGE BUTTON ── */
+    .message-button {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .75rem 1.6rem;
+        background: var(--gold);
+        color: var(--navy);
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: .88rem;
+        margin-top: 1.2rem;
+        transition: background .25s, transform .2s, box-shadow .2s;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(200,150,12,.3);
+    }
+
+        .message-button:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200,150,12,.35);
+            text-decoration: none;
+            color: var(--navy);
+        }
+
+    /* ── TIMELINE ── */
+    .timeline-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 1.5rem 0;
+    }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(11,31,58,.1);
+            transform: translateY(-50%);
+        }
+
+    .timeline-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .timeline-point {
+        width: 44px;
+        height: 44px;
+        background: var(--white);
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 0 auto .8rem;
+        transition: transform .3s, box-shadow .3s, background .3s;
+        box-shadow: 0 2px 8px rgba(200,150,12,.15);
+    }
+
+        .timeline-point i {
+            color: var(--gold);
+            font-size: .9rem;
+        }
+
+    .timeline-item:hover .timeline-point {
+        transform: scale(1.1);
+        background: rgba(200,150,12,.08);
+        box-shadow: 0 4px 16px rgba(200,150,12,.25);
+    }
+
+    .timeline-label {
+        font-weight: 600;
+        color: var(--navy);
+        font-size: .85rem;
+    }
+
+    .timeline-date {
+        color: var(--slate);
+        font-size: .78rem;
+        margin-top: .2rem;
+    }
+
+    /* ── PDF ── */
+    .primary-button {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .75rem 1.6rem;
+        background: var(--gold);
+        color: var(--navy);
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: .88rem;
+        text-decoration: none;
+        transition: background .25s, transform .2s, box-shadow .2s;
+        box-shadow: 0 4px 14px rgba(200,150,12,.28);
+    }
+
+        .primary-button:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200,150,12,.35);
+            color: var(--navy);
+            text-decoration: none;
+        }
+
+    .pdf-viewer {
+        background: var(--white);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        height: 800px;
+        overflow-y: auto;
+        border: 1px solid rgba(11,31,58,.08);
+        box-shadow: inset 0 2px 6px rgba(0,0,0,.04);
+    }
+
     .pdf-container {
         display: flex;
         flex-direction: column;
@@ -321,11 +531,10 @@
         .pdf-container canvas {
             max-width: 100%;
             height: auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(11,31,58,.1);
+            border-radius: 6px;
         }
 
-    /* Loading spinner */
     .loading-spinner {
         display: flex;
         justify-content: center;
@@ -336,92 +545,175 @@
     .spinner {
         width: 40px;
         height: 40px;
-        border: 4px solid #e5e7eb;
-        border-top-color: #3b82f6;
+        border: 4px solid rgba(200,150,12,.15);
+        border-top-color: var(--gold);
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
 
-    .message-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 
-        .message-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(37, 99, 235, 0.3);
+    .hidden {
+        display: none !important;
+    }
+
+    /* ── VERIFY LOADING OVERLAY ── */
+    .verify-loading-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 31, 58, 0.55);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .verify-loading-overlay.active {
+            display: flex;
         }
+
+    .verify-loading-box {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 2.5rem 3rem;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        animation: verifyFadeInUp 0.3s ease;
+        max-width: 360px;
+        width: 90%;
+    }
+
+    @@keyframes verifyFadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .verify-loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(200, 150, 12, 0.2);
+        border-top-color: var(--gold);
+        border-radius: 50%;
+        animation: verifySpin 0.8s linear infinite;
+        margin: 0 auto 1.2rem;
+    }
+
+    @@keyframes verifySpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .verify-loading-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 0.4rem;
+    }
+
+    .verify-loading-text {
+        font-size: 0.85rem;
+        color: var(--slate);
+        line-height: 1.5;
+    }
+
+    .verify-loading-subtext {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+
+        .verify-loading-subtext i {
+            color: var(--gold);
+            animation: verifyPulse 1.5s ease-in-out infinite;
+        }
+
+    @@keyframes verifyPulse {
+        0%, 100% {
+            opacity: 0.4;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
 </style>
 
-<div class="page-container">
-    <!-- Tender Header -->
-    <div class="tender-header">
-        <div class="flex justify-between items-center mb-6">
-            <button onclick="history.back()" class="back-button">
-                <i class="fas fa-arrow-left text-xl"></i>
-                <span class="hidden sm:inline">Back</span>
-            </button>
-            <div class="flex gap-4">
-                <span class="status-badge status-@Model.Tender.TenderStatus.ToLower()">
-                    <i class="fas @(Model.Tender.TenderStatus.ToLower() == "open" ? "fa-door-open" :
-                                                         Model.Tender.TenderStatus.ToLower() == "closed" ? "fa-lock" : "fa-clock")"></i>
-                    @Model.Tender.TenderStatus
-                </span>
-                <span class="status-badge @(Model.Tender.IsVerified == "Verified" ? "verified" :
-                                                                Model.Tender.IsVerified == "Not Verified" ? "not-verified" : "verification-pending")">
-                    <i class="fas @(Model.Tender.IsVerified == "Verified" ? "fa-check-circle" :
-                                                         Model.Tender.IsVerified == "Not Verified" ? "fa-times-circle" : "fa-spinner fa-spin")"></i>
-                    @Model.Tender.IsVerified
-                </span>
+<div class="td-wrap">
+
+    <!-- Verify Loading Overlay -->
+    <div class="verify-loading-overlay" id="verifyLoadingOverlay">
+        <div class="verify-loading-box">
+            <div class="verify-loading-spinner"></div>
+            <div class="verify-loading-title" id="verifyLoadingTitle">Processing...</div>
+            <div class="verify-loading-text" id="verifyLoadingText">Updating tender status and sending email notifications.</div>
+            <div class="verify-loading-subtext">
+                <i class="fas fa-envelope"></i> This may take a few seconds
             </div>
         </div>
+    </div>
 
-        <h1 class="text-3xl font-bold text-white mb-4">@Model.Tender.Title</h1>
-        <div class="flex flex-wrap items-center gap-6 text-white/90">
-            <span class="flex items-center gap-2">
-                <i class="fas fa-hashtag"></i>
-                <span>Tender ID: @Model.Tender.TenderId</span>
-            </span>
-            <span class="flex items-center gap-2">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Posted: @Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
-            </span>
-            <span class="flex items-center gap-2">
-                <i class="fas fa-user-tie"></i>
-                <span>Issued By: @Model.Tender.IssuedBy</span>
-            </span>
+    <!-- Tender Header -->
+    <div class="tender-header">
+        <div class="tender-header-content">
+            <div class="header-top-row">
+                <button onclick="history.back()" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Back</span>
+                </button>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+                    <span class="status-badge status-@Model.Tender.TenderStatus.ToLower()">
+                        <i class="fas @(Model.Tender.TenderStatus.ToLower() == "open" ? "fa-door-open" : Model.Tender.TenderStatus.ToLower() == "closed" ? "fa-lock" : "fa-clock")"></i>
+                        @Model.Tender.TenderStatus
+                    </span>
+                    <span class="status-badge @(Model.Tender.IsVerified == "Verified" ? "verified" : Model.Tender.IsVerified == "Not Verified" ? "not-verified" : "verification-pending")">
+                        <i class="fas @(Model.Tender.IsVerified == "Verified" ? "fa-check-circle" : Model.Tender.IsVerified == "Not Verified" ? "fa-times-circle" : "fa-spinner fa-spin")"></i>
+                        @Model.Tender.IsVerified
+                    </span>
+                </div>
+            </div>
+            <h1>@Model.Tender.Title</h1>
+            <div class="header-meta">
+                <span><i class="fas fa-hashtag"></i> Tender ID: @Model.Tender.TenderId</span>
+                <span><i class="fas fa-calendar-alt"></i> Posted: @Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
+                <span><i class="fas fa-user-tie"></i> Issued By: @Model.Tender.IssuedBy</span>
+            </div>
         </div>
     </div>
+
     @if (Model.Tender.IsVerified == "Pending")
     {
-        <!-- Verification Actions -->
-        <div class="bg-white p-4 border-b border-gray-200 flex justify-end gap-3">
+        <div class="verify-bar">
             <a href="javascript:void(0);"
                class="action-button verify-button verify-btn"
                data-id="@Model.Tender.TenderId"
                data-status="Verified">
-                <i class="fas fa-check-circle"></i>
-                Verify Tender
+                <i class="fas fa-check-circle"></i> Verify Tender
             </a>
             <a href="javascript:void(0);"
                class="action-button reject-button verify-btn"
                data-id="@Model.Tender.TenderId"
                data-status="Not Verified">
-                <i class="fas fa-times-circle"></i>
-                Reject Tender
+                <i class="fas fa-times-circle"></i> Reject Tender
             </a>
-
-            <!-- Hidden Form for AJAX Submit -->
             <form id="verifyForm_@Model.Tender.TenderId" class="hidden" method="POST"
                   asp-action="UpdateVerifiedStatus" asp-controller="Admin">
                 @Html.AntiForgeryToken()
@@ -431,110 +723,94 @@
         </div>
     }
 
-
-    <!-- Tabs Navigation -->
+    <!-- Tabs -->
     <div class="tabs-container">
         <button onclick="showTab('details')" class="tab-button active" id="details-tab-btn">
-            <i class="fas fa-info-circle"></i>
-            Details
+            <i class="fas fa-info-circle"></i> Details
         </button>
         <button onclick="showTab('documents')" class="tab-button" id="documents-tab-btn">
-            <i class="fas fa-file-pdf"></i>
-            Documents
+            <i class="fas fa-file-pdf"></i> Documents
         </button>
     </div>
 
-    <!-- Content Area -->
-    <div class="bg-white rounded-b-lg shadow-sm">
+    <!-- Content -->
+    <div style="background:var(--white);border-radius:0 0 12px 12px;border:1px solid rgba(11,31,58,.07);border-top:none;">
+
         <!-- Details Tab -->
-        <div id="details-tab" class="tab-content active p-6">
+        <div id="details-tab" class="tab-content active" style="padding:1.8rem;">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
                 <!-- Publisher Card -->
                 <div class="info-card publisher-card">
                     @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
                     {
-                        <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)"
-                             alt="Publisher"
-                             class="publisher-photo">
+                        <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)" alt="Publisher" class="publisher-photo">
                     }
                     else
                     {
-                        <div class="publisher-photo bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-user text-4xl text-blue-500"></i>
+                        <div class="publisher-photo-placeholder">
+                            <i class="fas fa-user" style="font-size:2.2rem;color:var(--gold);"></i>
                         </div>
                     }
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                    <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;">
                         @Model.User.FirstName @Model.User.MiddleName @Model.User.LastName
                     </h3>
-                    <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
-                        @Model.User.UserRole
-                    </span>
-                    <div class="space-y-3 text-left">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                                <i class="fas fa-envelope text-blue-500"></i>
-                            </div>
-                            <span class="text-gray-700">@Model.User.EmailAddress</span>
+                    <span class="publisher-role-badge">@Model.User.UserRole</span>
+                    <div style="margin-top:.5rem;">
+                        <div class="pub-contact-item">
+                            <div class="pub-icon"><i class="fas fa-envelope"></i></div>
+                            <span>@Model.User.EmailAddress</span>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                                <i class="fas fa-phone text-blue-500"></i>
-                            </div>
-                            <span class="text-gray-700">@Model.User.Phone</span>
+                        <div class="pub-contact-item">
+                            <div class="pub-icon"><i class="fas fa-phone"></i></div>
+                            <span>@Model.User.Phone</span>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                                <i class="fas fa-map-marker-alt text-blue-500"></i>
-                            </div>
-                            <span class="text-gray-700">@Model.User.City, @Model.User.District, @Model.User.Province</span>
+                        <div class="pub-contact-item">
+                            <div class="pub-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <span>@Model.User.City, @Model.User.District, @Model.User.Province</span>
                         </div>
-
                         <a asp-action="UserMessage" asp-controller="Chat" asp-route-receiverId="@Model.User.UserId"
                            class="message-button">
-                            <i class="fas fa-paper-plane"></i>
-                            Send Message
+                            <i class="fas fa-paper-plane"></i> Send Message
                         </a>
                     </div>
                 </div>
 
                 <!-- Tender Details -->
                 <div class="lg:col-span-2">
-                    <!-- Basic Information -->
-                    <div class="info-card mb-6">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-info-circle text-blue-600 mr-2"></i>Tender Information
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Basic Info -->
+                    <div class="info-card">
+                        <div class="info-card-inner">
+                            <h3 class="info-card-title"><i class="fas fa-info-circle"></i> Tender Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
                                 <div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Type</span>
-                                        <span class="font-medium text-gray-800">@Model.Tender.TenderType</span>
+                                        <span class="info-item-label">Type</span>
+                                        <span class="info-item-value">@Model.Tender.TenderType</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Duration</span>
-                                        <span class="font-medium text-gray-800">@Model.Tender.ProjectDuration</span>
+                                        <span class="info-item-label">Duration</span>
+                                        <span class="info-item-value">@Model.Tender.ProjectDuration</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Budget</span>
-                                        <span class="font-medium text-green-600">
-                                            <i class="fas fa-rupee-sign mr-1"></i>
-                                            @Model.Tender.BudgetEstimation.ToString("N2")
+                                        <span class="info-item-label">Budget</span>
+                                        <span class="info-item-value" style="color:var(--gold);">
+                                            <i class="fas fa-rupee-sign"></i> @Model.Tender.BudgetEstimation.ToString("N2")
                                         </span>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Issued Date</span>
-                                        <span class="font-medium text-gray-800">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
+                                        <span class="info-item-label">Issued Date</span>
+                                        <span class="info-item-value">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Opening Date</span>
-                                        <span class="font-medium text-gray-800">@Model.Tender.OpeningDate.ToString("MMM dd, yyyy")</span>
+                                        <span class="info-item-label">Opening Date</span>
+                                        <span class="info-item-value">@Model.Tender.OpeningDate.ToString("MMM dd, yyyy")</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="text-gray-600">Closing Date</span>
-                                        <span class="font-medium text-gray-800">@Model.Tender.ClosingDate.ToString("MMM dd, yyyy")</span>
+                                        <span class="info-item-label">Closing Date</span>
+                                        <span class="info-item-value">@Model.Tender.ClosingDate.ToString("MMM dd, yyyy")</span>
                                     </div>
                                 </div>
                             </div>
@@ -543,37 +819,23 @@
 
                     <!-- Timeline -->
                     <div class="info-card">
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                                <i class="fas fa-clock text-blue-600 mr-2"></i>Timeline
-                            </h3>
+                        <div class="info-card-inner">
+                            <h3 class="info-card-title"><i class="fas fa-clock"></i> Timeline</h3>
                             <div class="timeline-container">
                                 <div class="timeline-item">
-                                    <div class="timeline-point">
-                                        <i class="fas fa-flag text-blue-600"></i>
-                                    </div>
-                                    <div class="font-medium">Issue Date</div>
-                                    <div class="text-sm text-gray-600">
-                                        @Model.Tender.IssuedDate.ToString("MMM dd, yyyy")
-                                    </div>
+                                    <div class="timeline-point"><i class="fas fa-flag"></i></div>
+                                    <div class="timeline-label">Issue Date</div>
+                                    <div class="timeline-date">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</div>
                                 </div>
                                 <div class="timeline-item">
-                                    <div class="timeline-point">
-                                        <i class="fas fa-door-open text-blue-600"></i>
-                                    </div>
-                                    <div class="font-medium">Opening Date</div>
-                                    <div class="text-sm text-gray-600">
-                                        @Model.Tender.OpeningDate.ToString("MMM dd, yyyy")
-                                    </div>
+                                    <div class="timeline-point"><i class="fas fa-door-open"></i></div>
+                                    <div class="timeline-label">Opening Date</div>
+                                    <div class="timeline-date">@Model.Tender.OpeningDate.ToString("MMM dd, yyyy")</div>
                                 </div>
                                 <div class="timeline-item">
-                                    <div class="timeline-point">
-                                        <i class="fas fa-lock text-blue-600"></i>
-                                    </div>
-                                    <div class="font-medium">Closing Date</div>
-                                    <div class="text-sm text-gray-600">
-                                        @Model.Tender.ClosingDate.ToString("MMM dd, yyyy")
-                                    </div>
+                                    <div class="timeline-point"><i class="fas fa-lock"></i></div>
+                                    <div class="timeline-label">Closing Date</div>
+                                    <div class="timeline-date">@Model.Tender.ClosingDate.ToString("MMM dd, yyyy")</div>
                                 </div>
                             </div>
                         </div>
@@ -583,59 +845,69 @@
         </div>
 
         <!-- Documents Tab -->
-        <div id="documents-tab" class="tab-content p-6">
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold text-gray-800 flex items-center">
-                    <i class="fas fa-file-pdf text-blue-600 mr-2"></i>Tender Document
+        <div id="documents-tab" class="tab-content" style="padding:1.8rem;">
+            <div style="margin-bottom:1.4rem;">
+                <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;">
+                    <i style="color:var(--gold);" class="fas fa-file-pdf"></i> Tender Document
                 </h3>
-                <p class="text-gray-600 mt-2">
-                    View and download the official tender document below.
-                </p>
+                <p style="color:var(--slate);font-size:.88rem;">View and download the official tender document below.</p>
             </div>
 
-            <div class="flex justify-end mb-4">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
                 <a href="@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)"
-                   class="action-button primary-button" download>
-                    <i class="fas fa-download"></i>
-                    Download Document
+                   class="primary-button" download>
+                    <i class="fas fa-download"></i> Download Document
                 </a>
             </div>
 
             <div class="pdf-viewer">
                 <div id="pdf-container" class="pdf-container">
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                    </div>
+                    <div class="loading-spinner"><div class="spinner"></div></div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
-
-
-<!-- Flowbite JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Show details tab by default
         showTab('details');
 
-        // Load PDF when documents tab is clicked
         document.getElementById('documents-tab-btn').addEventListener('click', function() {
             loadPDF();
         });
+
+        // Loading overlay helpers
+        const verifyOverlay = document.getElementById('verifyLoadingOverlay');
+        const verifyTitle = document.getElementById('verifyLoadingTitle');
+        const verifyText = document.getElementById('verifyLoadingText');
+
+        function showVerifyLoading(status) {
+            if (status === 'Verified') {
+                verifyTitle.textContent = 'Verifying Tender...';
+                verifyText.textContent = 'Updating status and notifying the publisher & all bidders via email.';
+            } else {
+                verifyTitle.textContent = 'Rejecting Tender...';
+                verifyText.textContent = 'Updating status and notifying the publisher via email.';
+            }
+            verifyOverlay.classList.add('active');
+        }
+
+        function hideVerifyLoading() {
+            verifyOverlay.classList.remove('active');
+        }
 
         // Verify/Reject buttons
         document.querySelectorAll('.verify-btn').forEach(button => {
             button.addEventListener('click', function () {
                 let tenderId = this.getAttribute('data-id');
-                let status = this.getAttribute('data-status'); // Get the current status (Verified or Not Verified)
+                let status = this.getAttribute('data-status');
                 let form = document.getElementById(`verifyForm_${tenderId}`);
-                form.querySelector('input[name="IsVerified"]').value = status; // Set the correct status in the form
-
+                form.querySelector('input[name="IsVerified"]').value = status;
                 if (confirm(`Are you sure you want to mark this tender as ${status}?`)) {
-                    // Submit the hidden form via AJAX
+                    showVerifyLoading(status);
                     fetch(form.action, {
                         method: form.method,
                         body: new FormData(form),
@@ -645,14 +917,19 @@
                     })
                         .then(response => response.json())
                         .then(data => {
+                            hideVerifyLoading();
                             if (data.success) {
                                 alert(`Tender ${status} successfully!`);
-                                location.reload(); // Reload page to update status
+                                location.reload();
                             } else {
                                 alert("Failed to update tender status.");
                             }
                         })
-                        .catch(error => console.error("Error:", error));
+                        .catch(error => {
+                            hideVerifyLoading();
+                            console.error("Error:", error);
+                            alert("Something went wrong. Please try again.");
+                        });
                 }
             });
         });
@@ -661,76 +938,47 @@
     function showTab(tabName) {
         const tabs = document.querySelectorAll('.tab-content');
         const buttons = document.querySelectorAll('.tab-button');
-
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-
-        buttons.forEach(btn => {
-            btn.classList.remove('active');
-        });
-
+        tabs.forEach(tab => tab.classList.remove('active'));
+        buttons.forEach(btn => btn.classList.remove('active'));
         document.getElementById(`${tabName}-tab`).classList.add('active');
         document.getElementById(`${tabName}-tab-btn`).classList.add('active');
-
-        // Load PDF when documents tab is clicked
-        if (tabName === 'documents') {
-            loadPDF();
-        }
+        if (tabName === 'documents') { loadPDF(); }
     }
 
     function loadPDF() {
         const pdfContainer = document.getElementById('pdf-container');
-
-        // Check if PDF is already loaded
-        if (pdfContainer.querySelector('canvas')) {
-            return;
-        }
-
+        if (pdfContainer.querySelector('canvas')) { return; }
         const url = "@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)";
-
         pdfjsLib.getDocument(url).promise.then(pdf => {
-            // Clear loading indicator
             pdfContainer.innerHTML = '';
-
             const scale = 1.5;
             const numPages = pdf.numPages;
-
-            // Render all pages
             for (let pageNum = 1; pageNum <= numPages; pageNum++) {
                 const pageContainer = document.createElement('div');
                 pageContainer.className = 'mb-6 relative';
-
                 const pageLabel = document.createElement('div');
                 pageLabel.className = 'absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md opacity-75';
                 pageLabel.textContent = `Page ${pageNum} of ${numPages}`;
-
                 const canvas = document.createElement('canvas');
                 canvas.className = 'mx-auto shadow-md rounded-lg';
-
                 pageContainer.appendChild(canvas);
                 pageContainer.appendChild(pageLabel);
                 pdfContainer.appendChild(pageContainer);
-
                 pdf.getPage(pageNum).then(page => {
                     const viewport = page.getViewport({ scale });
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
                     const ctx = canvas.getContext('2d');
-
-                    page.render({
-                        canvasContext: ctx,
-                        viewport: viewport
-                    });
+                    page.render({ canvasContext: ctx, viewport: viewport });
                 });
             }
         }).catch(error => {
             console.error('Error loading PDF:', error);
             pdfContainer.innerHTML = `
-                <div class="text-center p-8">
-                    <i class="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Error Loading PDF</h3>
-                    <p class="text-gray-600">There was an error loading the document. Please try downloading it instead.</p>
+                <div style="text-align:center;padding:3rem;">
+                    <i class="fas fa-exclamation-circle" style="font-size:2.5rem;color:#ef4444;margin-bottom:1rem;display:block;"></i>
+                    <h3 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:.4rem;">Error Loading PDF</h3>
+                    <p style="color:var(--slate);">There was an error loading the document. Please try downloading it instead.</p>
                 </div>
             `;
         });

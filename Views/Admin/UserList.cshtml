@@ -4,140 +4,486 @@
     Layout = "_Layout";
 }
 
-<div class="bg-gray-50 min-h-screen p-8">
 
-    <div class="mb-6">
-        <button onclick="history.back()" class="text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center gap-2 hover:translate-x-[-5px]">
-            <i class="fas fa-arrow-left text-xl"></i>
-            <span class="font-medium">Back</span>
-        </button>
-    </div>
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .ul-wrap {
+        background: var(--ivory);
+        min-height: 100vh;
+        padding: 2rem;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--muted);
+        font-size: .88rem;
+        font-weight: 500;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 1.5rem;
+        transition: color .2s, transform .2s;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            color: var(--navy);
+            transform: translateX(-4px);
+        }
+
+    /* ── PAGE HEADER ── */
+    .ul-header {
+        background: var(--navy);
+        border-radius: 12px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 1.8rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .ul-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .ul-header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+    .ul-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .ul-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .68rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .6rem;
+    }
+
+        .ul-eyebrow span {
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .ul-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.1;
+    }
+
+        .ul-header h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .ul-header p {
+        color: var(--slate);
+        font-size: .88rem;
+        font-weight: 300;
+        margin: 0;
+    }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border-radius: 10px;
+        padding: 1.5rem 1.6rem;
+        border: 1px solid rgba(11,31,58,.07);
+        position: relative;
+        overflow: hidden;
+        transition: transform .3s, box-shadow .3s;
+    }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 36px rgba(11,31,58,.09);
+        }
+
+            .stat-card:hover::before {
+                opacity: 1;
+            }
+
+    .stat-card--blue::before {
+        background: #3b82f6;
+    }
+
+    .stat-card--purple::before {
+        background: #8b5cf6;
+    }
+
+    .stat-card--green::before {
+        background: #10b981;
+    }
+
+    .stat-card--gold::before {
+        background: var(--gold);
+    }
+
+    .stat-inner {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon--blue {
+        background: rgba(59,130,246,.1);
+        color: #3b82f6;
+    }
+
+    .stat-icon--purple {
+        background: rgba(139,92,246,.1);
+        color: #8b5cf6;
+    }
+
+    .stat-icon--green {
+        background: rgba(16,185,129,.1);
+        color: #10b981;
+    }
+
+    .stat-icon--gold {
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+    }
+
+    .stat-label {
+        font-size: .72rem;
+        font-weight: 500;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .3rem;
+    }
+
+    .stat-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1;
+    }
+
+    /* ── TABLE SECTION ── */
+    .table-section {
+        background: var(--white);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.07);
+        overflow: hidden;
+    }
+
+    .table-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.5rem 1.8rem;
+        border-bottom: 1px solid rgba(11,31,58,.06);
+    }
+
+    .table-toolbar-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .table-controls {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+    }
+
+        .table-controls select,
+        .table-controls input {
+            background: var(--ivory);
+            border: 1px solid rgba(11,31,58,.12);
+            color: var(--navy);
+            font-size: .85rem;
+            font-family: 'DM Sans', sans-serif;
+            border-radius: 6px;
+            padding: .55rem 1rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+            .table-controls select:focus,
+            .table-controls input:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(200,150,12,.08);
+            }
+
+            .table-controls input::placeholder {
+                color: var(--slate);
+            }
+
+    /* table */
+    .ul-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .875rem;
+    }
+
+        .ul-table thead tr {
+            background: var(--navy);
+        }
+
+        .ul-table thead th {
+            padding: .9rem 1.4rem;
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--slate);
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .ul-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .2s;
+        }
+
+            .ul-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .ul-table tbody tr:hover {
+                background: rgba(200,150,12,.04);
+            }
+
+        .ul-table td {
+            padding: 1rem 1.4rem;
+            color: var(--muted);
+            vertical-align: middle;
+        }
+
+    /* role badges */
+    .role-badge {
+        display: inline-block;
+        padding: .28rem .85rem;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 600;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    .role-badge--admin {
+        background: rgba(139,92,246,.1);
+        color: #7c3aed;
+    }
+
+    .role-badge--bidder {
+        background: rgba(16,185,129,.1);
+        color: #059669;
+    }
+
+    .role-badge--publisher {
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+    }
+
+    /* action button */
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: .85rem;
+        transition: background .2s, transform .2s;
+    }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+</style>
+
+<div class="ul-wrap">
+
+    <!-- Back Button -->
+    <button onclick="history.back()" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </button>
 
     <!-- Page Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">
-            <i class="fas fa-users-gear mr-2"></i>User Management
-        </h1>
-        <p class="text-gray-600">Monitor and manage system users</p>
+    <div class="ul-header">
+        <div class="ul-header-content">
+            <p class="ul-eyebrow"><span></span> Admin Panel</p>
+            <h1>User <em>Management</em></h1>
+            <p>Monitor and manage system users</p>
+        </div>
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Users Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 mr-4">
-                    <i class="fas fa-users text-blue-500 text-2xl"></i>
-                </div>
+    <div class="stats-grid">
+        <div class="stat-card stat-card--blue">
+            <div class="stat-inner">
+                <div class="stat-icon stat-icon--blue"><i class="fas fa-users"></i></div>
                 <div>
-                    <p class="text-gray-500">Total Users</p>
-                    <h3 class="text-2xl font-bold">@Model.Count()</h3>
+                    <p class="stat-label">Total Users</p>
+                    <h3 class="stat-value">@Model.Count()</h3>
                 </div>
             </div>
         </div>
-
-        <!-- Admin Users Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 mr-4">
-                    <i class="fas fa-user-shield text-purple-500 text-2xl"></i>
-                </div>
+        <div class="stat-card stat-card--purple">
+            <div class="stat-inner">
+                <div class="stat-icon stat-icon--purple"><i class="fas fa-user-shield"></i></div>
                 <div>
-                    <p class="text-gray-500">Administrators</p>
-                    <h3 class="text-2xl font-bold">@Model.Count(u => u.UserRole == "Admin")</h3>
+                    <p class="stat-label">Administrators</p>
+                    <h3 class="stat-value">@Model.Count(u => u.UserRole == "Admin")</h3>
                 </div>
             </div>
         </div>
-
-        <!-- Bidders Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 mr-4">
-                    <i class="fas fa-gavel text-green-500 text-2xl"></i>
-                </div>
+        <div class="stat-card stat-card--green">
+            <div class="stat-inner">
+                <div class="stat-icon stat-icon--green"><i class="fas fa-gavel"></i></div>
                 <div>
-                    <p class="text-gray-500">Bidders</p>
-                    <h3 class="text-2xl font-bold">@Model.Count(u => u.UserRole == "Bidder")</h3>
+                    <p class="stat-label">Bidders</p>
+                    <h3 class="stat-value">@Model.Count(u => u.UserRole == "Bidder")</h3>
                 </div>
             </div>
         </div>
-
-        <!-- Publishers Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-orange-100 mr-4">
-                    <i class="fas fa-bullhorn text-orange-500 text-2xl"></i>
-                </div>
+        <div class="stat-card stat-card--gold">
+            <div class="stat-inner">
+                <div class="stat-icon stat-icon--gold"><i class="fas fa-bullhorn"></i></div>
                 <div>
-                    <p class="text-gray-500">Publishers</p>
-                    <h3 class="text-2xl font-bold">@Model.Count(u => u.UserRole == "Publisher")</h3>
+                    <p class="stat-label">Publishers</p>
+                    <h3 class="stat-value">@Model.Count(u => u.UserRole == "Publisher")</h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- User List Section -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold text-gray-800">User List</h2>
-
-            <!-- Filter Dropdown -->
-            <div class="flex gap-4">
-                <select id="roleFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+    <!-- User List Table -->
+    <div class="table-section">
+        <div class="table-toolbar">
+            <h2 class="table-toolbar-title">User List</h2>
+            <div class="table-controls">
+                <select id="roleFilter">
                     <option value="">All Roles</option>
                     <option value="Admin">Administrators</option>
                     <option value="Bidder">Bidders</option>
                     <option value="Publisher">Publishers</option>
                 </select>
-                <input type="text" id="searchInput" placeholder="Search users..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                <input type="text" id="searchInput" placeholder="Search users…" />
             </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <table class="ul-table">
+                <thead>
                     <tr>
-                        <th class="px-6 py-3">User ID</th>
-                        <th class="px-6 py-3">Full Name</th>
-                        <th class="px-6 py-3">Email</th>
-                        <th class="px-6 py-3">Phone</th>
-                        <th class="px-6 py-3">Role</th>
-                        <th class="px-6 py-3">Location</th>
-                        <th class="px-6 py-3">Actions</th>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Location</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in Model)
                     {
-                        <tr class="user-row bg-white border-b hover:bg-gray-50" data-role="@user.UserRole">
-                            <td class="px-6 py-4">@user.UserId</td>
-                            <td class="px-6 py-4">@($"{user.FirstName} {user.MiddleName} {user.LastName}")</td>
-                            <td class="px-6 py-4">@user.EmailAddress</td>
-                            <td class="px-6 py-4">@user.Phone</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                        @(user.UserRole == "Admin" ? "bg-purple-100 text-purple-800" :
-                                                                          user.UserRole == "Bidder" ? "bg-green-100 text-green-800" :
-                                                                          "bg-orange-100 text-orange-800")">
-                                @user.UserRole
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">@($"{user.City}, {user.District}, {user.Province}")</td>
-                        <td class="px-6 py-4">
-                            <div class="flex gap-2">
-                                <a asp-action="UserDetails" asp-controller="Admin" asp-route-id="@user.UserEncId"
-                                   class="action-btn bg-blue-50 text-blue-600 hover:bg-blue-100"
-                                   data-tooltip-target="tooltip-view-@user.UserId">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                                        }
+                        <tr class="user-row" data-role="@user.UserRole">
+                            <td>@user.UserId</td>
+                            <td style="color:var(--navy);font-weight:500;">@($"{user.FirstName} {user.MiddleName} {user.LastName}")</td>
+                            <td>@user.EmailAddress</td>
+                            <td>@user.Phone</td>
+                            <td>
+                                <span class="role-badge @(user.UserRole == "Admin" ? "role-badge--admin" : user.UserRole == "Bidder" ? "role-badge--bidder" : "role-badge--publisher")">
+                                    @user.UserRole
+                                </span>
+                            </td>
+                            <td>@($"{user.City}, {user.District}, {user.Province}")</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <a asp-action="UserDetails" asp-controller="Admin" asp-route-id="@user.UserEncId"
+                                       class="action-btn bg-blue-50 text-blue-600 hover:bg-blue-100"
+                                       data-tooltip-target="tooltip-view-@user.UserId">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </div>
+
 </div>
 
 <script>

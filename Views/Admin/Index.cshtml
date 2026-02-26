@@ -1,143 +1,407 @@
 ﻿@{
-    ViewData["Title"] = "Tender and Auction Dashboard";
+    ViewData["Title"] = "Admin: Tender Dashboard";
     Layout = "_Layout";
 }
 
-
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Tender System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    
     <style>
-        .stat-card {
-            transition: all 0.3s ease;
+        :root {
+            --navy: #0B1F3A;
+            --navy-mid: #122848;
+            --navy-light: #1a3560;
+            --gold: #C8960C;
+            --gold-lt: #E8B84B;
+            --ivory: #F7F3EC;
+            --slate: #8A9BB5;
+            --white: #ffffff;
         }
+
+        .dashboard-wrap {
+            background: var(--ivory);
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            padding: 2rem 2rem 3rem;
+        }
+
+        /* ── HEADER ── */
+        .dash-header {
+            background: var(--navy);
+            border-radius: 12px;
+            padding: 2.2rem 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .dash-header::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(200,150,12,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.06) 1px, transparent 1px);
+                background-size: 40px 40px;
+                pointer-events: none;
+            }
+
+            .dash-header::after {
+                content: '';
+                position: absolute;
+                top: -40%;
+                right: -5%;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+        .dash-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .dash-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .7rem;
+            font-weight: 500;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: .8rem;
+        }
+
+            .dash-eyebrow span {
+                display: inline-block;
+                width: 24px;
+                height: 1px;
+                background: var(--gold);
+            }
+
+        .dash-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 900;
+            color: var(--white);
+            margin: 0 0 .4rem;
+            line-height: 1.1;
+        }
+
+            .dash-header h1 em {
+                font-style: normal;
+                color: var(--gold-lt);
+            }
+
+        .dash-header p {
+            color: var(--slate);
+            font-size: .9rem;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        /* ── STAT CARDS ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1.8rem;
+            border: 1px solid rgba(11,31,58,.07);
+            position: relative;
+            overflow: hidden;
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 100%;
+                background: var(--gold);
+                opacity: 0;
+                transition: opacity .3s;
+            }
 
             .stat-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                box-shadow: 0 16px 40px rgba(11,31,58,.1);
             }
 
+                .stat-card:hover::before {
+                    opacity: 1;
+                }
+
+        .stat-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            font-size: .75rem;
+            font-weight: 500;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--slate);
+            margin-bottom: .5rem;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1;
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon--blue {
+            background: rgba(59,130,246,.1);
+            color: #3b82f6;
+        }
+
+        .stat-icon--green {
+            background: rgba(16,185,129,.1);
+            color: #10b981;
+        }
+
+        .stat-icon--gold {
+            background: rgba(200,150,12,.12);
+            color: var(--gold);
+        }
+
+        .stat-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: 1.2rem;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-decoration: none;
+            transition: gap .2s;
+        }
+
+        .stat-link--blue {
+            color: #3b82f6;
+        }
+
+        .stat-link--green {
+            color: #10b981;
+        }
+
+        .stat-link--gold {
+            color: var(--gold);
+        }
+
+        .stat-link:hover {
+            gap: .7rem;
+            text-decoration: none;
+        }
+
+        /* ── CHARTS ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
         .chart-container {
-            transition: all 0.3s ease;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1.8rem;
+            border: 1px solid rgba(11,31,58,.07);
+            transition: box-shadow .3s ease;
         }
 
             .chart-container:hover {
-                box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+                box-shadow: 0 8px 32px rgba(11,31,58,.08);
             }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .chart-title-label {
+            font-size: .65rem;
+            font-weight: 500;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: .25rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+            .chart-title-label::before {
+                content: '';
+                display: inline-block;
+                width: 16px;
+                height: 1px;
+                background: var(--gold);
+            }
+
+        .chart-actions {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+            .chart-actions button {
+                width: 32px;
+                height: 32px;
+                border: 1px solid rgba(11,31,58,.1);
+                border-radius: 6px;
+                background: transparent;
+                color: var(--slate);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: border-color .2s, color .2s;
+            }
+
+                .chart-actions button:hover {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                }
+
+        .chart-canvas-wrap {
+            position: relative;
+            height: 280px;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
-    <div class="p-4">
+<body>
+    <div class="dashboard-wrap">
+
         <!-- Header -->
-        <div class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Tender Dashboard</h1>
-            <p class="text-gray-600">Monitor and manage your system's performance</p>
+        <div class="dash-header">
+            <div class="dash-header-content">
+                <p class="dash-eyebrow"><span></span> Admin Panel</p>
+                <h1>Tender <em>Dashboard</em></h1>
+                <p>Monitor and manage your system's performance</p>
+            </div>
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="stats-grid">
+
             <!-- Users Card -->
-            <div class="stat-card bg-white p-6 rounded-xl shadow-sm">
-                <div class="flex items-center justify-between">
+            <div class="stat-card">
+                <div class="stat-card-top">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Total Users</p>
-                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.TotalUsers</h3>
+                        <p class="stat-label">Total Users</p>
+                        <h3 class="stat-value">@ViewBag.TotalUsers</h3>
                     </div>
-                    <div class="bg-blue-100 p-3 rounded-lg">
-                        <i class="fas fa-users text-blue-600 text-xl"></i>
+                    <div class="stat-icon stat-icon--blue">
+                        <i class="fas fa-users"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <a asp-action="UserList" asp-controller="Admin" class="text-blue-600 hover:text-blue-700 font-medium text-sm inline-flex items-center">
-                        View Details
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
+                <a asp-action="UserList" asp-controller="Admin" class="stat-link stat-link--blue">
+                    View Details <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
 
             <!-- Kyc Card -->
-            <div class="stat-card bg-white p-6 rounded-xl shadow-sm">
-                <div class="flex items-center justify-between">
+            <div class="stat-card">
+                <div class="stat-card-top">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Pending Kyc</p>
-                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.TotalCompanies</h3>
+                        <p class="stat-label">Pending KYC</p>
+                        <h3 class="stat-value">@ViewBag.TotalCompanies</h3>
                     </div>
-                    <div class="bg-green-100 p-3 rounded-lg">
-                        <i class="fas fa-file-contract text-green-600 text-xl"></i>
+                    <div class="stat-icon stat-icon--green">
+                        <i class="fas fa-file-contract"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <a asp-action="KycList" asp-controller="Admin" class="text-green-600 hover:text-green-700 font-medium text-sm inline-flex items-center">
-                        View Details
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
+                <a asp-action="KycList" asp-controller="Admin" class="stat-link stat-link--green">
+                    View Details <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
 
             <!-- Tenders Card -->
-            <div class="stat-card bg-white p-6 rounded-xl shadow-sm">
-                <div class="flex items-center justify-between">
+            <div class="stat-card">
+                <div class="stat-card-top">
                     <div>
-                        <p class="text-sm font-medium text-gray-600 mb-1">Total Tenders</p>
-                        <h3 class="text-2xl font-bold text-gray-800">@ViewBag.TotalTenders</h3>
+                        <p class="stat-label">Total Tenders</p>
+                        <h3 class="stat-value">@ViewBag.TotalTenders</h3>
                     </div>
-                    <div class="bg-green-100 p-3 rounded-lg">
-                        <i class="fas fa-file-contract text-green-600 text-xl"></i>
+                    <div class="stat-icon stat-icon--gold">
+                        <i class="fas fa-gavel"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <a asp-action="TenderList" asp-controller="Admin" class="text-green-600 hover:text-green-700 font-medium text-sm inline-flex items-center">
-                        View Details
-                        <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
+                <a asp-action="TenderList" asp-controller="Admin" class="stat-link stat-link--gold">
+                    View Details <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
-
 
         </div>
 
         <!-- Charts Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="charts-grid">
+
             <!-- Status Overview Chart -->
-            <div class="chart-container bg-white p-6 rounded-xl shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-semibold text-gray-800">Status Overview</h2>
-                    <div class="flex items-center space-x-2">
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div>
+                        <p class="chart-title-label">Overview</p>
+                        <h2 class="chart-title">Status Overview</h2>
+                    </div>
+                    <div class="chart-actions">
+                        <button><i class="fas fa-download"></i></button>
+                        <button><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
-                <div class="relative h-80">
+                <div class="chart-canvas-wrap">
                     <canvas id="statusChart"></canvas>
                 </div>
             </div>
 
             <!-- Verification Stats Chart -->
-            <div class="chart-container bg-white p-6 rounded-xl shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-semibold text-gray-800">Verification Statistics</h2>
-                    <div class="flex items-center space-x-2">
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div>
+                        <p class="chart-title-label">Statistics</p>
+                        <h2 class="chart-title">Verification Statistics</h2>
+                    </div>
+                    <div class="chart-actions">
+                        <button><i class="fas fa-download"></i></button>
+                        <button><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
-                <div class="relative h-80">
+                <div class="chart-canvas-wrap">
                     <canvas id="verificationChart"></canvas>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -154,7 +418,6 @@
                     data: [@ViewBag.TotalTenders, @ViewBag.TotalUsers],
                     backgroundColor: [
                         '#10B981',
-
                         '#3B82F6'
                     ],
                     borderWidth: 0
@@ -179,7 +442,7 @@
         new Chart(verificationCtx, {
             type: 'bar',
             data: {
-                labels: ['Tenders', 'Users' ],
+                labels: ['Tenders', 'Users'],
                 datasets: [{
                     label: 'Total',
                     data: [@ViewBag.TotalTenders, @ViewBag.TotalUsers],
@@ -213,4 +476,4 @@
         });
     </script>
 </body>
-</html>
+
