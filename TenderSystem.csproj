@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\BlogImage\" />
     <Folder Include="wwwroot\TempFiles\" />
     <Folder Include="wwwroot\TenderDocument\" />
     <Folder Include="wwwroot\UserImage\" />
