@@ -66,7 +66,7 @@ namespace TenderSystem
                     pattern: "{controller=Static}/{action=Index}/{id?}");
 
                 // Map the SignalR hub route
-                //endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<ChatHub>("/chathub");
 
             });
             app.Run();
