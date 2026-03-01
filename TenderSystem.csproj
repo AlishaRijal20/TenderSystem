@@ -19,6 +19,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\BlogImage\" />
+    <Folder Include="wwwroot\ProposalTender\" />
+    <Folder Include="wwwroot\RegisterImage\" />
+    <Folder Include="wwwroot\PanImage\" />
     <Folder Include="wwwroot\TempFiles\" />
     <Folder Include="wwwroot\TenderDocument\" />
     <Folder Include="wwwroot\UserImage\" />

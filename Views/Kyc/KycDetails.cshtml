@@ -1,0 +1,545 @@
+﻿@model TenderSystem.Models.UserListEdit
+
+@{
+    ViewData["Title"] = "KYC Details";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<style>
+    .kyc-details-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .status-verified {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .status-pending {
+        background-color: #fef9c3;
+        color: #854d0e;
+    }
+
+    .info-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        border: 1px solid #e5e7eb;
+    }
+
+    .card-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #f3f4f6;
+        background: linear-gradient(to right, #f9fafb, white);
+        display: flex;
+        align-items: center;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+    .card-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #1e293b;
+        font-weight: 500;
+    }
+
+    .info-value.empty {
+        color: #94a3b8;
+        font-style: italic;
+    }
+
+    .documents-section {
+        margin-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 1.5rem;
+    }
+
+    .documents-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .document-card {
+        background-color: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .document-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .document-icon {
+        color: #3b82f6;
+        margin-right: 0.5rem;
+    }
+
+    .document-image-container {
+        width: 100%;
+        margin-bottom: 1rem;
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 6px;
+        transition: transform 0.3s ease;
+    }
+
+    .document-image:hover {
+        transform: scale(1.02);
+    }
+
+    .document-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: auto;
+    }
+
+    .document-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+    }
+
+    .document-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background-color: #f1f5f9;
+        color: #334155;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        text-decoration: none;
+    }
+
+    .back-button:hover {
+        background-color: #e2e8f0;
+    }
+
+    .back-icon {
+        margin-right: 0.5rem;
+    }
+
+    .document-placeholder {
+        width: 100%;
+        height: 200px;
+        background-color: #e2e8f0;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-style: italic;
+    }
+
+    .zoom-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .zoom-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .zoom-image {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+    }
+
+    .zoom-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+    
+</style>
+
+<div class="mt-6">
+    <a asp-action="Index" asp-controller="BidTender" class="back-button">
+        <i class="fas fa-arrow-left back-icon"></i>
+        Back to Dashboard
+    </a>
+</div>
+<div class="kyc-details-container">
+    
+    <div class="page-header">
+        <h1 class="page-title">KYC Details</h1>
+        <p class="page-subtitle">Review your company and bank verification information</p>
+    </div>
+
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h2 class="card-title">Company Information</h2>
+            <div class="ml-auto">
+               
+                    <a asp-action="UpdateKyc" asp-controller="Kyc" class="document-button">
+                        Update Kyc
+                    </a>
+                
+
+                @if (Model.IsVerified)
+                {
+                    <span class="status-badge status-verified">
+                        <i class="fas fa-check-circle mr-2"></i> Verified
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-pending">
+                        <i class="fas fa-clock mr-2"></i> Pending Verification
+                    </span>
+                }
+
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Company Name</span>
+                    <span class="info-value">@Model.CompanyName</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Company Type</span>
+                    <span class="info-value">@Model.CompanyType</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Position</span>
+                    <span class="info-value">@Model.Position</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Registration Number</span>
+                    <span class="info-value">@Model.RegistrationNumber</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">PAN Number</span>
+                    <span class="info-value">@Model.PanNumber</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Office Email</span>
+                    <span class="info-value">@Model.OfficeEmail</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Website</span>
+                    <span class="info-value">
+                        @if (!string.IsNullOrEmpty(Model.CompanyWebsiteUrl))
+                        {
+                            <a href="@Model.CompanyWebsiteUrl" target="_blank" class="text-blue-600 hover:underline">
+                                @Model.CompanyWebsiteUrl
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="info-value empty">Not provided</span>
+                        }
+                    </span>
+                </div>
+                
+                
+            </div>
+            
+            <div class="info-item mt-4">
+                <span class="info-label">Full Address</span>
+                <span class="info-value">@Model.FullAddress</span>
+            </div>
+
+            <div class="documents-section">
+                <h3 class="documents-title">
+                    <i class="fas fa-file-alt mr-2 text-blue-600"></i>
+                    Verification Documents
+                </h3>
+                <div class="documents-grid">
+                    <div class="document-card">
+                        <h4 class="document-title">
+                            <i class="fas fa-file-contract document-icon"></i>
+                            Registration Document
+                        </h4>
+                        @if (!string.IsNullOrEmpty(Model.RegistrationDocument))
+                        {
+                            <div class="document-image-container">
+                                <img src="~/RegisterImage/@Model.RegistrationDocument" alt="Registration Document" 
+                                     class="document-image" onclick="openZoomView(this.src)" />
+                            </div>
+                            <div class="document-actions">
+                                <a href="~/RegisterImage/@Model.RegistrationDocument" target="_blank" class="document-button">
+                                    <i class="fas fa-external-link-alt mr-2"></i> Open in New Tab
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="document-placeholder">
+                                <i class="fas fa-file-upload mr-2"></i> Document not uploaded
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="document-card">
+                        <h4 class="document-title">
+                            <i class="fas fa-id-card document-icon"></i>
+                            PAN Document
+                        </h4>
+                        @if (!string.IsNullOrEmpty(Model.PanDocument))
+                        {
+                            <div class="document-image-container">
+                                <img src="~/PanImage/@Model.PanDocument" alt="PAN Document" 
+                                     class="document-image" onclick="openZoomView(this.src)" />
+                            </div>
+                            <div class="document-actions">
+                                <a href="~/PanImage/@Model.PanDocument" target="_blank" class="document-button">
+                                    <i class="fas fa-external-link-alt mr-2"></i> Open in New Tab
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="document-placeholder">
+                                <i class="fas fa-file-upload mr-2"></i> Document not uploaded
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <h2 class="card-title">Bank Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Bank Name</span>
+                    <span class="info-value">@Model.BankName</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Account Number</span>
+                    <span class="info-value">
+                        @if (!string.IsNullOrEmpty(Model.AccountNumber))
+                        {
+                            <span>@(new string('*', Model.AccountNumber.Length - 4) + Model.AccountNumber.Substring(Model.AccountNumber.Length - 4))</span>
+                        }
+                        else
+                        {
+                            <span class="info-value empty">Not provided</span>
+                        }
+                    </span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Account Holder Name</span>
+                    <span class="info-value">@Model.AccountHolderName</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">@Model.AccountType</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</div>
+
+<!-- Image Zoom Overlay -->
+<div id="zoomOverlay" class="zoom-overlay" onclick="closeZoomView()">
+    <img id="zoomImage" class="zoom-image" src="/placeholder.svg" alt="Zoomed Document" />
+    <div class="zoom-close" onclick="closeZoomView()">
+        <i class="fas fa-times"></i>
+    </div>
+</div>
+
+<script>
+    // Function to open the zoom view
+    function openZoomView(imageSrc) {
+        document.getElementById('zoomImage').src = imageSrc;
+        document.getElementById('zoomOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when zoom is active
+    }
+
+    // Function to close the zoom view
+    function closeZoomView() {
+        document.getElementById('zoomOverlay').classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Close zoom view when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeZoomView();
+        }
+    });
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <text>
+                Toastify({
+                    text: '@TempData["ErrorMessage"]',
+                duration: 5000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                stopOnFocus: true
+                                }).showToast();
+        </text>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>
+                Toastify({
+                    text: '@TempData["SuccessMessage"]',
+                duration: 5000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                stopOnFocus: true
+                                }).showToast();
+        </text>
+    }
+</script>

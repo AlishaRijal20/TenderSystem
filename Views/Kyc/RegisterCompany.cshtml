@@ -1,0 +1,422 @@
+﻿@model UserListEdit
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<style>
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        padding: 1.5rem;
+        color: white;
+    }
+
+    .form-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-section-title {
+        position: relative;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .form-section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #1e40af, #3b82f6);
+    }
+
+    .input-group {
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+    }
+
+    .form-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    .form-label {
+        position: absolute;
+        top: -0.5rem;
+        left: 0.75rem;
+        padding: 0 0.25rem;
+        background-color: white;
+        font-size: 0.75rem;
+        color: #6b7280;
+        transition: all 0.3s;
+    }
+
+    .form-input:focus + .form-label,
+    .form-input:not(:placeholder-shown) + .form-label {
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    .file-input-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background-color: #f3f4f6;
+        border: 1px dashed #d1d5db;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .file-input-label:hover {
+        background-color: #e5e7eb;
+        border-color: #9ca3af;
+    }
+
+    .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    .preview-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0.75rem;
+    }
+
+    .preview-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+    }
+
+    .preview-remove {
+        margin-left: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        background-color: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .preview-remove:hover {
+        background-color: #dc2626;
+    }
+
+    .submit-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        color: white;
+        font-weight: 600;
+        border-radius: 0.375rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(30, 64, 175, 0.25);
+    }
+
+    .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .checkbox-input {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid #d1d5db;
+        accent-color: #1e40af;
+    }
+
+    .checkbox-label {
+        font-size: 0.875rem;
+        color: #4b5563;
+    }
+
+    .checkbox-label a {
+        color: #1e40af;
+        text-decoration: underline;
+    }
+
+    .checkbox-label a:hover {
+        color: #1e3a8a;
+    }
+
+    .validation-error {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+
+    
+</style>
+
+<div class="min-h-screen py-10" style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
+    <div class="container mx-auto px-4">
+        <div class="form-container max-w-4xl mx-auto">
+            <!-- Form Header -->
+            <div class="form-header">
+                <div class="flex items-center justify-between">
+                    
+                    <h1 class="text-2xl font-bold">KYC Verification</h1>
+                </div>
+            </div>
+
+            <form asp-action="RegisterCompany" asp-controller="Kyc" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-red-700 p-4"></div>
+
+                <!-- Company Details Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Company Details</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 form-grid">
+                        <!-- Company Name -->
+                        <div class="input-group">
+                            <input asp-for="CompanyName" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="CompanyName" class="form-label">Company Name</label>
+                            <span asp-validation-for="CompanyName" class="validation-error"></span>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="input-group">
+                            <input asp-for="FullAddress" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="FullAddress" class="form-label">Full Address</label>
+                            <span asp-validation-for="FullAddress" class="validation-error"></span>
+                        </div>
+
+                        <!-- Company Website URL -->
+                        <div class="input-group">
+                            <input asp-for="CompanyWebsiteUrl" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="CompanyWebsiteUrl" class="form-label">Company URL</label>
+                            <span asp-validation-for="CompanyWebsiteUrl" class="validation-error"></span>
+                        </div>
+
+                        <!-- Registration Number -->
+                        <div class="input-group">
+                            <input asp-for="RegistrationNumber" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="RegistrationNumber" class="form-label">Registration Number</label>
+                            <span asp-validation-for="RegistrationNumber" class="validation-error"></span>
+                        </div>
+
+                        <!-- PAN Number -->
+                        <div class="input-group">
+                            <input asp-for="PanNumber" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="PanNumber" class="form-label">PAN Number</label>
+                            <span asp-validation-for="PanNumber" class="validation-error"></span>
+                        </div>
+
+                        <!-- Company Type -->
+                        <div class="input-group">
+                            <input asp-for="CompanyType" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="CompanyType" class="form-label">Company Type</label>
+                            <span asp-validation-for="CompanyType" class="validation-error"></span>
+                        </div>
+
+                        <!-- Office Email -->
+                        <div class="input-group">
+                            <input asp-for="OfficeEmail" type="email" class="form-input" placeholder=" " required />
+                            <label asp-for="OfficeEmail" class="form-label">Company Email</label>
+                            <span asp-validation-for="OfficeEmail" class="validation-error"></span>
+                        </div>
+
+                        <!-- Position -->
+                        <div class="input-group">
+                            <input asp-for="Position" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="Position" class="form-label">Your Position in Company</label>
+                            <span asp-validation-for="Position" class="validation-error"></span>
+                        </div>
+                    </div>
+
+                    <!-- Registration Document Upload -->
+                    <div class="mt-6">
+                        <p class="text-sm font-medium text-gray-700 mb-2">Registration Document</p>
+                        <div class="file-input-container">
+                            <label for="RegisterFile" class="file-input-label">
+                                <i class="fas fa-file-upload mr-2"></i>
+                                <span>Choose file</span>
+                            </label>
+                            <input asp-for="RegisterFile" id="RegisterFile" type="file" class="file-input" onchange="previewImage(event, 'RegDocPreview')" required />
+                            <span asp-validation-for="RegisterFile" class="validation-error"></span>
+                            
+                            <div class="preview-container hidden" id="RegDocPreviewContainer">
+                                <img id="RegDocPreview" src="#" alt="Registration Document Preview" class="preview-image" />
+                                <button type="button" id="RegDocRemove" class="preview-remove" onclick="removeImage('RegDocPreview', 'RegDocPreviewContainer')">
+                                    <i class="fas fa-times mr-1"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAN Document Upload -->
+                    <div class="mt-4">
+                        <p class="text-sm font-medium text-gray-700 mb-2">PAN Document</p>
+                        <div class="file-input-container">
+                            <label for="PanFile" class="file-input-label">
+                                <i class="fas fa-file-upload mr-2"></i>
+                                <span>Choose file</span>
+                            </label>
+                            <input asp-for="PanFile" id="PanFile" type="file" class="file-input" onchange="previewImage(event, 'PanDocPreview')" required />
+                            <span asp-validation-for="PanFile" class="validation-error"></span>
+                            
+                            <div class="preview-container hidden" id="PanDocPreviewContainer">
+                                <img id="PanDocPreview" src="#" alt="PAN Document Preview" class="preview-image" />
+                                <button type="button" id="PanDocRemove" class="preview-remove" onclick="removeImage('PanDocPreview', 'PanDocPreviewContainer')">
+                                    <i class="fas fa-times mr-1"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Details Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Bank Details</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 form-grid">
+                        <!-- Bank Name -->
+                        <div class="input-group">
+                            <input asp-for="BankName" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="BankName" class="form-label">Bank Name</label>
+                            <span asp-validation-for="BankName" class="validation-error"></span>
+                        </div>
+
+                        <!-- Account Number -->
+                        <div class="input-group">
+                            <input asp-for="AccountNumber" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="AccountNumber" class="form-label">Account Number</label>
+                            <span asp-validation-for="AccountNumber" class="validation-error"></span>
+                        </div>
+
+                        <!-- Account Type -->
+                        <div class="input-group">
+                            <input asp-for="AccountType" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="AccountType" class="form-label">Account Type</label>
+                            <span asp-validation-for="AccountType" class="validation-error"></span>
+                        </div>
+
+                        <!-- Account Holder Name -->
+                        <div class="input-group">
+                            <input asp-for="AccountHolderName" type="text" class="form-input" placeholder=" " required />
+                            <label asp-for="AccountHolderName" class="form-label">Account Holder Name</label>
+                            <span asp-validation-for="AccountHolderName" class="validation-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Submit Section -->
+                <div class="form-section">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" class="checkbox-input" required />
+                        <label for="agreeTerms" class="checkbox-label">
+                            I agree to the <a href="#" target="_blank">terms and conditions</a>.
+                        </label>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button type="submit" class="submit-button">
+                            <i class="fas fa-check-circle mr-2"></i> Complete Registration
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to preview image when a file is selected
+        function previewImage(event, previewId) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            const previewElement = document.getElementById(previewId);
+            const previewContainer = document.getElementById(previewId + 'Container');
+
+            if (file) {
+                reader.onload = function (e) {
+                    previewElement.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Function to remove image preview
+        function removeImage(previewId, containerId) {
+            const previewElement = document.getElementById(previewId);
+            const previewContainer = document.getElementById(containerId);
+            const fileInput = document.getElementById(previewId === 'RegDocPreview' ? 'RegisterFile' : 'PanFile');
+        
+            previewElement.src = '#';
+            previewContainer.classList.add('hidden');
+            fileInput.value = '';
+        }
+
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                    Toastify({
+                        text: '@TempData["ErrorMessage"]',
+                    duration: 5000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    stopOnFocus: true
+                        }).showToast();
+            </text>
+        }
+        
+    </script>
+</div>
+
