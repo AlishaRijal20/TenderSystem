@@ -1,0 +1,592 @@
+﻿@model TenderApplicationEdit
+@{
+    ViewData["Title"] = "Apply Tenders";
+    Layout = "";
+}
+
+<!-- Flowbite CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.css">
+<!-- Flowbite JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"></script>
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    body {
+        background-color: #f9fafb;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+    
+    .page-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .header-card {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border-radius: 1rem 1rem 0 0;
+        padding: 2.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+    }
+    
+    .header-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+        z-index: 0;
+    }
+    
+    .header-card * {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .section-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-body {
+        padding: 2rem;
+    }
+    
+    .section-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 3rem;
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
+        border-radius: 0.75rem;
+        margin-right: 1rem;
+    }
+    
+    .input-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .input-label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .input-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        outline: none;
+    }
+    
+    .file-input-wrapper {
+        position: relative;
+        width: 100%;
+        height: 10rem;
+        border: 2px dashed #e5e7eb;
+        border-radius: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .file-input-wrapper:hover {
+        border-color: #6366f1;
+        background-color: rgba(99, 102, 241, 0.05);
+    }
+    
+    .file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .file-icon {
+        font-size: 2rem;
+        color: #6366f1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .file-name {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+    
+    .checkbox-wrapper {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+    }
+    
+    .checkbox {
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.25rem;
+        margin-right: 0.75rem;
+        margin-top: 0.125rem;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    
+    .checkbox:checked {
+        background-color: #6366f1;
+        border-color: #6366f1;
+    }
+    
+    .checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 0.75rem;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+    
+    .validation-error {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+    
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(17, 24, 39, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        backdrop-filter: blur(4px);
+    }
+    
+    .loading-card {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        text-align: center;
+        max-width: 20rem;
+        width: 100%;
+    }
+    
+    .spinner {
+        width: 3rem;
+        height: 3rem;
+        border: 3px solid #e5e7eb;
+        border-top-color: #6366f1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    
+    
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 1rem;
+        left: 2.5rem;
+        right: 2.5rem;
+        height: 2px;
+        background-color: #e5e7eb;
+        z-index: 0;
+    }
+    
+    .step {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+    
+    .step-circle {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: white;
+        border: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+    
+    .step.active .step-circle {
+        background-color: #6366f1;
+        border-color: #6366f1;
+        color: white;
+    }
+    
+    .step.completed .step-circle {
+        background-color: #10b981;
+        border-color: #10b981;
+        color: white;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #6b7280;
+    }
+    
+    .step.active .step-label {
+        color: #6366f1;
+        font-weight: 600;
+    }
+    
+    .step.completed .step-label {
+        color: #10b981;
+        font-weight: 600;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* Add these new styles */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background-color: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        color: #374151;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+        .back-button:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-5px);
+        }
+    
+    
+</style>
+
+<body>
+    <div class="page-container">
+        <button type="button" class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+
+        <div class="header-card">
+            <h1 class="text-3xl font-bold mb-2">Tender Proposal Application</h1>
+            <p class="text-white opacity-90">Complete your proposal details to participate in the tender process</p>
+        </div>
+
+        <form asp-action="AppliedTender" asp-controller="BidTender" enctype="multipart/form-data" method="Post" id="proposalForm">
+            
+            <div asp-validation-summary="ModelOnly" class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-50"></div>
+
+            <input asp-for="CompanyApplyId" type="hidden" value="@Model.CompanyApplyId" />
+            <input asp-for="TenderAppllyId" type="hidden" value="@Model.TenderAppllyId" />
+
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Tender Details</h2>
+                </div>
+                <div class="section-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="input-group">
+                            <label asp-for="ProposedDuration" class="input-label">
+                                Proposed Duration <span class="text-red-500">*</span>
+                            </label>
+                            <input asp-for="ProposedDuration" type="text" class="input-field"
+                                   placeholder="e.g., 6 months, 30 days, 1 year" required
+                                   pattern="^\d+\s+(day|days|month|months|year|years)$">
+                            <small class="text-gray-500">Format: number followed by days, months, or years</small>
+                            <span asp-validation-for="ProposedDuration" class="validation-error"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label asp-for="ProposedBudget" class="input-label">
+                                Proposal Amount (NPR) <span class="text-red-500">*</span>
+                            </label>
+                            <input asp-for="ProposedBudget" type="number" class="input-field" placeholder="e.g., 500000" required>
+                            <span asp-validation-for="ProposedBudget" class="validation-error"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Required Documents</h2>
+                </div>
+                <div class="section-body">
+                    <div class="input-group">
+                        <label asp-for="TenderFile" class="input-label">
+                            Proposal Document (PDF only) <span class="text-red-500">*</span>
+                        </label>
+                        <input asp-for="TenderFile" type="file" class="input-field" accept=".pdf" required>
+                        <span asp-validation-for="TenderFile" class="validation-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-body">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="terms" class="checkbox" required>
+                        <label for="terms" class="text-sm text-gray-700">
+                            I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">terms and conditions</a>
+                            and agree to pay NPR 10 application fee <span class="text-red-500">*</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane mr-2"></i> Submit Proposal
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <p class="text-lg font-medium text-gray-800">Processing Payment</p>
+            <p class="text-sm text-gray-500 mt-2">Please wait while we process your payment...</p>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function updateFileName(input) {
+            const fileName = input.files[0] ? input.files[0].name : '';
+            document.getElementById('fileName').textContent = fileName;
+
+            if (fileName) {
+                document.getElementById('fileName').classList.remove('hidden');
+            } else {
+                document.getElementById('fileName').classList.add('hidden');
+            }
+        }
+
+        document.getElementById('proposalForm').addEventListener('submit', function (e) {
+        const proposedDuration = document.querySelector('[name="ProposedDuration"]').value;
+        const proposedBudget = parseFloat(document.querySelector('[name="ProposedBudget"]').value);
+        const fileInput = document.querySelector('[name="TenderFile"]');
+        const termsCheckbox = document.getElementById('terms');
+
+        let isValid = true;
+
+        // Clear previous error messages
+        document.querySelectorAll('.validation-error').forEach(el => el.remove());
+        // Validate proposed duration
+        const durationPattern = /^\d+\s+(day|days|month|months|year|years)$/;
+        if (!durationPattern.test(proposedDuration)) {
+            e.preventDefault();
+            const durationInput = document.querySelector('[name="ProposedDuration"]');
+            addErrorMessage(durationInput, 'Please enter duration in format: number followed by days, months, or years');
+            isValid = false;
+        }
+        // Validate proposed budget
+        if (proposedBudget <= 0 || isNaN(proposedBudget)) {
+            e.preventDefault();
+            const budgetInput = document.querySelector('[name="ProposedBudget"]');
+            addErrorMessage(budgetInput, 'Proposed budget must be greater than 0');
+            isValid = false;
+        }
+
+        // Validate file
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name.toLowerCase();
+            const fileSize = fileInput.files[0].size / 1024 / 1024; // Convert to MB
+
+            if (!fileName.endsWith('.pdf')) {
+                e.preventDefault();
+                addErrorMessage(fileInput, 'Only PDF files are allowed');
+                isValid = false;
+            }
+
+            // Check file size (max 5MB)
+            if (fileSize > 5) {
+                e.preventDefault();
+                addErrorMessage(fileInput, 'File size should not exceed 5MB');
+                isValid = false;
+            }
+        }
+
+        // Validate terms checkbox
+        if (!termsCheckbox.checked) {
+            e.preventDefault();
+            addErrorMessage(termsCheckbox, 'Please agree to the terms and conditions');
+            isValid = false;
+        }
+
+        if (isValid) {
+            showLoading();
+        }
+
+        return isValid;
+    });
+
+    function addErrorMessage(element, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'validation-error';
+        errorDiv.textContent = message;
+        element.parentNode.appendChild(errorDiv);
+    }
+
+    // Existing functions
+    function showLoading() {
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    // Back button functionality
+    document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+    });
+
+        document.getElementById('proposalForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            showLoading();
+
+            // Submit form via AJAX
+            var formData = new FormData(this);
+
+            fetch('/BidTender/AppliedTender', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Redirect directly to eSewa
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        hideLoading();
+                        alert(data.message || 'Submission failed');
+                    }
+                })
+                .catch(error => {
+                    hideLoading();
+                    alert('An error occurred');
+                });
+        });
+        
+    </script>
+</body>

@@ -1,0 +1,939 @@
+﻿@model TenderApplicationViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tender Application - @Model.Tender.Title</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <style>
+       
+        /* Base styles */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+        }
+
+        .page-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Tender header */
+        .tender-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            border-radius: 1rem 1rem 0 0;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .tender-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .status-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .status-won {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .status-lost {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: white;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tab-button {
+            padding: 1.25rem 1.5rem;
+            color: #64748b;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-button:hover {
+            color: #3b82f6;
+        }
+
+        .tab-button.active {
+            color: #3b82f6;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* Contract button */
+        .contract-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+            margin: 1rem 0;
+        }
+
+        .contract-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .contract-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .contract-button:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Content grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        /* Info cards */
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(229, 231, 235, 0.5);
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Publisher card */
+        .publisher-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .publisher-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid #e2e8f0;
+            object-fit: cover;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Timeline */
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .timeline-point {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item:hover .timeline-point {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+            background: #eff6ff;
+        }
+
+        /* PDF viewer */
+        .pdf-viewer {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            height: 800px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Action buttons */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .primary-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+        }
+
+        .primary-button:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        /* PDF container */
+        .pdf-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pdf-container canvas {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        /* Description box */
+        .description-box {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Back button */
+        .back-button {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .back-button:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+        }
+
+        /* Tab content */
+        .tab-content {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Info item */
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Contact item */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .contact-icon {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            color: #3b82f6;
+            border-radius: 0.5rem;
+        }
+
+        /* Document card */
+        .document-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .document-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .document-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            color: #3b82f6;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        /* Message button */
+        .message-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+        }
+
+        .message-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive adjustments */
+       
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Tender Header -->
+        <div class="tender-header">
+            <div class="flex justify-between items-center mb-6">
+                <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="back-button">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                    <span class="hidden sm:inline">Back</span>
+                </a>
+                <div class="flex gap-4">
+                    <span class="status-badge status-@Model.Application.ApplicationStatus.ToLower()">
+                        <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                      Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : "fa-hourglass-half")"></i>
+                        @Model.Application.ApplicationStatus
+                    </span>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold text-white mb-4">@Model.Tender.Title</h1>
+            <div class="flex flex-wrap items-center gap-6 text-white/90">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-hashtag"></i>
+                    <span>Tender ID: @Model.Tender.TenderId</span>
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Application ID: @Model.Application.ApplicationId</span>
+                </span>
+                
+            </div>
+        </div>
+
+        <!-- Contract Button -->
+        @if (Model.Application.ApplicationStatus.ToLower() == "won")
+        {
+            <div class="flex justify-center">
+                <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId"
+                   class="contract-button">
+                    <i class="fas fa-file-contract"></i>
+                    Generate Contract
+                </a>
+            </div>
+        }
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <div class="tabs-wrapper">
+                <button onclick="showTab('details')" class="tab-button active" id="details-tab-btn">
+                    <i class="fas fa-info-circle"></i>
+                    Details
+                </button>
+                <button onclick="showTab('application')" class="tab-button" id="application-tab-btn">
+                    <i class="fas fa-file-alt"></i>
+                    Application
+                </button>
+                <button onclick="showTab('documents')" class="tab-button" id="documents-tab-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    Documents
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="bg-white rounded-b-lg shadow-sm">
+            <!-- Details Tab -->
+            <div id="details-tab" class="tab-content">
+                <div class="content-grid">
+                    <!-- Publisher Card -->
+                    <div class="info-card publisher-card">
+                        @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
+                        {
+                            <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)"
+                                 alt="Publisher"
+                                 class="publisher-photo">
+                        }
+                        else
+                        {
+                            <div class="publisher-photo bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-user text-4xl text-blue-500"></i>
+                            </div>
+                        }
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                            @Model.User.FirstName @Model.User.MiddleName @Model.User.LastName
+                        </h3>
+                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
+                            @Model.User.UserRole
+                        </span>
+                        <div class="space-y-3 text-left">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <span class="text-gray-700">@Model.User.EmailAddress</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <span class="text-gray-700">@Model.User.Phone</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <span class="text-gray-700">@Model.User.City, @Model.User.District</span>
+                            </div>
+                        </div>
+                        <a asp-action="UserMessage" asp-controller="Chat" asp-route-receiverId="@Model.User.UserId" 
+                           class="message-button">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </a>
+                    </div>
+
+                    <!-- Tender Details -->
+                    <div class="info-card">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-info-circle text-blue-600 mr-2"></i>Tender Information
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="info-item">
+                                <span class="text-gray-600">Type</span>
+                                <span class="font-medium text-gray-800">@Model.Tender.TenderType</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="text-gray-600">Duration</span>
+                                <span class="font-medium text-gray-800">@Model.Tender.ProjectDuration</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="text-gray-600">Budget</span>
+                                <span class="font-medium text-green-600">₹ @Model.Tender.BudgetEstimation.ToString("N2")</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="text-gray-600">Status</span>
+                                <span class="font-medium">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        @(Model.Tender.TenderStatus.ToLower() == "open" ? "bg-green-100 text-green-800" :
+                                        Model.Tender.TenderStatus.ToLower() == "closed" ? "bg-red-100 text-red-800" :
+                                        "bg-yellow-100 text-yellow-800")">
+                                        @Model.Tender.TenderStatus
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="description-box">
+                                <h4 class="text-lg font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-align-left text-blue-600 mr-2"></i>
+                                    Project Description
+                                </h4>
+                                <p class="text-gray-700 leading-relaxed">
+                                   @Model.Tender.TenderDescription
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="info-card mx-6 my-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-clock text-blue-600 mr-2"></i>Timeline
+                    </h3>
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-point">
+                                <i class="fas fa-flag text-blue-600"></i>
+                            </div>
+                            <div class="font-medium">Issue Date</div>
+                            <div class="text-sm text-gray-600">
+                                @Model.Tender.IssuedDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-point">
+                                <i class="fas fa-door-open text-blue-600"></i>
+                            </div>
+                            <div class="font-medium">Opening Date</div>
+                            <div class="text-sm text-gray-600">
+                                @Model.Tender.OpeningDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-point">
+                                <i class="fas fa-lock text-blue-600"></i>
+                            </div>
+                            <div class="font-medium">Closing Date</div>
+                            <div class="text-sm text-gray-600">
+                                @Model.Tender.ClosingDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Tab -->
+            <div id="application-tab" class="tab-content hidden">
+                <div class="p-6">
+                    <div class="info-card">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-file-alt text-blue-600 mr-2"></i>Application Details
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="info-item">
+                                <span class="text-gray-600">Application ID</span>
+                                <span class="font-medium text-gray-800">@Model.Application.ApplicationId</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="text-gray-600">Proposed Duration</span>
+                                <span class="font-medium text-gray-800">@Model.Application.ProposedDuration</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="text-gray-600">Proposed Budget</span>
+                                <span class="font-medium text-green-600">₹ @Model.Application.ProposedBudget.ToString("N2")</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="text-gray-600">Status</span>
+                                <span class="font-medium">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                        @(Model.Application.ApplicationStatus.ToLower() == "won" ? "bg-green-100 text-green-800" :
+                                        Model.Application.ApplicationStatus.ToLower() == "lost" ? "bg-red-100 text-red-800" :
+                                        "bg-yellow-100 text-yellow-800")">
+                                        <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                                    Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : 
+                                                    "fa-hourglass-half") mr-2"></i>
+                                        @Model.Application.ApplicationStatus
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.Application.ApplicationStatus.ToLower() == "won")
+                    {
+                        <div class="info-card mt-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-trophy text-yellow-500 mr-2"></i>Congratulations!
+                            </h3>
+                            <p class="text-gray-700 mb-4">
+                                Your application has been accepted. You can now generate a contract for this tender.
+                            </p>
+                            <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId"
+                               class="contract-button inline-flex">
+                                <i class="fas fa-file-contract"></i>
+                                Generate Contract
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Documents Tab -->
+            <div id="documents-tab" class="tab-content hidden">
+                <div class="p-6">
+                    <!-- Tender Document -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <div class="document-title">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Tender Document</h3>
+                                    <p class="text-sm text-gray-500">Original tender document published by the issuer</p>
+                                </div>
+                            </div>
+                            <a href="@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)"
+                               class="action-button primary-button" download>
+                                <i class="fas fa-download"></i>
+                                Download
+                            </a>
+                        </div>
+                        <div class="pdf-viewer">
+                            <div id="tenderPdfContainer" class="pdf-container">
+                                <div class="flex justify-center items-center p-8">
+                                    <div class="text-center">
+                                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                                        <p class="text-gray-600">Loading document...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application Document -->
+                    <div class="document-card mt-6">
+                        <div class="document-header">
+                            <div class="document-title">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Application Document</h3>
+                                    <p class="text-sm text-gray-500">Your submitted proposal document</p>
+                                </div>
+                            </div>
+                            <a href="@Url.Content("~/ProposalTender/" + Model.Application.ApplicationDocument)"
+                               class="action-button primary-button" download>
+                                <i class="fas fa-download"></i>
+                                Download
+                            </a>
+                        </div>
+                        <div class="pdf-viewer">
+                            <div id="applicationPdfContainer" class="pdf-container">
+                                <div class="flex justify-center items-center p-8">
+                                    <div class="text-center">
+                                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                                        <p class="text-gray-600">Loading document...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            document.getElementById(`${tabName}-tab-btn`).classList.add('active');
+            
+            // Load PDFs when documents tab is clicked
+            if (tabName === 'documents') {
+                loadTenderPDF();
+                loadApplicationPDF();
+            }
+        }
+
+        // Function to load Tender PDF
+        function loadTenderPDF() {
+            const url = "@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)";
+            const pdfContainer = document.getElementById('tenderPdfContainer');
+            
+            // Check if PDF is already loaded
+            if (pdfContainer.querySelector('canvas')) {
+                return;
+            }
+            
+            // Show loading indicator
+            pdfContainer.innerHTML = `
+                <div class="flex justify-center items-center p-8">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                        <p class="text-gray-600">Loading document...</p>
+                    </div>
+                </div>
+            `;
+            
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                // Clear loading indicator
+                pdfContainer.innerHTML = '';
+                
+                const scale = 1.5;
+                const numPages = pdf.numPages;
+
+                // Render all pages
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    const pageContainer = document.createElement('div');
+                    pageContainer.className = 'mb-6 relative';
+                    
+                    const pageLabel = document.createElement('div');
+                    pageLabel.className = 'absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md opacity-75';
+                    pageLabel.textContent = `Page ${pageNum} of ${numPages}`;
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.className = 'mx-auto shadow-md rounded-lg';
+                    
+                    pageContainer.appendChild(canvas);
+                    pageContainer.appendChild(pageLabel);
+                    pdfContainer.appendChild(pageContainer);
+
+                    pdf.getPage(pageNum).then(page => {
+                        const viewport = page.getViewport({ scale });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        const ctx = canvas.getContext('2d');
+
+                        page.render({
+                            canvasContext: ctx,
+                            viewport: viewport
+                        }).promise.then(() => {
+                            console.log(`Tender PDF Page ${pageNum} rendered successfully`);
+                        }).catch(error => {
+                            console.error(`Error rendering tender PDF page ${pageNum}:`, error);
+                        });
+                    });
+                }
+            }).catch(error => {
+                console.error('Error loading tender PDF:', error);
+                pdfContainer.innerHTML = `
+                    <div class="text-center p-8">
+                        <i class="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Error Loading PDF</h3>
+                        <p class="text-gray-600">There was an error loading the tender document. Please try downloading it instead.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Function to load Application PDF
+        function loadApplicationPDF() {
+            const url = "@Url.Content("~/ProposalTender/" + Model.Application.ApplicationDocument)";
+            const pdfContainer = document.getElementById('applicationPdfContainer');
+            
+            // Check if PDF is already loaded
+            if (pdfContainer.querySelector('canvas')) {
+                return;
+            }
+            
+            // Show loading indicator
+            pdfContainer.innerHTML = `
+                <div class="flex justify-center items-center p-8">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                        <p class="text-gray-600">Loading document...</p>
+                    </div>
+                </div>
+            `;
+            
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                // Clear loading indicator
+                pdfContainer.innerHTML = '';
+                
+                const scale = 1.5;
+                const numPages = pdf.numPages;
+
+                // Render all pages
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    const pageContainer = document.createElement('div');
+                    pageContainer.className = 'mb-6 relative';
+                    
+                    const pageLabel = document.createElement('div');
+                    pageLabel.className = 'absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md opacity-75';
+                    pageLabel.textContent = `Page ${pageNum} of ${numPages}`;
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.className = 'mx-auto shadow-md rounded-lg';
+                    
+                    pageContainer.appendChild(canvas);
+                    pageContainer.appendChild(pageLabel);
+                    pdfContainer.appendChild(pageContainer);
+
+                    pdf.getPage(pageNum).then(page => {
+                        const viewport = page.getViewport({ scale });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        const ctx = canvas.getContext('2d');
+
+                        page.render({
+                            canvasContext: ctx,
+                            viewport: viewport
+                        }).promise.then(() => {
+                            console.log(`Application PDF Page ${pageNum} rendered successfully`);
+                        }).catch(error => {
+                            console.error(`Error rendering application PDF page ${pageNum}:`, error);
+                        });
+                    });
+                }
+            }).catch(error => {
+                console.error('Error loading application PDF:', error);
+                pdfContainer.innerHTML = `
+                    <div class="text-center p-8">
+                        <i class="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Error Loading PDF</h3>
+                        <p class="text-gray-600">There was an error loading the application document. Please try downloading it instead.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Add event listener for document ready
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show details tab by default
+            showTab('details');
+
+            // Handle download button loading state
+            const downloadButtons = document.querySelectorAll('.primary-button');
+            if (downloadButtons) {
+                downloadButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        this.classList.add('opacity-75', 'cursor-wait');
+                        const icon = this.querySelector('i');
+                        icon.classList.remove('fa-download');
+                        icon.classList.add('fa-spinner', 'fa-spin');
+
+                        // Reset button state after download starts
+                        setTimeout(() => {
+                            this.classList.remove('opacity-75', 'cursor-wait');
+                            icon.classList.remove('fa-spinner', 'fa-spin');
+                            icon.classList.add('fa-download');
+                        }, 1000);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

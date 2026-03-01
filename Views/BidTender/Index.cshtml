@@ -1,0 +1,489 @@
+﻿@{
+    ViewData["Title"] = "Bidder Dashboard";
+    var tenders = ViewBag.Tenders as List<TenderEdit>;
+    var kycStatus = ViewBag.KycStatus as bool?;
+    var hasCompany = ViewBag.HasCompany as bool?;
+}
+
+<style>
+    body {
+        overflow-x: hidden;
+        background-color: #f9fafb;
+    }
+
+    /* Header styling */
+    .header {
+        padding-top: 120px;
+        padding-bottom: 10px;
+        min-height: 600px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        color: white;
+    }
+
+    .homebg {
+        width: 100%;
+        height: 700px;
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+    }
+
+    .header .title h1 {
+        text-wrap: nowrap;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #ffffff, #e0e7ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .header .title p {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #e0e7ff;
+    }
+
+    .image-container {
+        position: relative;
+        left: 160px;
+        width: 384px;
+        height: auto;
+        margin-bottom: 250px;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    
+
+    .bldrop {
+        position: relative;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .hand-img {
+        position: absolute;
+        top: 50px;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        opacity: 0.8;
+    }
+
+    /* Button styling */
+    .explore-btn {
+        background: linear-gradient(45deg, #f97316, #ea580c);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(249, 115, 22, 0.25);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .explore-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(249, 115, 22, 0.3);
+    }
+
+    /* KYC Banner styling */
+    .kyc-banner {
+        position: relative;
+        z-index: 10;
+        margin-top: -80px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .kyc-banner-pending {
+        background: linear-gradient(135deg, rgba(254, 240, 199, 0.9), rgba(251, 207, 114, 0.9));
+        border-left: 5px solid #f59e0b;
+    }
+
+    .kyc-banner-complete {
+        background: linear-gradient(135deg, rgba(209, 250, 229, 0.9), rgba(167, 243, 208, 0.9));
+        border-left: 5px solid #10b981;
+    }
+
+    .kyc-button {
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+        text-decoration: none;
+    }
+
+    .kyc-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Section styling */
+    .dashboard-section {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin: 2rem 0;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    .section-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        background: linear-gradient(to right, #f9fafb, white);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1e3a8a;
+    }
+
+    .section-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        border-radius: 10px;
+        margin-right: 12px;
+    }
+
+    .section-content {
+        padding: 2rem;
+    }
+
+    /* Swiper styling */
+    .swiper {
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .swiper-slide {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        height: auto;
+    }
+
+    .swiper-slide:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .swiper-slide-content {
+        padding: 1.5rem;
+    }
+
+    .swiper-pagination {
+        position: static;
+        margin-top: 20px;
+    }
+
+    .swiper-button-next, .swiper-button-prev {
+        color: #3b82f6;
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .swiper-button-next:after, .swiper-button-prev:after {
+        font-size: 18px;
+    }
+
+    /* Card styling */
+    .card-image {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 1rem 0 0.5rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-issuer {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-price {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .countdown {
+        background: linear-gradient(45deg, #ef4444, #dc2626);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .view-details-btn {
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .view-details-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+    }
+
+    .view-more-btn {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .view-more-link {
+        background: linear-gradient(45deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .view-more-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Empty state styling */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 0;
+        color: #64748b;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+   
+</style>
+
+<div class="mx-auto w-full max-w-7xl px-4">
+    <!-- Header Background -->
+    <svg id="header_bg" class="homebg w-full h-72 absolute top-0 left-0 z-[-1]" viewBox="0 10 500 50" preserveAspectRatio="none">
+        <defs>
+            <radialGradient id="Gradient" cx="0.5" cy="0.5" r="0.5" fx="0.75" fy="0.25">
+                <stop offset="0%" stop-color="#07365d" />
+                <stop offset="100%" stop-color="#000717" />
+            </radialGradient>
+        </defs>
+        <path d="M0,0 L500,0 L500,55 L0,55 Z" fill="url(#Gradient)" />
+    </svg>
+
+    <!-- Header Section -->
+    <div class="header flex justify-between items-center relative py-40 px-6">
+        <div class="title">
+            <h1>BidNetra: Smart Bidding Platform</h1>
+            <p>Discover Premium Tenders & Auctions in Real-Time</p>
+            <button class="explore-btn mt-6">
+                <i class="fas fa-search mr-2"></i>
+                Explore Opportunities
+            </button>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div class="image-container">
+                <img class="bldrop" src="~/Images/HomeLogo.png" alt="Platform Logo" />
+                <img class="hand-img" src="~/Images/hand.png" alt="Bidding Illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- KYC Verification Banner -->
+    @if (kycStatus.HasValue && !hasCompany.GetValueOrDefault())
+    {
+        <div class="kyc-banner p-5 @(kycStatus.Value ? "kyc-banner-complete" : "kyc-banner-pending")">
+            <div class="flex items-center justify-between flex-wrap">
+                <div class="flex items-center">
+                    <div class="mr-4 text-2xl">
+                        <i class="fas @(kycStatus.Value ? "fa-check-circle" : "fa-exclamation-triangle")"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg @(kycStatus.Value ? "text-green-800" : "text-yellow-800")">
+                            @(kycStatus.Value ? "KYC Verification Complete" : "KYC Verification Required")
+                        </h3>
+                        <p class="@(kycStatus.Value ? "text-green-700" : "text-yellow-700")">
+                            @(kycStatus.Value ?
+                                "Your account is fully verified. You can participate in all tenders and auctions." :
+                                "Please complete your KYC verification to unlock full bidding capabilities.")
+                        </p>
+                    </div>
+                </div>
+                @if (!kycStatus.Value)
+                {
+                    <a asp-action="RegisterCompany" asp-controller="Kyc" class="kyc-button">
+                        <i class="fas fa-id-card mr-2"></i>
+                        Complete Verification
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Upcoming Tenders Section -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="section-icon">
+                    <i class="fas fa-file-contract"></i>
+                </span>
+                Upcoming Tenders
+            </h2>
+        </div>
+        <div class="section-content">
+            @if (tenders != null && tenders.Any())
+            {
+                <div class="swiper tenderSwiper">
+                    <div class="swiper-wrapper">
+                        @foreach (var tender in tenders)
+                        {
+                            <div class="swiper-slide">
+                                <div class="swiper-slide-content">
+                                    <h3 class="card-title">@tender.Title</h3>
+                                    <p class="card-issuer">
+                                        <i class="fas fa-building mr-2 text-blue-500"></i>
+                                        @tender.IssuedBy
+                                    </p>
+                                    <div class="card-footer">
+                                        <span class="countdown">
+                                            <i class="far fa-clock mr-1"></i>
+                                            @tender.ClosingDate.ToString("dd MMM yyyy")
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-file-contract empty-state-icon"></i>
+                    <p>No upcoming tenders available at the moment.</p>
+                </div>
+            }
+
+            <div class="view-more-btn">
+                <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="view-more-link">
+                    <i class="fas fa-list-ul mr-2"></i>
+                    View All Tenders
+                </a>
+            </div>
+        </div>
+    </div>
+
+    
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Tender Swiper
+            var tenderSwiper = new Swiper(".tenderSwiper", {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".tenderSwiper .swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".tenderSwiper .swiper-button-next",
+                    prevEl: ".tenderSwiper .swiper-button-prev",
+                },
+                breakpoints: {
+                    640: { slidesPerView: 1 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                }
+            });
+
+            
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                        toastr.success('@TempData["SuccessMessage"]', 'Success', {timeOut: 5000 });
+            </text>
+        }
+        });
+    </script>
+</div>
+
