@@ -3,159 +3,229 @@
     Layout = "_Layout";
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
 <style>
     :root {
-        --primary: #2563eb;
-        --primary-dark: #1d4ed8;
-        --secondary: #f97316;
-        --secondary-dark: #ea580c;
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
         --success: #10b981;
-        --success-dark: #059669;
-        --dark: #1e293b;
-        --light: #f8fafc;
-        --gray: #64748b;
+    }
+
+    
+    .dash-bleed {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
     }
 
     .dashboard-container {
-        padding: 1.5rem;
+        padding: 2rem;
         max-width: 1400px;
         margin: 0 auto;
+        font-family: 'DM Sans', sans-serif;
     }
 
-    /* Hero section styling */
+    /* ── HERO ── */
     .hero-section {
         position: relative;
-        border-radius: 16px;
         overflow: hidden;
-        margin-bottom: 2rem;
-    }
-
-    .hero-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-        z-index: -1;
+        background: var(--navy);
     }
 
     .hero-pattern {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        z-index: -1;
-        opacity: 0.5;
+        inset: 0;
+        background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .hero-glow {
+        position: absolute;
+        top: -40%;
+        right: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(200,150,12,.18) 0%, transparent 65%);
+        z-index: 1;
+        pointer-events: none;
     }
 
     .hero-content {
-        padding: 3rem 2rem;
+        padding: 3.5rem 2.5rem;
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
 
     .welcome-message {
-        max-width: 800px;
+        max-width: 780px;
         margin: 0 auto;
         text-align: center;
     }
 
-    .welcome-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: white;
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .68rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
         margin-bottom: 1rem;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+        .hero-eyebrow span {
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .welcome-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 900;
+        color: var(--white);
+        margin-bottom: .9rem;
+        line-height: 1.15;
+    }
+
+        .welcome-title em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
     .welcome-subtitle {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 2rem;
-        line-height: 1.6;
+        font-size: 1rem;
+        color: var(--slate);
+        margin-bottom: 0;
+        line-height: 1.7;
+        font-weight: 300;
     }
 
     .highlight {
-        color: var(--secondary);
-        font-weight: 700;
+        color: var(--gold-lt);
+        font-weight: 600;
     }
 
-    /* Stats section styling */
+    /* ── STATS ── */
     .stats-section {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
         margin-bottom: 2rem;
+        padding-top: 2rem;
     }
 
     .stat-card {
-        background: white;
+        background: var(--white);
         border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 1.6rem;
+        border: 1px solid rgba(11,31,58,.07);
         display: flex;
         flex-direction: column;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        transition: transform .3s ease, box-shadow .3s ease;
     }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            opacity: 0;
+            transition: opacity .3s;
+        }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 16px 40px rgba(11,31,58,.1);
         }
+
+            .stat-card:hover::before {
+                opacity: 1;
+            }
+
+    .stat-card--blue::before {
+        background: #3b82f6;
+    }
+
+    .stat-card--green::before {
+        background: var(--success);
+    }
+
+    .stat-card--purple::before {
+        background: #8b5cf6;
+    }
 
     .stat-header {
         display: flex;
         align-items: center;
         margin-bottom: 1rem;
+        gap: .8rem;
     }
 
     .stat-icon {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 1rem;
         color: white;
+        font-size: 1.1rem;
+        flex-shrink: 0;
     }
 
     .stat-icon-blue {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    }
-
-    .stat-icon-orange {
-        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        background: #3b82f6;
     }
 
     .stat-icon-green {
-        background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+        background: var(--success);
     }
 
     .stat-icon-purple {
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        background: #8b5cf6;
     }
 
     .stat-title {
-        font-size: 0.875rem;
+        font-size: .72rem;
         font-weight: 600;
-        color: var(--gray);
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
     }
 
     .stat-value {
-        font-size: 1.75rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
         font-weight: 700;
-        color: var(--dark);
+        color: var(--navy);
+        line-height: 1;
+        margin-bottom: .5rem;
     }
 
     .stat-change {
         display: flex;
         align-items: center;
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
+        font-size: .8rem;
+        gap: .25rem;
+        margin-top: .4rem;
     }
 
     .stat-change-positive {
@@ -166,66 +236,63 @@
         color: #ef4444;
     }
 
-    .stat-change-icon {
-        margin-right: 0.25rem;
-    }
-
-    /* Actions section styling */
-    .actions-section {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
+    /* ── ACTION CARD ── */
     .action-card {
-        background: white;
+        background: var(--white);
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(11,31,58,.07);
+        transition: transform .3s ease, box-shadow .3s ease;
         display: flex;
         flex-direction: column;
+        margin-bottom: 2rem;
+        max-width: 680px;
     }
 
         .action-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 16px 40px rgba(11,31,58,.1);
         }
 
     .action-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
+        padding: 1.6rem;
+        border-bottom: 1px solid rgba(11,31,58,.06);
+        background: var(--navy-mid);
     }
 
     .action-title {
         display: flex;
         align-items: center;
-        font-size: 1.25rem;
+        gap: .75rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 0.5rem;
+        color: var(--white);
+        margin-bottom: .5rem;
     }
 
     .action-icon {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 0.75rem;
-        color: white;
+        color: var(--navy);
+        background: var(--gold);
+        font-size: .95rem;
+        flex-shrink: 0;
     }
 
     .action-description {
-        color: var(--gray);
+        color: var(--slate);
         line-height: 1.6;
-        margin-top: 1rem;
+        font-size: .9rem;
+        margin-top: .6rem;
     }
 
     .action-content {
-        padding: 1.5rem;
+        padding: 1.6rem;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -238,13 +305,14 @@
     .feature-item {
         display: flex;
         align-items: center;
-        margin-bottom: 0.75rem;
-        color: var(--dark);
+        gap: .6rem;
+        margin-bottom: .75rem;
+        color: var(--muted);
+        font-size: .9rem;
     }
 
     .feature-icon {
-        color: var(--primary);
-        margin-right: 0.5rem;
+        color: var(--gold);
     }
 
     .action-footer {
@@ -256,48 +324,35 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.875rem 1.5rem;
-        font-size: 1rem;
-        font-weight: 600;
-        border-radius: 0.5rem;
-        transition: all 0.3s ease;
+        gap: .5rem;
+        padding: .9rem 1.8rem;
+        font-size: .95rem;
+        font-weight: 700;
+        border-radius: 8px;
+        transition: all .3s ease;
         border: none;
         text-decoration: none;
         width: 100%;
+        background: var(--gold);
+        color: var(--navy);
+        box-shadow: 0 4px 16px rgba(200,150,12,.3);
+        font-family: 'DM Sans', sans-serif;
     }
 
-    .btn-primary {
-        background: linear-gradient(45deg, var(--primary), var(--primary-dark));
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-    }
-
-        .btn-primary:hover {
+        .action-button:hover {
+            background: var(--gold-lt);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px -1px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 22px rgba(200,150,12,.4);
+            color: var(--navy);
+            text-decoration: none;
         }
 
-    .btn-secondary {
-        background: linear-gradient(45deg, var(--secondary), var(--secondary-dark));
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
-    }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px -1px rgba(249, 115, 22, 0.4);
-        }
-
-    .button-icon {
-        margin-right: 0.5rem;
-    }
-
-    /* Recent activity section styling */
+    /* ── ACTIVITY ── */
     .activity-section {
-        background: white;
+        background: var(--white);
         border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 1.8rem;
+        border: 1px solid rgba(11,31,58,.07);
     }
 
     .section-header {
@@ -308,50 +363,66 @@
     }
 
     .section-title {
-        font-size: 1.25rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: var(--dark);
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
     }
 
+        .section-title i {
+            color: var(--gold);
+        }
+
     .view-all {
-        font-size: 0.875rem;
-        color: var(--primary);
+        font-size: .8rem;
         font-weight: 600;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--gold);
         text-decoration: none;
+        transition: color .2s;
     }
 
         .view-all:hover {
-            text-decoration: underline;
+            color: var(--gold-lt);
+            text-decoration: none;
         }
 
     .activity-list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: .85rem;
     }
 
     .activity-item {
         display: flex;
         align-items: flex-start;
-        padding: 1rem;
+        gap: 1rem;
+        padding: 1rem 1.2rem;
         border-radius: 8px;
-        background-color: #f8fafc;
-        transition: background-color 0.3s ease;
+        background: var(--ivory);
+        border: 1px solid rgba(11,31,58,.05);
+        transition: background .2s, border-color .2s;
     }
 
         .activity-item:hover {
-            background-color: #f1f5f9;
+            background: rgba(200,150,12,.04);
+            border-color: rgba(200,150,12,.15);
         }
 
     .activity-icon {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 1rem;
         flex-shrink: 0;
+        font-size: .9rem;
+        color: white;
     }
 
     .activity-content {
@@ -360,8 +431,15 @@
 
     .activity-title {
         font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 0.25rem;
+        color: var(--navy);
+        margin-bottom: .25rem;
+        font-size: .92rem;
+    }
+
+    .activity-description {
+        color: var(--muted);
+        font-size: .85rem;
+        margin-bottom: .5rem;
     }
 
     .activity-meta {
@@ -371,105 +449,124 @@
     }
 
     .activity-time {
-        font-size: 0.75rem;
-        color: var(--gray);
+        font-size: .75rem;
+        color: var(--slate);
     }
 
     .activity-status {
-        font-size: 0.75rem;
+        font-size: .68rem;
         font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 9999px;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        padding: .25rem .7rem;
+        border-radius: 999px;
     }
 
     .status-success {
-        background-color: #d1fae5;
-        color: #065f46;
+        background: rgba(16,185,129,.1);
+        color: #059669;
     }
 
     .status-pending {
-        background-color: #fef3c7;
-        color: #92400e;
+        background: rgba(245,158,11,.1);
+        color: #b45309;
     }
 
+    .empty-activity {
+        text-align: center;
+        padding: 2.5rem;
+        color: var(--slate);
+    }
+
+        .empty-activity i {
+            font-size: 2rem;
+            color: var(--gold);
+            opacity: .4;
+            display: block;
+            margin-bottom: .8rem;
+        }
+
+    @@media (max-width: 1024px) {
+        .stats-section {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .stats-section {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-content {
+            padding: 2rem 1rem;
+        }
+
+        .action-card {
+            max-width: 100%;
+        }
+    }
 </style>
 
-<div class="dashboard-container">
-    <!-- Hero Section -->
+<div class="dash-bleed">
+
     <div class="hero-section">
-        <div class="hero-bg"></div>
         <div class="hero-pattern"></div>
+        <div class="hero-glow"></div>
         <div class="hero-content">
             <div class="welcome-message">
-                <h1 class="welcome-title">Welcome Back, @User.FindFirst("FullName")?.Value</h1>
+                <p class="hero-eyebrow"><span></span> Publisher Portal <span></span></p>
+                <h1 class="welcome-title">
+                    Welcome Back,<br><em>@User.FindFirst("FullName")?.Value</em>
+                </h1>
                 <p class="welcome-subtitle">
-                    Your gateway to managing <span class="highlight">Tenders</span> and <span class="highlight">Auctions</span> with precision and ease.
+                    Your gateway to managing <span class="highlight">Tenders</span> with precision and ease.
                     Take control of your publishing activities and make informed decisions that drive success.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Stats Section -->
-    <div class="stats-section">
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon stat-icon-blue">
-                    <i class="fas fa-file-contract"></i>
+    <div class="dashboard-container">
+
+        <div class="stats-section">
+            <div class="stat-card stat-card--blue">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-blue"><i class="fas fa-file-contract"></i></div>
+                    <div class="stat-title">Active Tenders</div>
                 </div>
-                <div class="stat-title">Active Tenders</div>
+                <div class="stat-value">@Model.ActiveTenders</div>
+                <div class="stat-change stat-change-positive">
+                    <i class="fas fa-arrow-up"></i> @Model.TendersChange% from last month
+                </div>
             </div>
-            <div class="stat-value">@Model.ActiveTenders</div>
-            <div class="stat-change stat-change-positive">
-                <i class="fas fa-arrow-up stat-change-icon"></i> @Model.TendersChange% from last month
+
+            <div class="stat-card stat-card--green">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-green"><i class="fas fa-users"></i></div>
+                    <div class="stat-title">Total Bidders</div>
+                </div>
+                <div class="stat-value">@Model.TotalBidders</div>
+                <div class="stat-change stat-change-positive">
+                    <i class="fas fa-arrow-up"></i> @Model.BiddersChange% from last month
+                </div>
+            </div>
+
+            <div class="stat-card stat-card--purple">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-purple"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-title">Completion Rate</div>
+                </div>
+                <div class="stat-value">@Model.CompletionRate%</div>
+                <div class="stat-change stat-change-positive">
+                    <i class="fas fa-arrow-up"></i> @Model.CompletionRateChange% from last month
+                </div>
             </div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon stat-icon-orange">
-                    <i class="fas fa-gavel"></i>
-                </div>
-                <div class="stat-title">Active Auctions</div>
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon stat-icon-green">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-title">Total Bidders</div>
-            </div>
-            <div class="stat-value">@Model.TotalBidders</div>
-            <div class="stat-change stat-change-positive">
-                <i class="fas fa-arrow-up stat-change-icon"></i> @Model.BiddersChange% from last month
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon stat-icon-purple">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="stat-title">Completion Rate</div>
-            </div>
-            <div class="stat-value">@Model.CompletionRate%</div>
-            <div class="stat-change stat-change-positive">
-                <i class="fas fa-arrow-up stat-change-icon"></i> @Model.CompletionRateChange% from last month
-            </div>
-        </div>
-    </div>
-
-    <!-- Actions Section -->
-    <div class="actions-section">
         <div class="action-card">
             <div class="action-header">
                 <div class="action-title">
-                    <div class="action-icon stat-icon-blue">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
+                    <div class="action-icon"><i class="fas fa-file-contract"></i></div>
                     Tender Management
                 </div>
                 <p class="action-description">
@@ -478,106 +575,53 @@
             </div>
             <div class="action-content">
                 <div class="action-features">
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Create and publish new tenders</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Review and evaluate tender applications</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Monitor active tender progress</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Generate detailed tender reports</span>
-                    </div>
+                    <div class="feature-item"><i class="fas fa-check-circle feature-icon"></i><span>Create and publish new tenders</span></div>
+                    <div class="feature-item"><i class="fas fa-check-circle feature-icon"></i><span>Review and evaluate tender applications</span></div>
+                    <div class="feature-item"><i class="fas fa-check-circle feature-icon"></i><span>Monitor active tender progress</span></div>
+                    <div class="feature-item"><i class="fas fa-check-circle feature-icon"></i><span>Generate detailed tender reports</span></div>
                 </div>
                 <div class="action-footer">
-                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList" class="action-button btn-primary">
-                        <i class="fas fa-tasks button-icon"></i>
-                        Manage Tenders
+                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList" class="action-button">
+                        <i class="fas fa-tasks"></i> Manage Tenders
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="action-card">
-            <div class="action-header">
-                <div class="action-title">
-                    <div class="action-icon stat-icon-orange">
-                        <i class="fas fa-gavel"></i>
-                    </div>
-                    Auction Management
-                </div>
-                <p class="action-description">
-                    Create dynamic auctions, track bidding activity, and finalize sales with our powerful auction management platform.
-                </p>
+        <div class="activity-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-clock"></i> Recent Activity</h2>
+                <a href="#" class="view-all">View All</a>
             </div>
-            <div class="action-content">
-                <div class="action-features">
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Create and schedule new auctions</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Monitor real-time bidding activity</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Communicate with bidders</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-check-circle feature-icon"></i>
-                        <span>Finalize auction sales and contracts</span>
-                    </div>
-                </div>
-                <div class="action-footer">
-                    <a asp-action="AuctionPage" asp-controller="PublisherAuction" asp-route-activeTab="AuctionList" class="action-button btn-secondary">
-                        <i class="fas fa-bullhorn button-icon"></i>
-                        Manage Auctions
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Recent Activity Section -->
-    <div class="activity-section">
-        <div class="section-header">
-            <h2 class="section-title">Recent Activity</h2>
-            <a href="#" class="view-all">View All</a>
-        </div>
-        <div class="activity-list">
-            @if (Model.RecentActivities.Any())
-            {
-                @foreach (var activity in Model.RecentActivities)
+            <div class="activity-list">
+                @if (Model.RecentActivities.Any())
                 {
-                    <div class="activity-item">
-                        <div class="activity-icon @(activity.Type == "Tender" ? "stat-icon-blue" : "stat-icon-orange")">
-                            <i class="@activity.IconClass"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">@activity.Title</div>
-                            <p class="activity-description">@activity.Description</p>
-                            <div class="activity-meta">
-                                <span class="activity-time">@activity.GetTimeDisplay()</span>
-                                <span class="activity-status @activity.GetStatusClass()">@activity.Status</span>
+                    @foreach (var activity in Model.RecentActivities)
+                    {
+                        <div class="activity-item">
+                            <div class="activity-icon stat-icon-blue">
+                                <i class="@activity.IconClass"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">@activity.Title</div>
+                                <p class="activity-description">@activity.Description</p>
+                                <div class="activity-meta">
+                                    <span class="activity-time">@activity.GetTimeDisplay()</span>
+                                    <span class="activity-status @activity.GetStatusClass()">@activity.Status</span>
+                                </div>
                             </div>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-activity">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent activities to display.</p>
                     </div>
                 }
-            }
-            else
-            {
-                <div class="text-center py-4">
-                    <p class="text-gray">No recent activities to display.</p>
-                </div>
-            }
+            </div>
         </div>
+
     </div>
 </div>

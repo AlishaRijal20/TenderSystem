@@ -1,74 +1,366 @@
 ﻿@{
     Layout = "_Layout";
 }
-<div class="bg-gray-50 min-h-screen">
-    <!-- Page Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8">
-        <div class="container mx-auto">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-4xl font-bold text-white mb-2">Tender Management</h1>
-                    <p class="text-blue-100">Manage and track all your tender processes efficiently</p>
-                </div>
-                <div class="hidden sm:block">
-                    <div class="bg-blue-500 bg-opacity-20 rounded-lg p-4">
-                        <div class="text-white">
-                            <i class="fas fa-calendar-alt mr-2"></i>
-                            <span id="current-date"></span>
-                        </div>
-                    </div>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --navy-light: #1a3357;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    /* ── BLEED: escape layout container ── */
+    .tp-bleed {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO HEADER ── */
+    .tp-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2.5rem 4rem;
+    }
+
+        .tp-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .tp-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .tp-hero-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .tp-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .68rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .6rem;
+    }
+
+        .tp-eyebrow span {
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .tp-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+    }
+
+        .tp-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .tp-hero p {
+        color: var(--slate);
+        font-size: .9rem;
+        font-weight: 300;
+        margin: 0;
+    }
+
+    .tp-date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        background: rgba(200,150,12,.12);
+        border: 1px solid rgba(200,150,12,.25);
+        border-radius: 8px;
+        padding: .65rem 1.1rem;
+        color: var(--gold-lt);
+        font-size: .82rem;
+        font-weight: 500;
+    }
+
+    /* ── CARD BODY ── */
+    .tp-body {
+        max-width: 1400px;
+        margin: -2rem auto 0;
+        padding: 0 2rem 2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .tp-card {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: 0 8px 40px rgba(11,31,58,.1);
+        overflow: hidden;
+    }
+
+    /* ── TAB NAV ── */
+    .tp-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        border-bottom: 1px solid rgba(11,31,58,.08);
+        background: var(--white);
+        padding: 0 .5rem;
+    }
+
+    .tab-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: 1.1rem 1.4rem;
+        font-size: .85rem;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: color .2s, border-color .2s, background .2s;
+        white-space: nowrap;
+        position: relative;
+        top: 1px;
+    }
+
+        .tab-link:hover {
+            color: var(--navy);
+            background: rgba(11,31,58,.03);
+        }
+
+        .tab-link.border-b-2.border-blue-600,
+        .tab-link.active-tab {
+            color: var(--navy) !important;
+            border-bottom-color: var(--gold) !important;
+            background: rgba(200,150,12,.04);
+        }
+
+        .tab-link .tab-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .78rem;
+            flex-shrink: 0;
+            transition: background .2s;
+        }
+
+        .tab-link:hover .tab-icon,
+        .tab-link.border-b-2.border-blue-600 .tab-icon {
+            background: rgba(200,150,12,.12);
+            color: var(--gold);
+        }
+
+    .tab-icon-list {
+        background: rgba(59,130,246,.08);
+        color: #3b82f6;
+    }
+
+    .tab-icon-open {
+        background: rgba(16,185,129,.08);
+        color: #10b981;
+    }
+
+    .tab-icon-closed {
+        background: rgba(239,68,68,.08);
+        color: #ef4444;
+    }
+
+    .tab-icon-awarded {
+        background: rgba(245,158,11,.08);
+        color: #f59e0b;
+    }
+
+    .tab-icon-publish {
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+    }
+
+    /* Publish button pushed right */
+    .tab-link.tab-publish {
+        margin-left: auto;
+        background: var(--gold);
+        color: var(--navy) !important;
+        border-radius: 8px;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+        border-bottom: none !important;
+        padding: .7rem 1.4rem;
+        box-shadow: 0 4px 14px rgba(200,150,12,.3);
+        transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+        .tab-link.tab-publish:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200,150,12,.4);
+            color: var(--navy) !important;
+        }
+
+        .tab-link.tab-publish .tab-icon {
+            background: rgba(11,31,58,.1);
+            color: var(--navy);
+        }
+
+    /* ── CONTENT AREA ── */
+    .tp-content {
+        padding: 2rem;
+        min-height: 500px;
+        background: var(--ivory);
+    }
+
+    .tp-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: var(--gold);
+        gap: .75rem;
+        font-size: .95rem;
+        font-weight: 500;
+        color: var(--muted);
+    }
+
+        .tp-loading i {
+            color: var(--gold);
+        }
+
+    @@media (max-width: 768px) {
+        .tp-hero
+
+    {
+        padding: 2rem 1.2rem 3.5rem;
+    }
+
+    .tp-body {
+        padding: 0 1rem 1.5rem;
+    }
+
+    .tp-tabs {
+        padding: 0;
+    }
+
+    .tab-link {
+        padding: .85rem .9rem;
+        font-size: .8rem;
+    }
+
+        .tab-link.tab-publish {
+            margin-left: 0;
+        }
+
+    }
+</style>
+
+<div class="tp-bleed">
+
+    <!-- Hero Header -->
+    <div class="tp-hero">
+        <div class="tp-hero-inner">
+            <div>
+                <p class="tp-eyebrow"><span></span> Publisher Portal</p>
+                <h1>Tender <em>Management</em></h1>
+                <p>Manage and track all your tender processes efficiently</p>
+            </div>
+            <div class="hidden sm:block">
+                <div class="tp-date-badge">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="current-date"></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 -mt-8">
-        <div class="bg-white rounded-lg shadow-xl p-6">
-            <!-- Tabs Navigation -->
-            <div class="mb-8">
-                <div class="flex flex-wrap gap-2 border-b border-gray-200">
-                    <button data-action="@Url.Action("TenderList", "PublisherTender")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-file-alt text-lg mr-3 text-blue-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Tenders List</span>
-                    </button>
+    <!-- Card Body -->
+    <div class="tp-body">
+        <div class="tp-card">
 
-                    <button data-action="@Url.Action("OpenTender", "PublisherTender")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-door-open text-lg mr-3 text-green-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Open Tenders</span>
-                    </button>
+            <!-- Tab Navigation -->
+            <div class="tp-tabs">
+                <button data-action="@Url.Action("TenderList", "PublisherTender")"
+                        class="tab-link">
+                    <span class="tab-icon tab-icon-list"><i class="fas fa-file-alt"></i></span>
+                    Tenders List
+                </button>
 
-                    <button data-action="@Url.Action("CloseTender", "PublisherTender")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-lock text-lg mr-3 text-red-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Closed Tenders</span>
-                    </button>
+                <button data-action="@Url.Action("OpenTender", "PublisherTender")"
+                        class="tab-link">
+                    <span class="tab-icon tab-icon-open"><i class="fas fa-door-open"></i></span>
+                    Open Tenders
+                </button>
 
-                    <button data-action="@Url.Action("AwardedTender", "PublisherTender")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-award text-lg mr-3 text-yellow-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Award Tenders</span>
-                    </button>
+                <button data-action="@Url.Action("CloseTender", "PublisherTender")"
+                        class="tab-link">
+                    <span class="tab-icon tab-icon-closed"><i class="fas fa-lock"></i></span>
+                    Closed Tenders
+                </button>
 
-                    <button data-action="@Url.Action("PublishTender", "PublisherTender")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all ml-auto">
-                        <i class="fas fa-plus-circle text-lg mr-3 text-purple-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Publish New Tender</span>
-                    </button>
-                </div>
+                <button data-action="@Url.Action("AwardedTender", "PublisherTender")"
+                        class="tab-link">
+                    <span class="tab-icon tab-icon-awarded"><i class="fas fa-award"></i></span>
+                    Award Tenders
+                </button>
+
+                <button data-action="@Url.Action("PublishTender", "PublisherTender")"
+                        class="tab-link tab-publish">
+                    <span class="tab-icon"><i class="fas fa-plus-circle"></i></span>
+                    Publish New Tender
+                </button>
             </div>
 
             <!-- Content Area -->
-            <div id="tender-content" class="bg-gray-50 rounded-lg p-6 min-h-[500px]">
-                <!-- Content will be loaded via AJAX -->
-                <div class="animate-pulse flex justify-center items-center h-full">
-                    <i class="fas fa-circle-notch fa-spin text-4xl text-blue-600"></i>
+            <div id="tender-content" class="tp-content">
+                <div class="tp-loading">
+                    <i class="fas fa-circle-notch fa-spin fa-lg"></i>
+                    <span>Loading tenders...</span>
                 </div>
             </div>
+
         </div>
     </div>
+
 </div>
 
 @section Scripts {
@@ -78,47 +370,48 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', options);
 
-                // Load default content
+            // Load default content
             $('#tender-content').load('@Url.Action("TenderList", "PublisherTender")', function() {
                 $('.tab-link').first().addClass('border-b-2 border-blue-600 bg-gray-50');
             });
 
             // Handle tab clicks
             $('.tab-link').click(function (e) {
-                    e.preventDefault();
-                    const url = $(this).data('action');
+                e.preventDefault();
+                const url = $(this).data('action');
 
-                    // Show loading animation
-                    $('#tender-content').html(`
-                        <div class="animate-pulse flex justify-center items-center h-full">
-                            <i class="fas fa-circle-notch fa-spin text-4xl text-blue-600"></i>
-                        </div>
-                    `);
+                // Show loading animation
+                $('#tender-content').html(`
+                    <div class="tp-loading">
+                        <i class="fas fa-circle-notch fa-spin fa-lg"></i>
+                        <span>Loading...</span>
+                    </div>
+                `);
 
-                    // Load content
-                    $('#tender-content').load(url);
+                // Load content
+                $('#tender-content').load(url);
 
-                    // Update active tab
-                    $('.tab-link').removeClass('border-b-2 border-blue-600 bg-gray-50');
-                    $(this).addClass('border-b-2 border-blue-600 bg-gray-50');
-                });
-
-                // Initialize Flowbite components
-                if (typeof initFlowbite === 'function') {
-                    initFlowbite();
-                }
+                // Update active tab
+                $('.tab-link').removeClass('border-b-2 border-blue-600 bg-gray-50');
+                $(this).addClass('border-b-2 border-blue-600 bg-gray-50');
             });
 
-            // Toast notifications
+            // Initialize Flowbite components
+            if (typeof initFlowbite === 'function') {
+                initFlowbite();
+            }
+        });
+
+        // Toast notifications
         @if (TempData["SuccessMessage"] != null)
         {
                 <text>
-                        toastr.success('@TempData["SuccessMessage"]', 'Success', {
-                            timeOut: 5000,
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: "toast-top-right",
-                        });
+                    toastr.success('@TempData["SuccessMessage"]', 'Success', {
+                        timeOut: 5000,
+                        closeButton: true,
+                        progressBar: true,
+                        positionClass: "toast-top-right",
+                    });
                 </text>
         }
     </script>

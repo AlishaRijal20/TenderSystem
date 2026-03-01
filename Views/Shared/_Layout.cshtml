@@ -267,13 +267,15 @@
                     <!-- Mobile menu button and profile -->
                     <div class="flex items-center md:order-2">
                         <!-- Profile Image Ajax Link -->
-                        <a data-ajax="true" data-ajax-method="get" data-ajax-update="#profile-img" class="btn-profile-img hidden" asp-action="ProfileImage" asp-controller="Home"></a>
+                        <!-- data-ajax-update targets #profile-img-inner (span inside the button)
+                             so the button element itself is never replaced and our click handler survives -->
+                        <a data-ajax="true" data-ajax-method="get" data-ajax-update="#profile-img-inner" class="btn-profile-img hidden" asp-action="ProfileImage" asp-controller="Home"></a>
 
                         <!-- Profile Dropdown -->
                         <div class="relative ml-3">
-                            <button id="profile-img" type="button" class="profile-image flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                                <span class="sr-only">Open user menu</span>
-                                <!-- Profile image will be loaded here via Ajax -->
+                            <button id="profile-img" type="button" class="profile-image flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-expanded="false">
+                                <span id="profile-img-inner"></span>
+                                <!-- Profile image loaded into #profile-img-inner via Ajax -->
                             </button>
 
                             <!-- Dropdown menu -->
@@ -558,19 +560,44 @@
     <!-- Custom Scripts -->
     <script>
         $(document).ready(function () {
-            // Load profile image
+            // Load profile image via Ajax
             $('.btn-profile-img')[0].click();
+
+            // ── PROFILE DROPDOWN ──────────────────────────────────────
+            // Manual toggle - does not rely on Flowbite so it works
+            // even after Ajax replaces the button inner HTML.
+            $(document).on('click', '#profile-img', function (e) {
+                e.stopPropagation();
+                var $dd = $('#user-dropdown');
+                if ($dd.hasClass('hidden')) {
+                    $dd.removeClass('hidden');
+                    $(this).attr('aria-expanded', 'true');
+                } else {
+                    $dd.addClass('hidden');
+                    $(this).attr('aria-expanded', 'false');
+                }
+            });
+
+            // Close when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#profile-img, #user-dropdown').length) {
+                    $('#user-dropdown').addClass('hidden');
+                    $('#profile-img').attr('aria-expanded', 'false');
+                }
+            });
+
+            // Stop clicks inside dropdown from bubbling up and closing it
+            $(document).on('click', '#user-dropdown', function (e) {
+                e.stopPropagation();
+            });
+            // ─────────────────────────────────────────────────────────
 
             // Handle mobile menu toggle
             $('#mobile-menu-button').on('click', function () {
                 $('#mobile-menu').toggleClass('hidden');
-
-                // Update aria-expanded attribute
                 const expanded = $(this).attr('aria-expanded') === 'true' || false;
                 $(this).attr('aria-expanded', !expanded);
             });
-
-
         });
     </script>
 
