@@ -1,0 +1,52 @@
+@model PaymentEdit
+
+<div class="min-h-screen bg-gray-100 py-6">
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-green-600">Payment Successful!</h2>
+            <p class="text-gray-600 mt-2">Your payment has been verified and processed successfully.</p>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="mb-8 bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <i class="fas fa-receipt me-2 text-blue-500"></i>Payment Details
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <p class="text-gray-600"><span class="font-medium">Tender ID:</span> #@Model.TenderId</p>
+                    
+                    <p class="text-gray-600"><span class="font-medium">Date:</span> @Model.PaymentDate.ToString("f")</p>
+                    <p class="text-gray-600"><span class="font-medium">Method:</span> Esewa</p>
+                    <p class="text-gray-600">
+                        <span class="font-medium">Status:</span>
+                        <span class="text-green-600">Verified</span>
+                    </p>
+                </div>
+
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <p class="text-gray-600"><span class="font-medium">Paid By:</span> @Model.PayFromUser.FirstName</p>
+                    <p class="text-gray-600"><span class="font-medium">Company:</span> @Model.PayFromCompany.CompanyName</p>
+                    <p class="text-gray-600"><span class="font-medium">Paid Amount:</span> Rs. @Model.PaymentAmount.ToString("N2")</p>
+                    <p class="text-gray-600"><span class="font-medium">Paid To:</span> @Model.PayToUser?.FirstName</p>
+                    <p class="text-gray-600"><span class="font-medium">Tender Title:</span> @Model.TenderTitle</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center space-x-4">
+            <a href="@Url.Action("TenderBidTab", "BidTender", new { activeTab = "UpcomingTender" })"
+               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                <i class="fas fa-list me-2"></i>View Tenders
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Add FontAwesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
