@@ -1,201 +1,351 @@
 ﻿@model IEnumerable<TenderEdit>
 
 <style>
-    .tender-card {
-        transition: all 0.3s ease;
+    :root {
+        --navy: #0B1F3A;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+        --accent: #ef4444; /* red — Closed */
+        --accent-bg: rgba(239,68,68,.08);
     }
 
-        .tender-card:hover {
-            transform: translateY(-2px);
+    .ct-partial {
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .ct-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .ct-toolbar-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .ct-toolbar-title .title-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            background: var(--accent-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: .8rem;
         }
 
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
+    .ct-controls {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .ct-controls select,
+        .ct-controls input[type="text"] {
+            background: var(--white);
+            border: 1px solid rgba(11,31,58,.14);
+            color: var(--navy);
+            font-size: .85rem;
+            font-family: 'DM Sans', sans-serif;
+            border-radius: 7px;
+            padding: .55rem 1rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            min-width: 160px;
+        }
+
+            .ct-controls select:focus,
+            .ct-controls input[type="text"]:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+            }
+
+            .ct-controls input[type="text"]::placeholder {
+                color: var(--slate);
+            }
+
+    .ct-count {
+        font-size: .78rem;
+        color: var(--slate);
         font-weight: 500;
-        font-size: 0.875rem;
-        text-transform: uppercase;
     }
 
-    .status-open {
-        background-color: #dcfce7;
-        color: #166534;
+    .ct-table-wrap {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid rgba(11,31,58,.07);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(11,31,58,.06);
     }
 
-    .status-closed {
-        background-color: #fee2e2;
-        color: #991b1b;
+    .ct-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .875rem;
     }
 
-    .status-pending {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-
-    .action-button {
-        transition: all 0.3s ease;
-    }
-
-        .action-button:hover {
-            transform: scale(1.05);
+        .ct-table thead tr {
+            background: var(--navy);
         }
 
-    .filter-dropdown {
-        backface-visibility: visible;
-        border: none;
-        color: white;
-        padding: 0.5rem 2rem 0.5rem 1rem;
-        border-radius: 0.5rem;
-        appearance: none;
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 1em;
-        background-color: #2563eb;
+        .ct-table thead th {
+            padding: .95rem 1.2rem;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .ct-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .18s;
+        }
+
+            .ct-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .ct-table tbody tr:hover {
+                background: rgba(200,150,12,.03) !important;
+            }
+
+        .ct-table td {
+            padding: .95rem 1.2rem;
+            color: var(--muted);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .ct-id {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--navy);
+        font-size: .9rem;
     }
 
-    .table-container {
-        animation: fadeIn 0.5s ease-out;
+    .ct-title {
+        color: var(--navy);
+        font-weight: 600;
+        font-size: .88rem;
+        max-width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 0 auto;
+    }
+
+    .ct-type-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: .22rem .75rem;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        background: rgba(11,31,58,.06);
+        color: var(--navy);
+    }
+
+    .ct-date {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .85rem;
+    }
+
+        .ct-date i {
+            color: var(--gold);
+        }
+
+    .ct-btn-view {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .4rem .9rem;
+        border-radius: 6px;
+        font-size: .78rem;
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        text-decoration: none;
+        background: var(--navy);
+        color: var(--white);
+        border: none;
+        transition: transform .2s, filter .2s;
+    }
+
+        .ct-btn-view:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    .ct-empty {
+        text-align: center;
+        padding: 3rem;
+        color: var(--slate);
+    }
+
+        .ct-empty i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: .35;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+    @@media (max-width: 768px) {
+        .ct-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ct-controls {
+            width: 100%;
+        }
+
+            .ct-controls select, .ct-controls input[type="text"] {
+                min-width: 0;
+                flex: 1;
+            }
     }
 </style>
 
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8">
-    <div class="container mx-auto px-4">
-        <!-- Header Section -->
-        <div class="flex justify-between items-center mb-8">
-            <a asp-action="Index" asp-controller="PublisherTender" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 text-2xl">
-                <i class="fas fa-arrow-left mr-2"></i>
-                <span class="text-lg">Back</span>
-            </a>
-            <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-                Closed Tenders
-            </h2>
-        </div>
+<div class="ct-partial">
 
-        <!-- Enhanced Filter Section -->
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex gap-4">
-                <!-- New Tender Type Filter -->
-                <select id="typeFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                        onchange="filterByType()">
-                    <option value="">All Types</option>
-                    @foreach (var type in Model.Select(t => t.TenderType).Distinct())
+    <div class="ct-toolbar">
+        <h2 class="ct-toolbar-title">
+            <span class="title-icon"><i class="fas fa-lock"></i></span>
+            Closed Tenders
+        </h2>
+        <div class="ct-controls">
+            <select id="typeFilter" onchange="filterByType()">
+                <option value="">All Types</option>
+                @foreach (var type in Model.Select(t => t.TenderType).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <input type="text" id="searchInput" placeholder="Search tenders..." onkeyup="searchTable()" />
+            <span class="ct-count" id="resultCount"></span>
+        </div>
+    </div>
+
+    <div class="ct-table-wrap">
+        <div style="overflow-x:auto;">
+            <table class="ct-table" id="tenderTable">
+                <thead>
+                    <tr>
+                        <th>Tender ID</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Closed Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
                     {
-                        <option value="@type">@type</option>
-                    }
-                </select>
-
-                <input type="text" id="searchInput" placeholder="Search tenders..."
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                       onkeyup="searchTable()">
-            </div>
-            <div class="text-sm text-gray-600" id="resultCount"></div>
-        </div>
-
-
-        <!-- Table Section -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden table-container">
-            <div class="overflow-x-auto">
-                <table class="w-full" id="tenderTable">
-                    <thead>
-                        <tr class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-hashtag mr-2"></i>Tender ID
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-file-alt mr-2"></i>Title
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-chart-pie mr-2"></i>Type
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-calendar-alt mr-2"></i>Closed Date
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-cogs mr-2"></i>Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
                         @foreach (var tender in Model)
                         {
-                            <tr class="tender-card border-b hover:bg-gray-50"
+                            <tr class="tender-card"
                                 data-status="@tender.IsVerified"
                                 data-type="@tender.TenderType.ToLower()"
                                 data-search="@(tender.TenderId + " " + tender.Title + " " + tender.IsVerified)">
-                                <td class="px-6 py-4 text-center font-medium text-gray-900">
-                                    #@tender.TenderId
+                                <td><span class="ct-id">#@tender.TenderId</span></td>
+                                <td><div class="ct-title" title="@tender.Title">@tender.Title</div></td>
+                                <td><span class="ct-type-badge">@tender.TenderType</span></td>
+                                <td>
+                                    <span class="ct-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        @tender.ClosingDate
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center">
-                                        <span class="line-clamp-1">@tender.Title</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center">
-                                        <span class="line-clamp-1">@tender.TenderType</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <i class="far fa-calendar-alt text-blue-500"></i>
-                                        <span>@tender.ClosingDate</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-center">
+                                <td>
                                     <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@tender.EncId"
-                                       class="action-button inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md">
-                                        <i class="fas fa-eye mr-2"></i>
-                                        View Details
+                                       class="ct-btn-view">
+                                        <i class="fas fa-eye"></i> View Details
                                     </a>
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="ct-empty">
+                                    <i class="fas fa-lock"></i>
+                                    <p style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.3rem;">No closed tenders</p>
+                                    <p style="font-size:.85rem;">There are currently no closed tenders to display.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="noResults" class="ct-empty hidden">
+                <p>No tenders found matching your criteria</p>
             </div>
         </div>
     </div>
 
-    <script>
-        // Function to search the table by tender title
-        function searchTable() {
-            const searchValue = document.getElementById("searchInput").value.toLowerCase();
-            const rows = document.querySelectorAll("#tenderTable tbody tr");
+</div>
 
-            rows.forEach(row => {
-                const title = row.cells[1].textContent.toLowerCase();
-                if (title.includes(searchValue)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        }
+<script>
+    function searchTable() {
+        const searchValue = document.getElementById("searchInput").value.toLowerCase();
+        const rows = document.querySelectorAll("#tenderTable tbody tr");
 
-        function filterByType() {
-            const selectedType = document.getElementById("typeFilter").value;
-            const rows = document.querySelectorAll("#tenderTable tbody tr");
-            const noResults = document.getElementById("noResults");
-            let visibleCount = 0;
-
-            rows.forEach(row => {
-                const type = row.getAttribute("data-type");
-                if (!selectedType || type === selectedType.toLowerCase()) {
-                    row.style.display = "";
-                    visibleCount++;
-                } else {
-                    row.style.display = "none";
-                }
-            });
-
-            // Show/hide no results message
-            noResults.classList.toggle("hidden", visibleCount > 0);
-
-            // Update result count if the element exists
-            const resultCount = document.getElementById("resultCount");
-            if (resultCount) {
-                resultCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
+        rows.forEach(row => {
+            const title = row.cells[1].textContent.toLowerCase();
+            if (title.includes(searchValue)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
             }
+        });
+    }
+
+    function filterByType() {
+        const selectedType = document.getElementById("typeFilter").value;
+        const rows = document.querySelectorAll("#tenderTable tbody tr");
+        const noResults = document.getElementById("noResults");
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const type = row.getAttribute("data-type");
+            if (!selectedType || type === selectedType.toLowerCase()) {
+                row.style.display = "";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        noResults.classList.toggle("hidden", visibleCount > 0);
+
+        const resultCount = document.getElementById("resultCount");
+        if (resultCount) {
+            resultCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
         }
-    </script>
-</body>
+    }
+</script>

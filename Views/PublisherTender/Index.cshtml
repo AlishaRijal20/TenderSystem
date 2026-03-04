@@ -4,7 +4,7 @@
 }
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+
 <style>
     :root {
         --navy: #0B1F3A;
@@ -18,13 +18,24 @@
         --success: #10b981;
     }
 
-    
+    /*
+            _Layout wraps @@RenderBody() inside:
+    <div class="container mx-auto px-4 py-6" >
+    That adds 1rem horizontal padding + 1.5rem top padding,
+    causing the ivory bg and navy hero to leave gaps.
+    .dash-bleed uses negative margins to escape that box fully.
+    */
     .dash-bleed {
-        margin-left: -1rem;
-        margin-right: -1rem;
+        /* True full-viewport bleed — escapes both the container's padding
+               AND its max-width, so no side gaps at any screen size */
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
         margin-top: -1.5rem;
         background: var(--ivory);
         min-height: 100vh;
+        overflow-x: hidden;
     }
 
     .dashboard-container {

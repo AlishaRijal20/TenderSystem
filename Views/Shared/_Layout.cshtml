@@ -25,6 +25,12 @@
             max-width: 100%;
         }
 
+        /* Allow full-bleed pages to escape container without scrollbar.
+                   Pages using the 100vw bleed trick need this on a parent. */
+        html {
+            overflow-x: hidden;
+        }
+
         .container {
             width: 100%;
             max-width: 1280px;
@@ -261,7 +267,7 @@
                 <div class="flex flex-wrap items-center justify-between py-3">
                     <!-- Logo -->
                     <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt="BidNetra Logo" />
+                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt="Tender System Logo" />
                     </a>
 
                     <!-- Mobile menu button and profile -->

@@ -5,214 +5,293 @@
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
 <style>
-
-
-    /* Custom styles */
-    .tender-card {
-        animation: fadeInUp 0.6s ease-out;
-        border-radius: 1rem;
-        overflow: hidden;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
     }
 
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .tdp-wrap {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--ivory);
+        min-height: 100vh;
+        padding-bottom: 3rem;
     }
 
-        .status-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-    /* Status Styles */
-    .status-open {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-    }
-
-    .status-closed {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: white;
-    }
-
-    .status-awarded {
-        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        color: white;
-    }
-
-    .status-pending {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-    }
-
-    /* Verification Styles */
-    .verified {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-    }
-
-    .not-verified {
-        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-        color: white;
-    }
-
-    .verification-pending {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-    }
-
-    .info-card {
-        border-radius: 0.75rem;
-        transition: all 0.3s ease;
+    /* ── HERO HEADER ── */
+    .tdp-hero {
+        background: var(--navy);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        padding: 0 2rem;
     }
 
-        .info-card::before {
+        .tdp-hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #2563eb);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
 
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        .tdp-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
         }
 
-            .info-card:hover::before {
-                opacity: 1;
-            }
-
-    .timeline-item {
+    /* top bar */
+    .tdp-topbar {
         position: relative;
-        padding: 1.25rem;
-        background: white;
-        border-radius: 0.75rem;
-        margin-bottom: 1.25rem;
-        transition: all 0.3s ease;
-        border-left: 4px solid #3b82f6;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.2rem 0;
+        flex-wrap: wrap;
+        gap: .75rem;
     }
 
-        .timeline-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    .tdp-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--slate);
+        font-size: .85rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color .2s, transform .2s;
+    }
+
+        .tdp-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-2px);
+            text-decoration: none;
         }
 
-    .pdf-viewer {
-        height: 800px;
-        border-radius: 0.75rem;
-        overflow-y: auto;
-        background: #f8fafc;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    .tdp-badges {
+        display: flex;
+        gap: .6rem;
+        flex-wrap: wrap;
+    }
+
+    .tdp-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .3rem .85rem;
+        border-radius: 6px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .tdp-badge-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .6rem;
+    }
+
+    .b-open {
+        background: linear-gradient(135deg,#10b981,#059669);
+        color: #fff;
+    }
+
+    .b-closed {
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        color: #fff;
+    }
+
+    .b-awarded {
+        background: linear-gradient(135deg,#fbbf24,#f59e0b);
+        color: #fff;
+    }
+
+    .b-pending {
+        background: linear-gradient(135deg,#f59e0b,#d97706);
+        color: #fff;
+    }
+
+    .b-verified {
+        background: linear-gradient(135deg,#3b82f6,#2563eb);
+        color: #fff;
+    }
+
+    .b-notver {
+        background: linear-gradient(135deg,#6b7280,#4b5563);
+        color: #fff;
+    }
+
+    .b-verpend {
+        background: linear-gradient(135deg,#f59e0b,#d97706);
+        color: #fff;
+    }
+
+    /* title block */
+    .tdp-title-block {
+        position: relative;
+        z-index: 2;
+        padding: 1.4rem 0 2.8rem;
+    }
+
+    .tdp-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
+
+        .tdp-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .tdp-title-block h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.3rem, 3vw, 1.9rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 1rem;
+        line-height: 1.2;
+        max-width: 700px;
+    }
+
+    .tdp-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+    }
+
+    .tdp-meta-item {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .8rem;
+        color: var(--slate);
+    }
+
+        .tdp-meta-item i {
+            color: var(--gold);
+            font-size: .78rem;
+        }
+
+        .tdp-meta-item strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+    /* ── CONTENT AREA ── */
+    .tdp-body {
+        max-width: 1100px;
+        margin: -1.5rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* white card wrapper for tabs */
+    .tdp-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
+        overflow: hidden;
+    }
+
+    /* ── TAB BAR ── */
+    .tdp-tab-bar {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(11,31,58,.08);
+        padding: 0 1.5rem;
+        background: var(--white);
+    }
+
+    .tdp-tab-nav {
+        display: flex;
+        gap: .25rem;
     }
 
     .tab-btn {
-        position: relative;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-        .tab-btn.active {
-            color: #3b82f6;
-            border-bottom: 2px solid #3b82f6;
-        }
-
-    .download-btn {
-        animation: pulse 2s infinite;
-    }
-
-    .tender-header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .tender-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: translate(30%, -30%);
-        }
-
-    .status-icon {
-        width: 24px;
-        height: 24px;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
+        gap: .4rem;
+        padding: 1rem 1.1rem;
+        font-size: .83rem;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+        transition: color .2s, border-color .2s;
+        font-family: 'DM Sans', sans-serif;
     }
 
-    /* Data status styles */
-    [data-status="open"] .info-card {
-        border-left: 4px solid #10b981;
+        .tab-btn:hover {
+            color: var(--navy);
+        }
+
+        .tab-btn.active {
+            color: var(--navy);
+            border-bottom-color: var(--gold);
+        }
+
+    .tdp-monitor-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .5rem 1.1rem;
+        border-radius: 7px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: .8rem;
+        font-weight: 700;
+        text-decoration: none;
+        align-self: center;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 3px 12px rgba(200,150,12,.3);
     }
 
-    [data-status="closed"] .info-card {
-        border-left: 4px solid #ef4444;
-    }
+        .tdp-monitor-btn:hover {
+            background: var(--gold-lt);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 16px rgba(200,150,12,.4);
+            text-decoration: none;
+            color: var(--navy);
+        }
 
-    [data-status="pending"] .info-card {
-        border-left: 4px solid #f59e0b;
-    }
-
-    [data-status="awarded"] .info-card {
-        border-left: 4px solid #fbbf24;
-    }
-
-    /* Progress indicator for verification */
-    .verification-progress {
-        height: 4px;
-        background: #e5e7eb;
-        border-radius: 2px;
-        overflow: hidden;
-        margin-top: 1rem;
-    }
-
-    .verification-progress-bar {
-        height: 100%;
-        transition: width 0.3s ease;
-    }
-
-    [data-verified="verified"] .verification-progress-bar {
-        width: 100%;
-        background: #3b82f6;
-    }
-
-    [data-verified="not verified"] .verification-progress-bar {
-        width: 33%;
-        background: #6b7280;
-    }
-
-    [data-verified="pending"] .verification-progress-bar {
-        width: 66%;
-        background: #f59e0b;
-    }
-
+    /* ── TAB CONTENT ── */
     .tab-content {
         display: none;
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity .3s ease;
     }
 
         .tab-content.active {
@@ -220,357 +299,605 @@
             opacity: 1;
         }
 
-    .apply-button {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        color: white;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+    .tdp-content {
+        padding: 2rem;
     }
 
-        .apply-button:hover {
+    /* ── SECTIONS ── */
+    .tdp-section {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid rgba(11,31,58,.07);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+        box-shadow: 0 2px 12px rgba(11,31,58,.05);
+        transition: box-shadow .3s, transform .3s;
+    }
+
+        .tdp-section:hover {
+            box-shadow: 0 8px 30px rgba(11,31,58,.1);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
         }
 
-    .key-detail {
+    .tdp-section-hd {
+        padding: 1rem 1.5rem;
+        background: var(--navy);
         display: flex;
         align-items: center;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        background-color: #f9fafb;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
+        gap: .65rem;
     }
 
-        .key-detail:hover {
-            background-color: #f3f4f6;
-            transform: translateX(5px);
+        .tdp-section-hd i {
+            color: var(--gold);
+            font-size: .9rem;
         }
 
-        .key-detail i {
-            width: 2rem;
-            height: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #e0e7ff;
-            color: #4f46e5;
-            border-radius: 0.5rem;
-            margin-right: 1rem;
+        .tdp-section-hd h2,
+        .tdp-section-hd h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--white);
+            margin: 0;
         }
 
-    .key-detail-label {
+    .tdp-section-body {
+        padding: 1.4rem 1.5rem;
+    }
+
+    .tdp-intro {
+        font-size: .9rem;
+        color: var(--muted);
+        margin-bottom: 1.2rem;
+        line-height: 1.6;
+    }
+
+    /* detail grid */
+    .tdp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .75rem;
+    }
+
+    .tdp-item {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .8rem 1rem;
+        background: var(--ivory);
+        border-radius: 8px;
+        border: 1px solid rgba(11,31,58,.05);
+        transition: background .2s, transform .2s;
+    }
+
+        .tdp-item:hover {
+            background: rgba(200,150,12,.05);
+            transform: translateX(4px);
+        }
+
+    .tdp-item-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        flex-shrink: 0;
+        margin-top: .05rem;
+    }
+
+    .tdp-item-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .2rem;
+    }
+
+    .tdp-item-value {
+        font-size: .88rem;
         font-weight: 600;
-        color: #4b5563;
-        min-width: 120px;
+        color: var(--navy);
+        line-height: 1.4;
     }
 
-    .key-detail-value {
-        color: #1f2937;
-        font-weight: 500;
+    /* awarded company sub-section */
+    .tdp-company-block {
+        margin-top: 1.4rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid rgba(11,31,58,.07);
     }
 
-    /* Custom scrollbar */
-    .pdf-viewer::-webkit-scrollbar {
-        width: 8px;
+    .tdp-company-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .92rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
     }
 
-    .pdf-viewer::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .pdf-viewer::-webkit-scrollbar-thumb {
-        background: #c5c5c5;
-        border-radius: 4px;
-    }
-
-        .pdf-viewer::-webkit-scrollbar-thumb:hover {
-            background: #a0a0a0;
+        .tdp-company-title i {
+            color: var(--gold);
         }
+
+    .tdp-profile-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem 1.1rem;
+        border-radius: 7px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .8rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-top: 1rem;
+        transition: background .2s, transform .2s;
+    }
+
+        .tdp-profile-btn:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    /* ── TIMELINE ── */
+    .tdp-timeline {
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
+        .tdp-timeline::before {
+            content: '';
+            position: absolute;
+            left: .9rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), rgba(200,150,12,.1));
+            border-radius: 2px;
+        }
+
+    .tdp-tl-item {
+        position: relative;
+        padding: 1rem 1.2rem;
+        background: var(--ivory);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .tdp-tl-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tdp-tl-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 14px rgba(11,31,58,.08);
+        }
+
+    .tdp-tl-dot {
+        position: absolute;
+        left: -2.05rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .7rem;
+        color: var(--white);
+    }
+
+    .dot-navy {
+        background: var(--navy);
+    }
+
+    .dot-green {
+        background: #10b981;
+    }
+
+    .dot-red {
+        background: #ef4444;
+    }
+
+    .tdp-tl-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .25rem;
+    }
+
+    .tdp-tl-date {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .tdp-tl-date i {
+            color: var(--gold);
+            font-size: .8rem;
+        }
+
+    /* ── DOCUMENTS TAB ── */
+    .tdp-doc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.4rem;
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    .tdp-doc-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .tdp-doc-title i {
+            color: var(--gold);
+        }
+
+    .tdp-dl-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1.2rem;
+        border-radius: 7px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .82rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 3px 12px rgba(11,31,58,.2);
+    }
+
+        .tdp-dl-btn:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(11,31,58,.25);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .tdp-dl-btn i {
+            color: var(--gold-lt);
+        }
+
+    .tdp-doc-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.2rem;
+        background: var(--white);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.07);
+        margin-bottom: 1.2rem;
+        box-shadow: 0 2px 8px rgba(11,31,58,.04);
+    }
+
+        .tdp-doc-meta i {
+            color: #ef4444;
+            font-size: 1.5rem;
+        }
+
+    .tdp-doc-name {
+        font-weight: 600;
+        color: var(--navy);
+        font-size: .88rem;
+    }
+
+    .tdp-doc-hint {
+        font-size: .78rem;
+        color: var(--slate);
+        margin-top: .15rem;
+    }
+
+    .pdf-viewer {
+        height: 800px;
+        border-radius: 10px;
+        overflow-y: auto;
+        background: #f8fafc;
+        border: 1px solid rgba(11,31,58,.08);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,.04);
+    }
+
+        .pdf-viewer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .pdf-viewer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .pdf-viewer::-webkit-scrollbar-thumb {
+            background: rgba(200,150,12,.3);
+            border-radius: 3px;
+        }
+
+            .pdf-viewer::-webkit-scrollbar-thumb:hover {
+                background: var(--gold);
+            }
+
+    @@media (max-width: 768px) {
+        .tdp-hero {
+            padding: 0 1rem;
+        }
+
+        .tdp-body {
+            padding: 0 .75rem;
+        }
+
+        .tdp-content {
+            padding: 1.2rem;
+        }
+
+        .tdp-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .tdp-tab-bar {
+            padding: 0 .75rem;
+        }
+    }
 </style>
 
-<div class="bg-gray-50 min-h-screen py-8">
-    <div class="container mx-auto px-4 max-w-6xl">
-        <div class="tender-card bg-white shadow-xl" data-status="@Model.TenderStatus.ToLower()" data-verified="@Model.IsVerified.ToLower()">
-            <!-- Header with back button and status badges -->
-            <div class="flex items-center justify-between p-6">
-                <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList"
-                   class="text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center gap-2 hover:scale-105">
-                    <i class="fas fa-arrow-left"></i>
-                    <span class="font-medium">Back</span>
-                </a>
-                <div class="flex gap-3">
-                    <span class="status-badge
-                        @(Model.TenderStatus.ToLower() == "open" ? "status-open" :
-                                                  Model.TenderStatus.ToLower() == "closed" ? "status-closed" :
-                                                  Model.TenderStatus.ToLower() == "awarded" ? "status-awarded" : "status-pending")">
-                        <div class="status-icon">
-                            <i class="fas
-                                @(Model.TenderStatus.ToLower() == "open" ? "fa-door-open" :
-                                                               Model.TenderStatus.ToLower() == "closed" ? "fa-lock" :
-                                                               Model.TenderStatus.ToLower() == "awarded" ? "fa-trophy" : "fa-clock") text-xs"></i>
-                        </div>
-                        @Model.TenderStatus
-                    </span>
+<div class="tdp-wrap" data-status="@Model.TenderStatus.ToLower()" data-verified="@Model.IsVerified.ToLower()">
 
-                    <span class="status-badge @(Model.IsVerified == "Verified" ? "verified" :
-                                                     Model.IsVerified == "Not Verified" ? "not-verified" : "verification-pending")">
-                        <div class="status-icon">
-                            <i class="fas @(Model.IsVerified == "Verified" ? "fa-shield-check" :
-                                                               Model.IsVerified == "Not Verified" ? "fa-times-circle" : "fa-spinner fa-spin") text-xs"></i>
-                        </div>
-                        @Model.IsVerified
+    <!-- ── HERO ── -->
+    <div class="tdp-hero">
+        <div class="tdp-topbar">
+            <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList" class="tdp-back">
+                <i class="fas fa-arrow-left"></i> Back to Tenders
+            </a>
+            <div class="tdp-badges">
+                <span class="tdp-badge
+                    @(Model.TenderStatus.ToLower() == "open" ? "b-open" :
+                                            Model.TenderStatus.ToLower() == "closed" ? "b-closed" :
+                                            Model.TenderStatus.ToLower() == "awarded" ? "b-awarded" : "b-pending")">
+                    <span class="tdp-badge-dot">
+                        <i class="fas @(Model.TenderStatus.ToLower() == "open"    ? "fa-door-open" :
+                                                                   Model.TenderStatus.ToLower() == "closed" ? "fa-lock" :
+                                                                   Model.TenderStatus.ToLower() == "awarded" ? "fa-trophy" : "fa-clock")"></i>
                     </span>
+                    @Model.TenderStatus
+                </span>
+                <span class="tdp-badge
+                    @(Model.IsVerified == "Verified" ? "b-verified" :
+                                            Model.IsVerified == "Not Verified" ? "b-notver" : "b-verpend")">
+                    <span class="tdp-badge-dot">
+                        <i class="fas @(Model.IsVerified == "Verified"     ? "fa-shield-alt"   :
+                                                                   Model.IsVerified == "Not Verified" ? "fa-times-circle" : "fa-spinner fa-spin")"></i>
+                    </span>
+                    @Model.IsVerified
+                </span>
+            </div>
+        </div>
+
+        <div class="tdp-title-block">
+            <p class="tdp-eyebrow"><span></span> Tender Details</p>
+            <h1>@Model.Title</h1>
+            <div class="tdp-meta">
+                <div class="tdp-meta-item">
+                    <i class="fas fa-hashtag"></i>
+                    <span>ID: <strong>#@Model.TenderId</strong></span>
+                </div>
+                <div class="tdp-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Posted: <strong>@Model.IssuedDate.ToString("MMM dd, yyyy")</strong></span>
+                </div>
+                <div class="tdp-meta-item">
+                    <i class="fas fa-building"></i>
+                    <span>Issued by: <strong>@Model.IssuedBy</strong></span>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Tender Header -->
-            <div class="tender-header">
-                <h1 class="text-3xl font-bold text-white mb-4">@Model.Title</h1>
-                <div class="flex flex-wrap items-center text-blue-100 gap-6">
-                    <span class="flex items-center">
-                        <i class="fas fa-hashtag mr-2"></i>
-                        <span class="opacity-90">Tender ID:</span>
-                        <span class="font-semibold ml-2">@Model.TenderId</span>
-                    </span>
-                    <span class="flex items-center">
-                        <i class="fas fa-calendar-alt mr-2"></i>
-                        <span class="opacity-90">Posted:</span>
-                        <span class="font-semibold ml-2">@Model.IssuedDate.ToString("MMM dd, yyyy")</span>
-                    </span>
-                    <span class="flex items-center">
-                        <i class="fas fa-building mr-2"></i>
-                        <span class="opacity-90">Issued By:</span>
-                        <span class="font-semibold ml-2">@Model.IssuedBy</span>
-                    </span>
+    <!-- ── CARD + TABS ── -->
+    <div class="tdp-body">
+        <div class="tdp-card">
+
+            <div class="tdp-tab-bar">
+                <div class="tdp-tab-nav">
+                    <button onclick="showTab('details')" class="tab-btn active">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                    <button onclick="showTab('documents')" class="tab-btn">
+                        <i class="fas fa-file-alt"></i> Documents
+                    </button>
                 </div>
+                @if (Model.TenderStatus == "Closed")
+                {
+                    <a asp-action="MonitorTender" asp-controller="PublisherTender" asp-route-id="@Model.EncId"
+                       class="tdp-monitor-btn">
+                        <i class="fas fa-bell"></i> Monitor Now
+                    </a>
+                }
             </div>
 
-            <!-- Tab Navigation -->
-            <div class="border-b border-gray-200 bg-white">
-                <div class="flex justify-between items-center px-6">
-                    <nav class="flex space-x-8" aria-label="Tabs">
-                        <button onclick="showTab('details')" class="tab-btn py-4 px-1 text-sm font-medium text-blue-600 active">
-                            <i class="fas fa-info-circle mr-2"></i>Details
-                        </button>
-                        <button onclick="showTab('documents')" class="tab-btn py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
-                            <i class="fas fa-file-alt mr-2"></i>Documents
-                        </button>
-                    </nav>
+            <div class="tdp-content">
 
-                    @if (Model.TenderStatus == "Closed")
-                    {
-                        <a asp-action="MonitorTender" asp-controller="PublisherTender" asp-route-id="@Model.EncId"
-                           class="apply-button">
-                            <i class="fas fa-bell mr-2"></i>
-                            Monitor Now
-                        </a>
-
-                    }
-                </div>
-            </div>
-
-            <!-- Tab Content -->
-            <div class="p-6">
-                <!-- Details Tab -->
+                <!-- ── DETAILS TAB ── -->
                 <div id="details-tab" class="tab-content active">
-                    <!-- Tender Summary Card -->
-                    <div class="info-card mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-clipboard-list text-blue-600 mr-2"></i>Tender Summary
-                        </h2>
-                        <p class="text-gray-600 mb-4">@Model.Title</p>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                            <div class="key-detail">
-                                <i class="fas fa-tag"></i>
-                                <span class="key-detail-label">Type:</span>
-                                <span class="key-detail-value">@Model.TenderType</span>
-                            </div>
-                            <div class="key-detail">
-                                <i class="fas fa-hourglass-half"></i>
-                                <span class="key-detail-label">Duration:</span>
-                                <span class="key-detail-value">@Model.ProjectDuration</span>
-                            </div>
-                            <div class="key-detail">
-                                <i class="fas fa-rupee-sign"></i>
-                                <span class="key-detail-label">Budget:</span>
-                                <span class="key-detail-value">₹ @Model.BudgetEstimation.ToString("N2")</span>
-                            </div>
-                            <div class="key-detail">
-                                <i class="fas fa-user-tie"></i>
-                                <span class="key-detail-label">Issued By:</span>
-                                <span class="key-detail-value">@Model.IssuedBy</span>
-                            </div>
-                            <div class="key-detail">
-                                <i class="fas fa-user-tie"></i>
-                                <span class="key-detail-label">Description:</span>
-                                <span class="key-detail-value">@Model.TenderDescription</span>
+                    <!-- Summary -->
+                    <div class="tdp-section">
+                        <div class="tdp-section-hd">
+                            <i class="fas fa-clipboard-list"></i><h2>Tender Summary</h2>
+                        </div>
+                        <div class="tdp-section-body">
+                            <p class="tdp-intro">@Model.Title</p>
+                            <div class="tdp-grid">
+                                <div class="tdp-item">
+                                    <div class="tdp-item-icon"><i class="fas fa-tag"></i></div>
+                                    <div><div class="tdp-item-label">Type</div><div class="tdp-item-value">@Model.TenderType</div></div>
+                                </div>
+                                <div class="tdp-item">
+                                    <div class="tdp-item-icon"><i class="fas fa-hourglass-half"></i></div>
+                                    <div><div class="tdp-item-label">Duration</div><div class="tdp-item-value">@Model.ProjectDuration</div></div>
+                                </div>
+                                <div class="tdp-item">
+                                    <div class="tdp-item-icon"><i class="fas fa-rupee-sign"></i></div>
+                                    <div><div class="tdp-item-label">Budget</div><div class="tdp-item-value">&#8377; @Model.BudgetEstimation.ToString("N2")</div></div>
+                                </div>
+                                <div class="tdp-item">
+                                    <div class="tdp-item-icon"><i class="fas fa-user-tie"></i></div>
+                                    <div><div class="tdp-item-label">Issued By</div><div class="tdp-item-value">@Model.IssuedBy</div></div>
+                                </div>
+                                <div class="tdp-item" style="grid-column:1/-1;">
+                                    <div class="tdp-item-icon"><i class="fas fa-align-left"></i></div>
+                                    <div>
+                                        <div class="tdp-item-label">Description</div>
+                                        <div class="tdp-item-value" style="font-weight:400;color:var(--muted);">@Model.TenderDescription</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-
                     <!-- Financial Details -->
-                    <div class="info-card bg-white p-6 shadow-sm">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                            <i class="fas fa-coins text-yellow-600 mr-2"></i>Financial Details
-                        </h2>
-                        <div class="space-y-4">
-                            <div class="key-detail">
-                                <i class="fas fa-rupee-sign"></i>
-                                <span class="key-detail-label">Budget:</span>
-                                <span class="key-detail-value">₹ @Model.BudgetEstimation.ToString("N2")</span>
+                    <div class="tdp-section">
+                        <div class="tdp-section-hd">
+                            <i class="fas fa-coins"></i><h2>Financial Details</h2>
+                        </div>
+                        <div class="tdp-section-body">
+                            <div class="tdp-grid">
+                                <div class="tdp-item">
+                                    <div class="tdp-item-icon"><i class="fas fa-rupee-sign"></i></div>
+                                    <div><div class="tdp-item-label">Budget Estimation</div><div class="tdp-item-value">&#8377; @Model.BudgetEstimation.ToString("N2")</div></div>
+                                </div>
                             </div>
-
 
                             @if (Model.AwardedCompany != null)
                             {
-                                <div class="mt-6 border-t pt-6">
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                        <i class="fas fa-building text-blue-600 mr-2"></i>Awarded Company Details
-                                    </h3>
-                                    <div class="space-y-4">
-                                        <div class="key-detail">
-                                            <i class="fas fa-building"></i>
-                                            <span class="key-detail-label">Company Name:</span>
-                                            <span class="key-detail-value">@Model.AwardedCompany.CompanyName</span>
+                                <div class="tdp-company-block">
+                                    <h3 class="tdp-company-title"><i class="fas fa-building"></i> Awarded Company Details</h3>
+                                    <div class="tdp-grid">
+                                        <div class="tdp-item">
+                                            <div class="tdp-item-icon"><i class="fas fa-building"></i></div>
+                                            <div><div class="tdp-item-label">Company Name</div><div class="tdp-item-value">@Model.AwardedCompany.CompanyName</div></div>
                                         </div>
-                                        <div class="key-detail">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            <span class="key-detail-label">Address:</span>
-                                            <span class="key-detail-value">@Model.AwardedCompany.FullAddress</span>
+                                        <div class="tdp-item">
+                                            <div class="tdp-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                            <div><div class="tdp-item-label">Address</div><div class="tdp-item-value">@Model.AwardedCompany.FullAddress</div></div>
                                         </div>
-                                        <div class="key-detail">
-                                            <i class="fas fa-envelope"></i>
-                                            <span class="key-detail-label">Email:</span>
-                                            <span class="key-detail-value">@Model.AwardedCompany.OfficeEmail</span>
+                                        <div class="tdp-item">
+                                            <div class="tdp-item-icon"><i class="fas fa-envelope"></i></div>
+                                            <div><div class="tdp-item-label">Email</div><div class="tdp-item-value">@Model.AwardedCompany.OfficeEmail</div></div>
                                         </div>
-                                        <div class="key-detail">
-                                            <i class="fas fa-globe"></i>
-                                            <span class="key-detail-label">Website:</span>
-                                            <span class="key-detail-value">
-                                                @if (!string.IsNullOrEmpty(Model.AwardedCompany.CompanyWebsiteUrl))
-                                                {
-                                                    <a href="@Model.AwardedCompany.CompanyWebsiteUrl" target="_blank"
-                                                       class="text-blue-600 hover:text-blue-800">
-                                                        @Model.AwardedCompany.CompanyWebsiteUrl
-                                                    </a>
-                                                }
-                                                else
-                                                {
-                                                    <span>Not provided</span>
-                                                }
-                                            </span>
+                                        <div class="tdp-item">
+                                            <div class="tdp-item-icon"><i class="fas fa-globe"></i></div>
+                                            <div>
+                                                <div class="tdp-item-label">Website</div>
+                                                <div class="tdp-item-value">
+                                                    @if (!string.IsNullOrEmpty(Model.AwardedCompany.CompanyWebsiteUrl))
+                                                    {
+                                                        <a href="@Model.AwardedCompany.CompanyWebsiteUrl" target="_blank" style="color:var(--gold);text-decoration:none;">@Model.AwardedCompany.CompanyWebsiteUrl</a>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <span style="color:var(--slate);">Not provided</span>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="key-detail">
-                                            <i class="fas fa-star"></i>
-                                            <span class="key-detail-label">Rating:</span>
-                                            <span class="key-detail-value">
-                                                @(Model.AwardedCompany.Rating?.ToString("N1") ?? "Not rated") / 5.0
-                                            </span>
-                                        </div>
-                                        <div class="mt-6">
-                                            <a asp-action="Index" asp-controller="Company" asp-route-id="@Model.AwardedCompany.EncId" asp-route-tenderId="@Model.TenderId"
-                                               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200">
-                                                <i class="fas fa-external-link-alt mr-2"></i>
-                                                View Company Profile
-                                            </a>
+                                        <div class="tdp-item">
+                                            <div class="tdp-item-icon"><i class="fas fa-star"></i></div>
+                                            <div><div class="tdp-item-label">Rating</div><div class="tdp-item-value">@(Model.AwardedCompany.Rating?.ToString("N1") ?? "Not rated") / 5.0</div></div>
                                         </div>
                                     </div>
+                                    <a asp-action="Index" asp-controller="Company"
+                                       asp-route-id="@Model.AwardedCompany.EncId"
+                                       asp-route-tenderId="@Model.TenderId"
+                                       class="tdp-profile-btn">
+                                        <i class="fas fa-external-link-alt"></i> View Company Profile
+                                    </a>
                                 </div>
                             }
                         </div>
                     </div>
 
-
                     <!-- Timeline -->
-                    <div class="info-card bg-white p-6 shadow-sm mb-8">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                            <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>Important Dates
-                        </h2>
-                        <div class="relative">
-                            <!-- Timeline line -->
-                            <div class="absolute left-8 top-0 bottom-0 w-1 bg-blue-100"></div>
-
-                            <div class="space-y-6 relative">
-                                <div class="timeline-item ml-12">
-                                    <div class="absolute -left-12 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                                        <i class="fas fa-flag"></i>
-                                    </div>
-                                    <div class="font-medium text-gray-800">Issued Date</div>
-                                    <div class="text-gray-600 flex items-center gap-2">
-                                        <i class="fas fa-calendar-day text-blue-500"></i>
-                                        @Model.IssuedDate.ToString("MMMM dd, yyyy")
-                                    </div>
+                    <div class="tdp-section">
+                        <div class="tdp-section-hd">
+                            <i class="fas fa-calendar-alt"></i><h2>Important Dates</h2>
+                        </div>
+                        <div class="tdp-section-body">
+                            <div class="tdp-timeline">
+                                <div class="tdp-tl-item">
+                                    <div class="tdp-tl-dot dot-navy"><i class="fas fa-flag"></i></div>
+                                    <div class="tdp-tl-label">Issued Date</div>
+                                    <div class="tdp-tl-date"><i class="fas fa-calendar-day"></i> @Model.IssuedDate.ToString("MMMM dd, yyyy")</div>
                                 </div>
-
-                                <div class="timeline-item ml-12">
-                                    <div class="absolute -left-12 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-                                        <i class="fas fa-door-open"></i>
-                                    </div>
-                                    <div class="font-medium text-gray-800">Opening Date</div>
-                                    <div class="text-gray-600 flex items-center gap-2">
-                                        <i class="fas fa-calendar-day text-green-500"></i>
-                                        @Model.OpeningDate.ToString("MMMM dd, yyyy")
-                                    </div>
+                                <div class="tdp-tl-item">
+                                    <div class="tdp-tl-dot dot-green"><i class="fas fa-door-open"></i></div>
+                                    <div class="tdp-tl-label">Opening Date</div>
+                                    <div class="tdp-tl-date"><i class="fas fa-calendar-day"></i> @Model.OpeningDate.ToString("MMMM dd, yyyy")</div>
                                 </div>
-
-                                <div class="timeline-item ml-12">
-                                    <div class="absolute -left-12 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white">
-                                        <i class="fas fa-lock"></i>
-                                    </div>
-                                    <div class="font-medium text-gray-800">Closing Date</div>
-                                    <div class="text-gray-600 flex items-center gap-2">
-                                        <i class="fas fa-calendar-day text-red-500"></i>
-                                        @Model.ClosingDate.ToString("MMMM dd, yyyy")
-                                    </div>
+                                <div class="tdp-tl-item">
+                                    <div class="tdp-tl-dot dot-red"><i class="fas fa-lock"></i></div>
+                                    <div class="tdp-tl-label">Closing Date</div>
+                                    <div class="tdp-tl-date"><i class="fas fa-calendar-day"></i> @Model.ClosingDate.ToString("MMMM dd, yyyy")</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Documents Tab -->
+                </div><!-- /details-tab -->
+                <!-- ── DOCUMENTS TAB ── -->
                 <div id="documents-tab" class="tab-content">
-                    <div class="mb-6 flex justify-between items-center">
-                        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                            <i class="fas fa-file-alt text-blue-600 mr-2"></i>Tender Documents
-                        </h2>
 
-                        <!-- Download Button -->
-                        <a href="@Url.Content("~/TenderDocument/" + Model.TenderDocument)" download
-                           class="download-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all duration-300">
-                            <i class="fas fa-download"></i>
-                            Download PDF
+                    <div class="tdp-doc-header">
+                        <h2 class="tdp-doc-title"><i class="fas fa-file-alt"></i> Tender Documents</h2>
+                        <a href="@Url.Content("~/TenderDocument/" + Model.TenderDocument)" download class="tdp-dl-btn">
+                            <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
 
-                    <!-- Document Preview Card -->
-                    <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                        <div class="flex items-center text-gray-700 mb-4">
-                            <i class="fas fa-file-pdf text-red-500 text-2xl mr-3"></i>
-                            <div>
-                                <div class="font-medium">@(Model.TenderDocument ?? "Tender Document.pdf")</div>
-                                <div class="text-sm text-gray-500">Click on the document to view or use the download button above</div>
-                            </div>
+                    <div class="tdp-doc-meta">
+                        <i class="fas fa-file-pdf"></i>
+                        <div>
+                            <div class="tdp-doc-name">@(Model.TenderDocument ?? "Tender Document.pdf")</div>
+                            <div class="tdp-doc-hint">Click on the document to view or use the download button above</div>
                         </div>
                     </div>
 
-                    <div class="pdf-viewer border border-gray-200">
+                    <div class="pdf-viewer">
                         <div id="pdf-container" class="p-4"></div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+                </div><!-- /documents-tab -->
+
+            </div><!-- /tdp-content -->
+        </div><!-- /tdp-card -->
+    </div><!-- /tdp-body -->
+
+</div><!-- /tdp-wrap -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 <script>

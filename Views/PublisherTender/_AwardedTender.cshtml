@@ -1,175 +1,363 @@
 ﻿@model IEnumerable<TenderEdit>
 
 <style>
-    .tender-card {
-        transition: all 0.3s ease;
+    :root {
+        --navy: #0B1F3A;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+        --accent: #f59e0b; /* amber — Awarded */
+        --accent-bg: rgba(245,158,11,.08);
     }
 
-        .tender-card:hover {
-            transform: translateY(-2px);
+    .at-partial {
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .at-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .at-toolbar-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .at-toolbar-title .title-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            background: var(--accent-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: .8rem;
         }
 
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
+    .at-controls {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .at-controls select,
+        .at-controls input[type="text"] {
+            background: var(--white);
+            border: 1px solid rgba(11,31,58,.14);
+            color: var(--navy);
+            font-size: .85rem;
+            font-family: 'DM Sans', sans-serif;
+            border-radius: 7px;
+            padding: .55rem 1rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            min-width: 160px;
+        }
+
+            .at-controls select:focus,
+            .at-controls input[type="text"]:focus {
+                border-color: var(--gold);
+                box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+            }
+
+            .at-controls input[type="text"]::placeholder {
+                color: var(--slate);
+            }
+
+    .at-count {
+        font-size: .78rem;
+        color: var(--slate);
         font-weight: 500;
-        font-size: 0.875rem;
+    }
+
+    .at-table-wrap {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid rgba(11,31,58,.07);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(11,31,58,.06);
+    }
+
+    .at-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .875rem;
+    }
+
+        .at-table thead tr {
+            background: var(--navy);
+        }
+
+        .at-table thead th {
+            padding: .95rem 1rem;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .at-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .18s;
+        }
+
+            .at-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .at-table tbody tr:hover {
+                background: rgba(200,150,12,.03) !important;
+            }
+
+        .at-table td {
+            padding: .95rem 1rem;
+            color: var(--muted);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .at-id {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--navy);
+        font-size: .9rem;
+    }
+
+    .at-title {
+        color: var(--navy);
+        font-weight: 600;
+        font-size: .88rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 0 auto;
+    }
+
+    .at-type-badge {
+        display: inline-flex;
+        padding: .22rem .7rem;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        background: rgba(11,31,58,.06);
+        color: var(--navy);
+    }
+
+    .at-date {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .85rem;
+    }
+
+        .at-date i {
+            color: var(--gold);
+        }
+
+    /* Payment status badges */
+    .at-pay {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .22rem .75rem;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .05em;
         text-transform: uppercase;
     }
 
-    .status-open {
-        background-color: #dcfce7;
-        color: #166534;
+    .at-pay-verified {
+        background: rgba(16,185,129,.1);
+        color: #059669;
     }
 
-    .status-closed {
-        background-color: #fee2e2;
-        color: #991b1b;
+    .at-pay-pending {
+        background: rgba(245,158,11,.1);
+        color: #b45309;
     }
 
-    .status-pending {
-        background-color: #fef3c7;
-        color: #92400e;
+    .at-pay-failed {
+        background: rgba(239,68,68,.1);
+        color: #dc2626;
     }
 
-    .action-button {
-        transition: all 0.3s ease;
+    .at-pay-notpaid {
+        background: rgba(138,155,181,.1);
+        color: var(--slate);
     }
 
-        .action-button:hover {
-            transform: scale(1.05);
+    /* Action icon buttons */
+    .at-action-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .6rem;
+    }
+
+    .at-icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        font-size: .9rem;
+        text-decoration: none;
+        transition: transform .2s, filter .2s;
+    }
+
+        .at-icon-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            text-decoration: none;
         }
 
-    .filter-dropdown {
-        backface-visibility: visible;
-        border: none;
-        color: white;
-        padding: 0.5rem 2rem 0.5rem 1rem;
-        border-radius: 0.5rem;
-        appearance: none;
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 1em;
-        background-color: #2563eb;
+    .at-icon-view {
+        background: rgba(11,31,58,.08);
+        color: var(--navy);
     }
 
-    .table-container {
-        animation: fadeIn 0.5s ease-out;
+    .at-icon-pay {
+        background: rgba(16,185,129,.1);
+        color: #059669;
+    }
+
+    .at-empty {
+        text-align: center;
+        padding: 3rem;
+        color: var(--slate);
+    }
+
+        .at-empty i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: .35;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+    @@media (max-width: 1024px) {
+        .at-table thead th:nth-child(3),
+        .at-table tbody td:nth-child(3) {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .at-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .at-controls {
+            width: 100%;
+        }
+
+            .at-controls select, .at-controls input[type="text"] {
+                min-width: 0;
+                flex: 1;
+            }
     }
 </style>
 
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8">
-    <div class="container mx-auto px-4">
-        <!-- Header Section -->
-        <div class="flex justify-between items-center mb-8">
-            <a asp-action="Index" asp-controller="PublisherTender" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 text-2xl">
-                <i class="fas fa-arrow-left mr-2"></i>
-                <span class="text-lg">Back</span>
-            </a>
-            <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-                Awarded Tenders
-            </h2>
-        </div>
+<div class="at-partial">
 
-        <!-- Enhanced Filter Section -->
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex gap-4">
-                <!-- New Tender Type Filter -->
-                <select id="typeFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                        onchange="filterByType()">
-                    <option value="">All Types</option>
-                    @foreach (var type in Model.Select(t => t.TenderType).Distinct())
+    <div class="at-toolbar">
+        <h2 class="at-toolbar-title">
+            <span class="title-icon"><i class="fas fa-award"></i></span>
+            Awarded Tenders
+        </h2>
+        <div class="at-controls">
+            <select id="typeFilter" onchange="filterByType()">
+                <option value="">All Types</option>
+                @foreach (var type in Model.Select(t => t.TenderType).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+            <input type="text" id="searchInput" placeholder="Search tenders..." onkeyup="searchTable()" />
+            <span class="at-count" id="resultCount"></span>
+        </div>
+    </div>
+
+    <div class="at-table-wrap">
+        <div style="overflow-x:auto;">
+            <table class="at-table" id="tenderTable">
+                <thead>
+                    <tr>
+                        <th>Tender ID</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Award Date</th>
+                        <th>Company</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
                     {
-                        <option value="@type">@type</option>
-                    }
-                </select>
-
-                <input type="text" id="searchInput" placeholder="Search tenders..."
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                       onkeyup="searchTable()">
-            </div>
-            <div class="text-sm text-gray-600" id="resultCount"></div>
-        </div>
-
-
-        <!-- Table Section -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden table-container">
-            <div class="overflow-x-auto">
-                <table class="w-full" id="tenderTable">
-                    <thead>
-                        <tr class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-hashtag mr-2"></i>Tender ID
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-file-alt mr-2"></i>Title
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-chart-pie mr-2"></i>Type
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-calendar-alt mr-2"></i>Award Date
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-building mr-2"></i>Company Name
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-money-bill mr-2"></i>Payment Status
-                            </th>
-                            <th class="px-6 py-4 text-center font-semibold">
-                                <i class="fas fa-cogs mr-2"></i>Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
                         @foreach (var tender in Model)
                         {
-                            <tr class="tender-card border-b hover:bg-gray-50"
+                            <tr class="tender-card"
                                 data-status="@tender.IsVerified"
                                 data-type="@tender.TenderType.ToLower()"
                                 data-search="@(tender.TenderId + " " + tender.Title + " " + tender.IsVerified)">
-                                <td class="px-6 py-4 text-center font-medium text-gray-900">
-                                    #@tender.TenderId
+                                <td><span class="at-id">#@tender.TenderId</span></td>
+                                <td><div class="at-title" title="@tender.Title">@tender.Title</div></td>
+                                <td><span class="at-type-badge">@tender.TenderType</span></td>
+                                <td>
+                                    <span class="at-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        @tender.AwardDate
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center">
-                                        <span class="line-clamp-1">@tender.Title</span>
+                                <td>
+                                    <div class="at-title" title="@tender.AwardedCompany.CompanyName">
+                                        @tender.AwardedCompany.CompanyName
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center">
-                                        <span class="line-clamp-1">@tender.TenderType</span>
-                                    </div>
+                                <td>
+                                    @{
+                                        var payClass = tender.PaymentStatus == "Verified" ? "at-pay-verified" :
+                                        tender.PaymentStatus == "Pending" ? "at-pay-pending" :
+                                        tender.PaymentStatus == "Failed" ? "at-pay-failed" : "at-pay-notpaid";
+                                    }
+                                    <span class="at-pay @payClass">@tender.PaymentStatus</span>
                                 </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <i class="far fa-calendar-alt text-blue-500"></i>
-                                        <span>@tender.AwardDate</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-center text-gray-800">
-                                    <div class="flex items-center justify-center">
-                                        <span class="line-clamp-1">@tender.AwardedCompany.CompanyName</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <span class="@(tender.PaymentStatus == "Verified" ? "text-green-600" :
-                                                                            tender.PaymentStatus == "Pending" ? "text-yellow-600" :
-                                                                            tender.PaymentStatus == "Failed" ? "text-red-600" : "text-gray-600")">
-                                    @tender.PaymentStatus
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="flex items-center justify-center space-x-2">
-                                    <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@tender.EncId"
-                                       class="text-blue-600 hover:text-blue-800" title="View Details">
-                                        <i class="fas fa-eye text-xl"></i>
-                                    </a>
-                                    @if (tender.PaymentStatus == "Not Paid")
+                                <td>
+                                    <div class="at-action-wrap">
+                                        <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@tender.EncId"
+                                           class="at-icon-btn at-icon-view" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        @if (tender.PaymentStatus == "Not Paid")
                                         {
                                             <a asp-action="TenderPayment" asp-controller="TenderSlip" asp-route-tenderId="@tender.EncId"
-                                               class="text-green-600 hover:text-green-800" title="Make Payment">
-                                                <i class="fas fa-money-bill-wave text-xl"></i>
+                                               class="at-icon-btn at-icon-pay" title="Make Payment">
+                                                <i class="fas fa-money-bill-wave"></i>
                                             </a>
                                         }
                                         @* else
@@ -183,52 +371,65 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="at-empty">
+                                    <i class="fas fa-award"></i>
+                                    <p style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);margin-bottom:.3rem;">No awarded tenders</p>
+                                    <p style="font-size:.85rem;">There are currently no awarded tenders to display.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="noResults" class="at-empty hidden">
+                <p>No tenders found matching your criteria</p>
             </div>
         </div>
     </div>
 
-    <script>
-        // Function to search the table by tender title
-        function searchTable() {
-            const searchValue = document.getElementById("searchInput").value.toLowerCase();
-            const rows = document.querySelectorAll("#tenderTable tbody tr");
+</div>
 
-            rows.forEach(row => {
-                const title = row.cells[1].textContent.toLowerCase();
-                if (title.includes(searchValue)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        }
+<script>
+    function searchTable() {
+        const searchValue = document.getElementById("searchInput").value.toLowerCase();
+        const rows = document.querySelectorAll("#tenderTable tbody tr");
 
-        function filterByType() {
-            const selectedType = document.getElementById("typeFilter").value;
-            const rows = document.querySelectorAll("#tenderTable tbody tr");
-            const noResults = document.getElementById("noResults");
-            let visibleCount = 0;
-
-            rows.forEach(row => {
-                const type = row.getAttribute("data-type");
-                if (!selectedType || type === selectedType.toLowerCase()) {
-                    row.style.display = "";
-                    visibleCount++;
-                } else {
-                    row.style.display = "none";
-                }
-            });
-
-            // Show/hide no results message
-            noResults.classList.toggle("hidden", visibleCount > 0);
-
-            // Update result count if the element exists
-            const resultCount = document.getElementById("resultCount");
-            if (resultCount) {
-                resultCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
+        rows.forEach(row => {
+            const title = row.cells[1].textContent.toLowerCase();
+            if (title.includes(searchValue)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
             }
+        });
+    }
+
+    function filterByType() {
+        const selectedType = document.getElementById("typeFilter").value;
+        const rows = document.querySelectorAll("#tenderTable tbody tr");
+        const noResults = document.getElementById("noResults");
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const type = row.getAttribute("data-type");
+            if (!selectedType || type === selectedType.toLowerCase()) {
+                row.style.display = "";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        noResults.classList.toggle("hidden", visibleCount > 0);
+
+        const resultCount = document.getElementById("resultCount");
+        if (resultCount) {
+            resultCount.textContent = `Showing ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
         }
-    </script>
-</body>
+    }
+</script>

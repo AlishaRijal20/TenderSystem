@@ -19,12 +19,17 @@
 
     /* ── BLEED: escape layout container ── */
     .tp-bleed {
-        margin-left: -1rem;
-        margin-right: -1rem;
+        /* True full-viewport bleed — escapes both the container's padding
+               AND its max-width, so no side gaps at any screen size */
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
         margin-top: -1.5rem;
         background: var(--ivory);
         min-height: 100vh;
         font-family: 'DM Sans', sans-serif;
+        overflow-x: hidden;
     }
 
     /* ── HERO HEADER ── */
@@ -32,7 +37,7 @@
         background: var(--navy);
         position: relative;
         overflow: hidden;
-        padding: 2.8rem 2.5rem 4rem;
+        padding: 2.8rem 2.5rem 4.5rem;
     }
 
         .tp-hero::before {
@@ -58,7 +63,7 @@
     .tp-hero-inner {
         position: relative;
         z-index: 1;
-        max-width: 1400px;
+        max-width: 1600px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
@@ -121,9 +126,9 @@
 
     /* ── CARD BODY ── */
     .tp-body {
-        max-width: 1400px;
+        max-width: 1600px;
         margin: -2rem auto 0;
-        padding: 0 2rem 2rem;
+        padding: 0 1.5rem 2rem;
         position: relative;
         z-index: 2;
     }
@@ -133,6 +138,7 @@
         border-radius: 14px;
         box-shadow: 0 8px 40px rgba(11,31,58,.1);
         overflow: hidden;
+        width: 100%;
     }
 
     /* ── TAB NAV ── */
@@ -142,7 +148,8 @@
         align-items: stretch;
         border-bottom: 1px solid rgba(11,31,58,.08);
         background: var(--white);
-        padding: 0 .5rem;
+        padding: 0 1rem;
+        gap: .25rem;
     }
 
     .tab-link {
@@ -246,7 +253,7 @@
 
     /* ── CONTENT AREA ── */
     .tp-content {
-        padding: 2rem;
+        padding: 1.5rem;
         min-height: 500px;
         background: var(--ivory);
     }
@@ -275,7 +282,7 @@
     }
 
     .tp-body {
-        padding: 0 1rem 1.5rem;
+        padding: 0 .5rem 1.5rem;
     }
 
     .tp-tabs {
