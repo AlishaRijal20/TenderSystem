@@ -6,101 +6,318 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
-    .form-container {
-        background-color: #ffffff;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .ukc-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO ── */
+    .ukc-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2.5rem 5rem;
+    }
+
+        .ukc-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .ukc-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .ukc-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .ukc-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
+
+        .ukc-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .ukc-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.2;
+    }
+
+        .ukc-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .ukc-hero-sub {
+        font-size: .88rem;
+        color: var(--slate);
+        margin: 0;
+    }
+
+    .ukc-notice {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .45rem 1rem;
+        border-radius: 6px;
+        background: rgba(200,150,12,.12);
+        border: 1px solid rgba(200,150,12,.25);
+        font-size: .75rem;
+        font-weight: 600;
+        color: var(--gold-lt);
+        align-self: flex-start;
+        margin-top: .35rem;
+    }
+
+    /* ── FORM CARD ── */
+    .ukc-body {
+        max-width: 900px;
+        margin: -2rem auto 3rem;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ukc-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
         overflow: hidden;
     }
 
-    .form-header {
-        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-        padding: 1.5rem;
-        color: white;
+    .ukc-val-summary {
+        padding: 1rem 1.5rem;
+        background: #fee2e2;
+        border-left: 3px solid #ef4444;
+        font-size: .84rem;
+        color: #991b1b;
     }
 
-    .form-section {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
+    /* ── SECTIONS ── */
+    .ukc-section {
+        border-bottom: 1px solid rgba(11,31,58,.06);
     }
 
-    .form-section-title {
-        position: relative;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1e3a8a;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.75rem;
-    }
-
-        .form-section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, #1e40af, #3b82f6);
+        .ukc-section:last-child {
+            border-bottom: none;
         }
 
-    .input-group {
-        margin-bottom: 1.25rem;
+    .ukc-section-hd {
+        padding: 1.1rem 2rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+    }
+
+    .ukc-section-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .ukc-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .ukc-section-body {
+        padding: 1.8rem 2rem;
+    }
+
+    /* ── GRIDS ── */
+    .ukc-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.4rem;
+    }
+
+    .ukc-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.4rem;
+    }
+
+    /* ── FLOATING LABEL ── */
+    .ukc-field {
         position: relative;
+        margin-bottom: .25rem;
     }
 
     .form-input {
         width: 100%;
-        padding: 0.75rem 1rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        transition: all 0.3s;
+        padding: .85rem 1rem;
+        border: 1.5px solid rgba(11,31,58,.15);
+        border-radius: 8px;
+        font-size: .88rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--white);
+        transition: border-color .2s, box-shadow .2s, background .2s;
+        outline: none;
     }
 
+        .form-input::placeholder {
+            color: transparent;
+        }
+
         .form-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+        .form-input[readonly] {
+            background: var(--ivory);
+            color: var(--slate);
+            border-style: dashed;
+            cursor: not-allowed;
         }
 
     .form-label {
         position: absolute;
-        top: -0.5rem;
-        left: 0.75rem;
-        padding: 0 0.25rem;
-        background-color: white;
-        font-size: 0.75rem;
-        color: #6b7280;
-        transition: all 0.3s;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        font-size: .84rem;
+        color: var(--slate);
+        background: var(--white);
+        padding: 0 .25rem;
+        pointer-events: none;
+        transition: all .2s;
     }
 
-    .form-input:focus + .form-label,
-    .form-input:not(:placeholder-shown) + .form-label {
-        color: #3b82f6;
-        font-weight: 500;
+    .form-input[readonly] ~ .form-label {
+        background: var(--ivory);
+    }
+
+    .form-input:focus ~ .form-label,
+    .form-input:not(:placeholder-shown) ~ .form-label {
+        top: 0;
+        font-size: .7rem;
+        color: var(--gold);
+        font-weight: 600;
+        letter-spacing: .04em;
+        background: var(--white);
+    }
+
+    .form-input[readonly]:not(:placeholder-shown) ~ .form-label {
+        background: var(--ivory);
+        color: var(--slate);
+    }
+
+    .validation-error {
+        font-size: .72rem;
+        color: #ef4444;
+        margin-top: .3rem;
+        display: block;
+    }
+
+    /* ── FILE UPLOAD ── */
+    .ukc-upload-label-text {
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .5rem;
+        display: block;
     }
 
     .file-input-container {
         position: relative;
-        margin-bottom: 1.5rem;
+        margin-bottom: .5rem;
     }
 
     .file-input-label {
         display: flex;
         align-items: center;
-        padding: 0.75rem 1rem;
-        background-color: #f3f4f6;
-        border: 1px dashed #d1d5db;
-        border-radius: 0.375rem;
+        gap: .6rem;
+        padding: .85rem 1.1rem;
+        background: var(--ivory);
+        border: 1.5px dashed rgba(11,31,58,.18);
+        border-radius: 8px;
         cursor: pointer;
-        transition: all 0.3s;
+        font-size: .84rem;
+        color: var(--muted);
+        transition: border-color .2s, background .2s;
     }
 
         .file-input-label:hover {
-            background-color: #e5e7eb;
-            border-color: #9ca3af;
+            border-color: var(--gold);
+            background: rgba(200,150,12,.04);
+            color: var(--navy);
+        }
+
+        .file-input-label i {
+            color: var(--gold);
+            font-size: .95rem;
         }
 
     .file-input {
@@ -110,292 +327,742 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0, 0, 0, 0);
+        clip: rect(0,0,0,0);
         white-space: nowrap;
         border-width: 0;
     }
 
+    .ukc-current-file {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        margin-top: .6rem;
+        padding: .4rem .85rem;
+        border-radius: 7px;
+        background: rgba(200,150,12,.08);
+        border: 1px solid rgba(200,150,12,.2);
+        font-size: .78rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+
+        .ukc-current-file i {
+            color: var(--gold);
+            font-size: .8rem;
+        }
+
     .preview-container {
         display: flex;
         align-items: center;
-        margin-top: 0.75rem;
+        margin-top: .6rem;
+        gap: .75rem;
     }
 
     .preview-image {
-        width: 80px;
-        height: 80px;
+        width: 72px;
+        height: 72px;
         object-fit: cover;
-        border-radius: 0.375rem;
-        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        border: 2px solid rgba(200,150,12,.2);
+        box-shadow: 0 2px 8px rgba(11,31,58,.08);
     }
 
     .preview-remove {
-        margin-left: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        background-color: #ef4444;
-        color: white;
+        padding: .3rem .7rem;
+        background: #ef4444;
+        color: var(--white);
         border: none;
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
+        border-radius: 5px;
+        font-size: .72rem;
+        font-weight: 700;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background .2s, transform .2s;
     }
 
         .preview-remove:hover {
-            background-color: #dc2626;
+            background: #dc2626;
+            transform: translateY(-1px);
         }
+
+    /* ── SUBMIT ── */
+    .ukc-submit-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 2rem;
+    }
 
     .submit-button {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-        color: white;
-        font-weight: 600;
-        border-radius: 0.375rem;
+        gap: .55rem;
+        padding: .9rem 2.2rem;
+        border-radius: 9px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .92rem;
+        font-weight: 700;
         border: none;
         cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 4px 6px rgba(30, 64, 175, 0.25);
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 5px 20px rgba(11,31,58,.2);
+        position: relative;
+        overflow: hidden;
     }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,150,12,.15), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+        }
 
         .submit-button:hover {
+            background: var(--navy-mid);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 8px 28px rgba(11,31,58,.28);
         }
 
-    .checkbox-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .checkbox-input {
-        width: 1rem;
-        height: 1rem;
-        margin-right: 0.5rem;
-        border-radius: 0.25rem;
-        border: 1px solid #d1d5db;
-        accent-color: #1e40af;
-    }
-
-    .checkbox-label {
-        font-size: 0.875rem;
-        color: #4b5563;
-    }
-
-        .checkbox-label a {
-            color: #1e40af;
-            text-decoration: underline;
-        }
-
-            .checkbox-label a:hover {
-                color: #1e3a8a;
+            .submit-button:hover::before {
+                opacity: 1;
             }
 
-    .validation-error {
-        color: #ef4444;
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
+        .submit-button .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .8rem;
+            transition: transform .2s;
+        }
+
+        .submit-button:hover .btn-gold {
+            transform: scale(1.1);
+        }
+
+    /* ── KYC SUBMISSION OVERLAY ── */
+    .kyc-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(11,31,58,.88);
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .35s ease;
+    }
+
+        .kyc-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    .kyc-overlay-card {
+        background: var(--white);
+        border-radius: 22px;
+        padding: 2.8rem 2.5rem;
+        width: min(440px, 92vw);
+        text-align: center;
+        box-shadow: 0 40px 90px rgba(11,31,58,.4);
+        transform: translateY(28px) scale(.95);
+        transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .kyc-overlay.active .kyc-overlay-card {
+        transform: translateY(0) scale(1);
+    }
+
+    /* top shimmer bar */
+    .kyc-overlay-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+        background-size: 200% 100%;
+        animation: kyc-shimmer 1.8s linear infinite;
+    }
+    @@keyframes kyc-shimmer {
+        0%
+
+    {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+
+    }
+
+    /* shield / verify icon ring */
+    .kyc-anim-ring {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(200,150,12,.14), rgba(200,150,12,.04));
+        border: 2px solid rgba(200,150,12,.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        position: relative;
+        animation: kyc-pulse 2s ease-in-out infinite;
+    }
+    @@keyframes kyc-pulse {
+        0%,100%
+
+    {
+        box-shadow: 0 0 0 0 rgba(200,150,12,.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 16px rgba(200,150,12,.0);
+    }
+
+    }
+
+    .kyc-anim-ring i {
+        font-size: 1.9rem;
+        color: var(--gold);
+        animation: kyc-bounce 1.6s ease-in-out infinite;
+    }
+    @@keyframes kyc-bounce {
+        0%,100%
+
+    {
+        transform: translateY(0) scale(1);
+    }
+
+    45% {
+        transform: translateY(-6px) scale(1.08);
+    }
+
+    65% {
+        transform: translateY(-3px) scale(1.04);
+    }
+
+    }
+
+    /* floating envelope particles */
+    .kyc-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 22px;
+    }
+
+    .kyc-particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold-lt);
+        opacity: 0;
+        animation: kyc-float 3s ease-in-out infinite;
+    }
+
+        .kyc-particle:nth-child(1) {
+            left: 15%;
+            animation-delay: 0s;
+            width: 5px;
+            height: 5px;
+        }
+
+        .kyc-particle:nth-child(2) {
+            left: 35%;
+            animation-delay: .6s;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .kyc-particle:nth-child(3) {
+            left: 55%;
+            animation-delay: 1.1s;
+            width: 6px;
+            height: 6px;
+        }
+
+        .kyc-particle:nth-child(4) {
+            left: 75%;
+            animation-delay: 1.7s;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .kyc-particle:nth-child(5) {
+            left: 88%;
+            animation-delay: 0.4s;
+            width: 5px;
+            height: 5px;
+        }
+    @@keyframes kyc-float {
+        0%
+
+    {
+        transform: translateY(100px) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    80% {
+        opacity: .4;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+
+    }
+
+    /* dots */
+    .kyc-dots {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin: 1.2rem 0 .4rem;
+    }
+
+        .kyc-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: kyc-dot .9s ease-in-out infinite;
+        }
+
+            .kyc-dots span:nth-child(2) {
+                animation-delay: .15s;
+                background: var(--gold-lt);
+            }
+
+            .kyc-dots span:nth-child(3) {
+                animation-delay: .30s;
+            }
+    @@keyframes kyc-dot {
+        0%,80%,100%
+
+    {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    40% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+
+    }
+
+    /* progress */
+    .kyc-progress-track {
+        height: 5px;
+        background: rgba(11,31,58,.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: .9rem 0 1.4rem;
+    }
+
+    .kyc-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+        border-radius: 99px;
+        transition: width .5s ease;
+    }
+
+    /* text */
+    .kyc-overlay-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .35rem;
+    }
+
+    .kyc-overlay-sub {
+        font-size: .86rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* steps */
+    .kyc-steps {
+        list-style: none;
+        padding: 0;
+        margin: 1.3rem 0 0;
+        text-align: left;
+    }
+
+        .kyc-steps li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--muted);
+            padding: .38rem 0;
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: color .3s;
+        }
+
+            .kyc-steps li:last-child {
+                border-bottom: none;
+            }
+
+            .kyc-steps li .s-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(11,31,58,.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                color: var(--slate);
+                flex-shrink: 0;
+                transition: all .3s;
+            }
+
+            .kyc-steps li.done .s-icon {
+                background: #22c55e;
+                border-color: #22c55e;
+                color: white;
+            }
+
+            .kyc-steps li.active {
+                color: var(--navy);
+                font-weight: 600;
+            }
+
+                .kyc-steps li.active .s-icon {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                    animation: kyc-spin 1.4s linear infinite;
+                }
+    @@keyframes kyc-spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    @@media (max-width: 900px) {
+        .ukc-hero
+
+    {
+        padding: 2rem 1.2rem 4rem;
+    }
+
+    .ukc-body {
+        padding: 0 .75rem;
+    }
+
+    .ukc-section-body {
+        padding: 1.2rem 1rem;
+    }
+
+    .ukc-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .ukc-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .ukc-submit-wrap {
+        padding: 1.5rem 1rem;
+    }
+
+    }
+    @@media (min-width: 640px) and (max-width: 900px) {
+        .ukc-grid-3
+
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     }
 </style>
 
-<div class="min-h-screen py-10" style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
-    <div class="container mx-auto px-4">
-        <div class="form-container max-w-4xl mx-auto">
-            <!-- Form Header -->
-            <div class="form-header">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold">Update KYC Verification</h1>
-                </div>
+<div class="ukc-bleed">
+
+    <!-- HERO -->
+    <div class="ukc-hero">
+        <div class="ukc-hero-inner">
+            <div>
+                <p class="ukc-eyebrow"><span></span> Bidder KYC</p>
+                <h1>Update <em>Verification</em></h1>
+                <p class="ukc-hero-sub">Edit your company and bank details to keep your KYC up to date.</p>
             </div>
+            <div class="ukc-notice">
+                <i class="fas fa-lock"></i> Reg. No. &amp; PAN are read-only
+            </div>
+        </div>
+    </div>
 
-            <form asp-action="UpdateKyc" asp-controller="Kyc" method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-red-700 p-4"></div>
+    <!-- FORM CARD -->
+    <div class="ukc-body">
+        <div class="ukc-card">
 
-                <!-- Company Details Section -->
-                <div class="form-section">
-                    <h2 class="form-section-title">Company Details</h2>
+            <form asp-action="UpdateKyc" asp-controller="Kyc" method="post" enctype="multipart/form-data" id="kycForm">
+                <div asp-validation-summary="ModelOnly" class="ukc-val-summary"></div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 form-grid">
-                        <!-- Company Name -->
-                        <div class="input-group">
-                            <input asp-for="CompanyName" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="CompanyName" class="form-label">Company Name</label>
-                            <span asp-validation-for="CompanyName" class="validation-error"></span>
-                        </div>
-
-                        <!-- Full Address -->
-                        <div class="input-group">
-                            <input asp-for="FullAddress" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="FullAddress" class="form-label">Full Address</label>
-                            <span asp-validation-for="FullAddress" class="validation-error"></span>
-                        </div>
-
-                        <!-- Company Website URL -->
-                        <div class="input-group">
-                            <input asp-for="CompanyWebsiteUrl" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="CompanyWebsiteUrl" class="form-label">Company URL</label>
-                            <span asp-validation-for="CompanyWebsiteUrl" class="validation-error"></span>
-                        </div>
-
-                        <!-- Registration Number (readonly) -->
-                        <div class="input-group">
-                            <input asp-for="RegistrationNumber" type="text" class="form-input" placeholder=" " readonly />
-                            <label asp-for="RegistrationNumber" class="form-label">Registration Number</label>
-                            <span asp-validation-for="RegistrationNumber" class="validation-error"></span>
-                        </div>
-
-                        <!-- PAN Number (readonly) -->
-                        <div class="input-group">
-                            <input asp-for="PanNumber" type="text" class="form-input" placeholder=" " readonly />
-                            <label asp-for="PanNumber" class="form-label">PAN Number</label>
-                            <span asp-validation-for="PanNumber" class="validation-error"></span>
-                        </div>
-
-                        <!-- Company Type -->
-                        <div class="input-group">
-                            <input asp-for="CompanyType" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="CompanyType" class="form-label">Company Type</label>
-                            <span asp-validation-for="CompanyType" class="validation-error"></span>
-                        </div>
-
-                        <!-- Office Email -->
-                        <div class="input-group">
-                            <input asp-for="OfficeEmail" type="email" class="form-input" placeholder=" " required />
-                            <label asp-for="OfficeEmail" class="form-label">Company Email</label>
-                            <span asp-validation-for="OfficeEmail" class="validation-error"></span>
-                        </div>
-
-                        <!-- Position -->
-                        <div class="input-group">
-                            <input asp-for="Position" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="Position" class="form-label">Your Position in Company</label>
-                            <span asp-validation-for="Position" class="validation-error"></span>
-                        </div>
+                <!-- COMPANY DETAILS -->
+                <div class="ukc-section">
+                    <div class="ukc-section-hd">
+                        <div class="ukc-section-icon"><i class="fas fa-building"></i></div>
+                        <h2 class="ukc-section-title">Company Details</h2>
                     </div>
-
-                    <!-- Registration Document Upload -->
-                    <div class="mt-6">
-                        <p class="text-sm font-medium text-gray-700 mb-2">Registration Document</p>
-                        <div class="file-input-container">
-                            <label for="RegisterFile" class="file-input-label">
-                                <i class="fas fa-file-upload mr-2"></i>
-                                <span>Choose file</span>
-                            </label>
-                            <input asp-for="RegisterFile" id="RegisterFile" type="file" class="file-input" onchange="previewImage(event, 'RegDocPreview')" />
-                            <span asp-validation-for="RegisterFile" class="validation-error"></span>
-
-                            @if (!string.IsNullOrEmpty(Model.RegistrationDocument))
-                            {
-                                <div class="preview-container" id="RegDocPreviewContainer">
-                                    <span class="text-sm text-gray-600">Current file: @Model.RegistrationDocument</span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="preview-container hidden" id="RegDocPreviewContainer">
-                                    <img id="RegDocPreview" src="#" alt="Registration Document Preview" class="preview-image" />
-                                    <button type="button" id="RegDocRemove" class="preview-remove" onclick="removeImage('RegDocPreview', 'RegDocPreviewContainer')">
-                                        <i class="fas fa-times mr-1"></i> Remove
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <!-- PAN Document Upload -->
-                    <div class="mt-4">
-                        <p class="text-sm font-medium text-gray-700 mb-2">PAN Document</p>
-                        <div class="file-input-container">
-                            <label for="PanFile" class="file-input-label">
-                                <i class="fas fa-file-upload mr-2"></i>
-                                <span>Choose file</span>
-                            </label>
-                            <input asp-for="PanFile" id="PanFile" type="file" class="file-input" onchange="previewImage(event, 'PanDocPreview')" />
-                            <span asp-validation-for="PanFile" class="validation-error"></span>
-
-                            @if (!string.IsNullOrEmpty(Model.PanDocument))
-                            {
-                                <div class="preview-container" id="PanDocPreviewContainer">
-                                    <span class="text-sm text-gray-600">Current file: @Model.PanDocument</span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="preview-container hidden" id="PanDocPreviewContainer">
-                                    <img id="PanDocPreview" src="#" alt="PAN Document Preview" class="preview-image" />
-                                    <button type="button" id="PanDocRemove" class="preview-remove" onclick="removeImage('PanDocPreview', 'PanDocPreviewContainer')">
-                                        <i class="fas fa-times mr-1"></i> Remove
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bank Details Section -->
-                <div class="form-section">
-                    <h2 class="form-section-title">Bank Details</h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 form-grid">
-                        <!-- Bank Name -->
-                        <div class="input-group">
-                            <input asp-for="BankName" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="BankName" class="form-label">Bank Name</label>
-                            <span asp-validation-for="BankName" class="validation-error"></span>
+                    <div class="ukc-section-body">
+                        <div class="ukc-grid-3">
+                            <div class="ukc-field">
+                                <input asp-for="CompanyName" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="CompanyName" class="form-label">Company Name</label>
+                                <span asp-validation-for="CompanyName" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="FullAddress" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="FullAddress" class="form-label">Full Address</label>
+                                <span asp-validation-for="FullAddress" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="CompanyWebsiteUrl" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="CompanyWebsiteUrl" class="form-label">Company URL</label>
+                                <span asp-validation-for="CompanyWebsiteUrl" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="RegistrationNumber" type="text" class="form-input" placeholder=" " readonly />
+                                <label asp-for="RegistrationNumber" class="form-label">Registration Number</label>
+                                <span asp-validation-for="RegistrationNumber" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="PanNumber" type="text" class="form-input" placeholder=" " readonly />
+                                <label asp-for="PanNumber" class="form-label">PAN Number</label>
+                                <span asp-validation-for="PanNumber" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="CompanyType" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="CompanyType" class="form-label">Company Type</label>
+                                <span asp-validation-for="CompanyType" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="OfficeEmail" type="email" class="form-input" placeholder=" " required />
+                                <label asp-for="OfficeEmail" class="form-label">Company Email</label>
+                                <span asp-validation-for="OfficeEmail" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="Position" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="Position" class="form-label">Your Position in Company</label>
+                                <span asp-validation-for="Position" class="validation-error"></span>
+                            </div>
                         </div>
 
-                        <!-- Account Number -->
-                        <div class="input-group">
-                            <input asp-for="AccountNumber" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="AccountNumber" class="form-label">Account Number</label>
-                            <span asp-validation-for="AccountNumber" class="validation-error"></span>
+                        <!-- Registration Document -->
+                        <div style="margin-top:1.6rem;">
+                            <span class="ukc-upload-label-text">
+                                <i class="fas fa-file-contract" style="color:var(--gold);margin-right:.4rem;"></i>
+                                Registration Document
+                            </span>
+                            <div class="file-input-container">
+                                <label for="RegisterFile" class="file-input-label">
+                                    <i class="fas fa-file-upload"></i>
+                                    <span>Choose file to replace current document</span>
+                                </label>
+                                <input asp-for="RegisterFile" id="RegisterFile" type="file" class="file-input"
+                                       onchange="previewImage(event, 'RegDocPreview')" />
+                                <span asp-validation-for="RegisterFile" class="validation-error"></span>
+                                @if (!string.IsNullOrEmpty(Model.RegistrationDocument))
+                                {
+                                    <div class="preview-container" id="RegDocPreviewContainer">
+                                        <span class="ukc-current-file">
+                                            <i class="fas fa-paperclip"></i>
+                                            Current file: @Model.RegistrationDocument
+                                        </span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="preview-container hidden" id="RegDocPreviewContainer">
+                                        <img id="RegDocPreview" src="#" alt="Registration Document Preview" class="preview-image" />
+                                        <button type="button" id="RegDocRemove" class="preview-remove"
+                                                onclick="removeImage('RegDocPreview', 'RegDocPreviewContainer')">
+                                            <i class="fas fa-times"></i> Remove
+                                        </button>
+                                    </div>
+                                }
+                            </div>
                         </div>
 
-                        <!-- Account Holder Name -->
-                        <div class="input-group">
-                            <input asp-for="AccountHolderName" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="AccountHolderName" class="form-label">Account Holder Name</label>
-                            <span asp-validation-for="AccountHolderName" class="validation-error"></span>
-                        </div>
-
-                        <!-- Account Type -->
-                        <div class="input-group">
-                            <input asp-for="AccountType" type="text" class="form-input" placeholder=" " required />
-                            <label asp-for="AccountType" class="form-label">Account Type</label>
-                            <span asp-validation-for="AccountType" class="validation-error"></span>
+                        <!-- PAN Document -->
+                        <div style="margin-top:1.2rem;">
+                            <span class="ukc-upload-label-text">
+                                <i class="fas fa-id-card" style="color:var(--gold);margin-right:.4rem;"></i>
+                                PAN Document
+                            </span>
+                            <div class="file-input-container">
+                                <label for="PanFile" class="file-input-label">
+                                    <i class="fas fa-file-upload"></i>
+                                    <span>Choose file to replace current document</span>
+                                </label>
+                                <input asp-for="PanFile" id="PanFile" type="file" class="file-input"
+                                       onchange="previewImage(event, 'PanDocPreview')" />
+                                <span asp-validation-for="PanFile" class="validation-error"></span>
+                                @if (!string.IsNullOrEmpty(Model.PanDocument))
+                                {
+                                    <div class="preview-container" id="PanDocPreviewContainer">
+                                        <span class="ukc-current-file">
+                                            <i class="fas fa-paperclip"></i>
+                                            Current file: @Model.PanDocument
+                                        </span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="preview-container hidden" id="PanDocPreviewContainer">
+                                        <img id="PanDocPreview" src="#" alt="PAN Document Preview" class="preview-image" />
+                                        <button type="button" id="PanDocRemove" class="preview-remove"
+                                                onclick="removeImage('PanDocPreview', 'PanDocPreviewContainer')">
+                                            <i class="fas fa-times"></i> Remove
+                                        </button>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-center p-6">
-                    <button type="submit" class="submit-button">
-                        <i class="fas fa-save mr-2"></i> Update KYC Details
+                <!-- BANK DETAILS -->
+                <div class="ukc-section">
+                    <div class="ukc-section-hd">
+                        <div class="ukc-section-icon"><i class="fas fa-university"></i></div>
+                        <h2 class="ukc-section-title">Bank Details</h2>
+                    </div>
+                    <div class="ukc-section-body">
+                        <div class="ukc-grid-2">
+                            <div class="ukc-field">
+                                <input asp-for="BankName" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="BankName" class="form-label">Bank Name</label>
+                                <span asp-validation-for="BankName" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="AccountNumber" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="AccountNumber" class="form-label">Account Number</label>
+                                <span asp-validation-for="AccountNumber" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="AccountHolderName" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="AccountHolderName" class="form-label">Account Holder Name</label>
+                                <span asp-validation-for="AccountHolderName" class="validation-error"></span>
+                            </div>
+                            <div class="ukc-field">
+                                <input asp-for="AccountType" type="text" class="form-input" placeholder=" " required />
+                                <label asp-for="AccountType" class="form-label">Account Type</label>
+                                <span asp-validation-for="AccountType" class="validation-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="ukc-submit-wrap">
+                    <button type="submit" class="submit-button" id="kycSubmitBtn">
+                        <span class="btn-gold"><i class="fas fa-save"></i></span>
+                        Update KYC Details
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
+
+    <!-- ── KYC SUBMISSION OVERLAY ── -->
+    <div class="kyc-overlay" id="kycOverlay">
+        <div class="kyc-overlay-card">
+
+            <!-- floating particles -->
+            <div class="kyc-particles">
+                <div class="kyc-particle"></div>
+                <div class="kyc-particle"></div>
+                <div class="kyc-particle"></div>
+                <div class="kyc-particle"></div>
+                <div class="kyc-particle"></div>
+            </div>
+
+            <div class="kyc-anim-ring">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <h3 class="kyc-overlay-title">Updating KYC Details…</h3>
+            <p class="kyc-overlay-sub">Please wait while we send your details to the admin for verification</p>
+
+            <div class="kyc-dots">
+                <span></span><span></span><span></span>
+            </div>
+
+            <div class="kyc-progress-track">
+                <div class="kyc-progress-fill" id="kycProgressFill"></div>
+            </div>
+
+            <ul class="kyc-steps">
+                <li id="kycStep1">
+                    <div class="s-icon"><i class="fas fa-check"></i></div>
+                    Validating company details
+                </li>
+                <li id="kycStep2">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Uploading KYC documents
+                </li>
+                <li id="kycStep3">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Sending verification email to admin
+                </li>
+                <li id="kycStep4">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Submitting for admin review
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    /* ── File preview ── */
     function previewImage(event, previewId) {
         const input = event.target;
         const previewContainer = document.getElementById(previewId + 'Container');
-
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-
             reader.onload = function (e) {
                 const previewImg = document.getElementById(previewId);
                 if (previewImg) {
                     previewImg.src = e.target.result;
                     previewContainer.classList.remove('hidden');
                 }
-            }
-
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
@@ -403,43 +1070,79 @@
     function removeImage(previewId, containerId) {
         const input = document.getElementById(previewId === 'RegDocPreview' ? 'RegisterFile' : 'PanFile');
         const previewContainer = document.getElementById(containerId);
-
         input.value = '';
         previewContainer.classList.add('hidden');
-
         const previewImg = document.getElementById(previewId);
-        if (previewImg) {
-            previewImg.src = '#';
-        }
+        if (previewImg) previewImg.src = '#';
     }
 
+    /* ── Overlay ── */
+    const kycOverlay  = document.getElementById('kycOverlay');
+    const kycProgress = document.getElementById('kycProgressFill');
+    const kycSteps    = [
+        document.getElementById('kycStep1'),
+        document.getElementById('kycStep2'),
+        document.getElementById('kycStep3'),
+        document.getElementById('kycStep4'),
+    ];
+
+    function setKycStep(index) {
+        kycSteps.forEach((el, i) => {
+            el.classList.remove('done', 'active');
+            if (i < index)  el.classList.add('done');
+            if (i === index) el.classList.add('active');
+        });
+    }
+
+    function showKycOverlay() {
+        kycOverlay.classList.add('active');
+        const timeline = [
+            { delay: 200,  pct: 20  },
+            { delay: 950,  pct: 50  },
+            { delay: 1800, pct: 78  },
+            { delay: 2700, pct: 100 },
+        ];
+        timeline.forEach(({ delay, pct }, i) => {
+            setTimeout(() => {
+                setKycStep(i);
+                kycProgress.style.width = pct + '%';
+            }, delay);
+        });
+    }
+
+    /* ── Form submit ── */
+    document.getElementById('kycForm').addEventListener('submit', function (e) {
+        // Let ASP.NET model validation handle field errors.
+        // Only show overlay if the form passes HTML5 validation.
+        if (!this.checkValidity()) return; // browser will show native errors
+        showKycOverlay();
+        // Form submits naturally; overlay stays until the server redirects.
+    });
+
+    /* ── Toastify messages ── */
     @if (TempData["ErrorMessage"] != null)
     {
-        <text>
-                Toastify({
-                    text: '@TempData["ErrorMessage"]',
-                duration: 5000,
-                close: true,
-                gravity: "top",
-                position: "right",
+            <text>
+            Toastify({
+                text: '@TempData["ErrorMessage"]',
+                duration: 5000, close: true,
+                gravity: "top", position: "right",
                 backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
                 stopOnFocus: true
-                    }).showToast();
-        </text>
+            }).showToast();
+            </text>
     }
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <text>
-                Toastify({
-                    text: '@TempData["SuccessMessage"]',
-                duration: 5000,
-                close: true,
-                gravity: "top",
-                position: "right",
+            <text>
+            Toastify({
+                text: '@TempData["SuccessMessage"]',
+                duration: 5000, close: true,
+                gravity: "top", position: "right",
                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                 stopOnFocus: true
-                    }).showToast();
-        </text>
+            }).showToast();
+            </text>
     }
 </script>
