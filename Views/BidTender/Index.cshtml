@@ -5,485 +5,736 @@
     var hasCompany = ViewBag.HasCompany as bool?;
 }
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
 <style>
-    body {
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --navy-light: #1a3357;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .bd-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
         overflow-x: hidden;
-        background-color: #f9fafb;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--ivory);
     }
 
-    /* Header styling */
-    .header {
-        padding-top: 120px;
-        padding-bottom: 10px;
-        min-height: 600px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    /* HERO */
+    .bd-hero {
+        background: var(--navy);
         position: relative;
-        color: white;
+        overflow: hidden;
+        padding: 3.5rem 2.5rem 5.5rem;
     }
 
-    .homebg {
-        width: 100%;
-        height: 700px;
-        position: absolute;
-        z-index: -1;
-        top: 0;
-        left: 0;
-    }
+        .bd-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
 
-    .header .title h1 {
-        text-wrap: nowrap;
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-        background: linear-gradient(45deg, #ffffff, #e0e7ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        .bd-hero::after {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
 
-    .header .title p {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-        color: #e0e7ff;
-    }
-
-    .image-container {
+    .bd-hero-inner {
         position: relative;
-        left: 160px;
-        width: 384px;
-        height: auto;
-        margin-bottom: 250px;
-        animation: float 6s ease-in-out infinite;
+        z-index: 2;
+        max-width: 1280px;
+        margin: 0 auto;
     }
 
-    
-
-    .bldrop {
-        position: relative;
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-
-    .hand-img {
-        position: absolute;
-        top: 50px;
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        opacity: 0.8;
-    }
-
-    /* Button styling */
-    .explore-btn {
-        background: linear-gradient(45deg, #f97316, #ea580c);
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        box-shadow: 0 4px 6px rgba(249, 115, 22, 0.25);
-        text-decoration: none;
+    .bd-eyebrow {
         display: inline-flex;
         align-items: center;
+        gap: .5rem;
+        font-size: .68rem;
+        font-weight: 500;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .8rem;
     }
 
-    .explore-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(249, 115, 22, 0.3);
+        .bd-eyebrow span {
+            display: inline-block;
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .bd-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.2;
+        margin: 0 0 .75rem;
     }
 
-    /* KYC Banner styling */
-    .kyc-banner {
+        .bd-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .bd-hero-sub {
+        font-size: .95rem;
+        color: var(--slate);
+        max-width: 560px;
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+
+    /* stats row */
+    .bd-stats {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .bd-stat {
+        display: flex;
+        flex-direction: column;
+        gap: .2rem;
+    }
+
+    .bd-stat-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--gold-lt);
+        line-height: 1;
+    }
+
+    .bd-stat-label {
+        font-size: .7rem;
+        font-weight: 500;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--slate);
+    }
+
+    .bd-stat-div {
+        width: 1px;
+        background: rgba(138,155,181,.2);
+        align-self: stretch;
+    }
+
+    /* KYC STRIP */
+    .bd-kyc-strip {
         position: relative;
         z-index: 10;
-        margin-top: -80px;
-        margin-bottom: 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+        max-width: 1280px;
+        margin: -2rem auto 0;
+        padding: 0 2rem;
     }
 
-    .kyc-banner-pending {
-        background: linear-gradient(135deg, rgba(254, 240, 199, 0.9), rgba(251, 207, 114, 0.9));
-        border-left: 5px solid #f59e0b;
-    }
-
-    .kyc-banner-complete {
-        background: linear-gradient(135deg, rgba(209, 250, 229, 0.9), rgba(167, 243, 208, 0.9));
-        border-left: 5px solid #10b981;
-    }
-
-    .kyc-button {
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
-        text-decoration: none;
-    }
-
-    .kyc-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    /* Section styling */
-    .dashboard-section {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        margin: 2rem 0;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-    }
-
-    .section-header {
+    .bd-kyc-box {
+        border-radius: 14px;
         padding: 1.5rem 2rem;
-        border-bottom: 1px solid #f3f4f6;
-        background: linear-gradient(to right, #f9fafb, white);
-    }
-
-    .section-title {
         display: flex;
         align-items: center;
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #1e3a8a;
-    }
-
-    .section-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        border-radius: 10px;
-        margin-right: 12px;
-    }
-
-    .section-content {
-        padding: 2rem;
-    }
-
-    /* Swiper styling */
-    .swiper {
-        width: 100%;
-        padding: 20px 0;
-    }
-
-    .swiper-slide {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        height: auto;
-    }
-
-    .swiper-slide:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .swiper-slide-content {
-        padding: 1.5rem;
-    }
-
-    .swiper-pagination {
-        position: static;
-        margin-top: 20px;
-    }
-
-    .swiper-button-next, .swiper-button-prev {
-        color: #3b82f6;
-        background: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .swiper-button-next:after, .swiper-button-prev:after {
-        font-size: 18px;
-    }
-
-    /* Card styling */
-    .card-image {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin: 1rem 0 0.5rem 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .card-issuer {
-        color: #64748b;
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .card-price {
-        color: #64748b;
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .card-footer {
-        display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-top: 1rem;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 40px rgba(11,31,58,.18);
     }
 
-    .countdown {
-        background: linear-gradient(45deg, #ef4444, #dc2626);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        display: inline-flex;
-        align-items: center;
+    .kyc-pending .bd-kyc-box {
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        border: 1.5px solid #f59e0b;
     }
 
-    .view-details-btn {
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        font-size: 0.875rem;
-        display: inline-flex;
-        align-items: center;
+    .kyc-complete .bd-kyc-box {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border: 1.5px solid #10b981;
     }
 
-    .view-details-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
-    }
-
-    .view-more-btn {
+    .bd-kyc-left {
         display: flex;
-        justify-content: center;
-        margin-top: 20px;
+        align-items: center;
+        gap: 1.2rem;
+        flex: 1;
+        min-width: 0;
     }
 
-    .view-more-link {
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
-        text-decoration: none;
+    .bd-kyc-icon-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+    }
+
+    .kyc-pending .bd-kyc-icon-box {
+        background: rgba(245,158,11,.15);
+        color: #b45309;
+    }
+
+    .kyc-complete .bd-kyc-icon-box {
+        background: rgba(16,185,129,.15);
+        color: #059669;
+    }
+
+    .bd-kyc-title {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: .25rem;
+    }
+
+    .kyc-pending .bd-kyc-title {
+        color: #92400e;
+    }
+
+    .kyc-complete .bd-kyc-title {
+        color: #065f46;
+    }
+
+    .bd-kyc-desc {
+        font-size: .84rem;
+        line-height: 1.5;
+    }
+
+    .kyc-pending .bd-kyc-desc {
+        color: #b45309;
+    }
+
+    .kyc-complete .bd-kyc-desc {
+        color: #059669;
+    }
+
+    .bd-kyc-steps {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+        margin-top: .7rem;
+    }
+
+    .bd-kyc-step {
         display: inline-flex;
         align-items: center;
+        gap: .3rem;
+        padding: .22rem .65rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+        background: rgba(245,158,11,.1);
+        color: #b45309;
+        border: 1px solid rgba(245,158,11,.25);
     }
 
-    .view-more-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    .bd-kyc-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .85rem 1.7rem;
+        border-radius: 9px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .88rem;
+        font-weight: 700;
+        text-decoration: none;
+        flex-shrink: 0;
+        box-shadow: 0 4px 16px rgba(11,31,58,.2);
+        transition: background .2s, transform .2s, box-shadow .2s;
+        position: relative;
+        overflow: hidden;
     }
 
-    /* Empty state styling */
-    .empty-state {
+        .bd-kyc-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,150,12,.15), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .bd-kyc-cta:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(11,31,58,.28);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+            .bd-kyc-cta:hover::before {
+                opacity: 1;
+            }
+
+        .bd-kyc-cta .cta-gold {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .8rem;
+            transition: transform .2s;
+        }
+
+        .bd-kyc-cta:hover .cta-gold {
+            transform: translateX(3px);
+        }
+
+    /* CONTENT */
+    .bd-content {
+        max-width: 1280px;
+        margin: 2.5rem auto 3rem;
+        padding: 0 2rem;
+    }
+
+    .bd-section {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid rgba(11,31,58,.07);
+        box-shadow: 0 4px 24px rgba(11,31,58,.06);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .bd-section-header {
+        padding: 1.2rem 2rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .bd-section-left {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .bd-section-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .88rem;
+        flex-shrink: 0;
+    }
+
+    .bd-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .bd-section-count {
+        font-size: .72rem;
+        font-weight: 600;
+        color: var(--slate);
+        letter-spacing: .06em;
+    }
+
+    .bd-section-body {
+        padding: 1.8rem 2rem;
+    }
+
+    /* TENDER GRID */
+    .bd-tender-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .bd-tender-card {
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid rgba(11,31,58,.07);
+        box-shadow: 0 3px 14px rgba(11,31,58,.05);
+        overflow: hidden;
+        transition: transform .25s, box-shadow .25s;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .bd-tender-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(11,31,58,.12);
+        }
+
+    .bd-tc-top {
+        background: var(--navy);
+        padding: .65rem 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .bd-tc-id {
+        font-family: 'Playfair Display', serif;
+        font-size: .78rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+    }
+
+    .bd-tc-type {
+        display: inline-flex;
+        padding: .18rem .6rem;
+        border-radius: 999px;
+        background: rgba(200,150,12,.18);
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--gold-lt);
+    }
+
+    .bd-tc-body {
+        padding: 1.1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bd-tc-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .45rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.35;
+    }
+
+    .bd-tc-issuer {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: .9rem;
+    }
+
+        .bd-tc-issuer i {
+            color: var(--gold);
+            font-size: .78rem;
+        }
+
+    .bd-tc-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: .9rem;
+        border-top: 1px solid rgba(11,31,58,.06);
+        margin-top: auto;
+    }
+
+    .bd-tc-date {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .75rem;
+        font-weight: 600;
+        color: #dc2626;
+        background: rgba(239,68,68,.07);
+        padding: .25rem .65rem;
+        border-radius: 6px;
+    }
+
+        .bd-tc-date i {
+            font-size: .72rem;
+        }
+
+    /* empty */
+    .bd-empty {
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 3rem;
+        color: var(--slate);
+        text-align: center;
+    }
+
+        .bd-empty i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: .35;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .bd-empty p {
+            font-family: 'Playfair Display',serif;
+            font-size: .95rem;
+            color: var(--navy);
+            margin-bottom: .3rem;
+        }
+
+        .bd-empty span {
+            font-size: .85rem;
+        }
+
+    /* view all */
+    .bd-view-all {
+        display: flex;
         justify-content: center;
-        padding: 3rem 0;
-        color: #64748b;
+        margin-top: 1.8rem;
     }
 
-    .empty-state-icon {
-        font-size: 3rem;
-        color: #cbd5e1;
-        margin-bottom: 1rem;
+    .bd-view-all-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .75rem 1.8rem;
+        border-radius: 8px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .88rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 4px 16px rgba(11,31,58,.18);
+        position: relative;
+        overflow: hidden;
     }
 
-   
+        .bd-view-all-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,150,12,.15), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .bd-view-all-btn:hover {
+            background: var(--navy-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(11,31,58,.25);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+            .bd-view-all-btn:hover::before {
+                opacity: 1;
+            }
+
+        .bd-view-all-btn .btn-accent {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .75rem;
+            transition: transform .2s;
+        }
+
+        .bd-view-all-btn:hover .btn-accent {
+            transform: translateX(3px);
+        }
+
+    @@media (max-width: 900px) {
+        .bd-hero {
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        .bd-kyc-strip {
+            padding: 0 1rem;
+        }
+
+        .bd-content {
+            padding: 0 1rem;
+        }
+
+        .bd-section-body {
+            padding: 1.2rem 1rem;
+        }
+
+        .bd-stats {
+            gap: 1.2rem;
+        }
+
+        .bd-tender-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
-<div class="mx-auto w-full max-w-7xl px-4">
-    <!-- Header Background -->
-    <svg id="header_bg" class="homebg w-full h-72 absolute top-0 left-0 z-[-1]" viewBox="0 10 500 50" preserveAspectRatio="none">
-        <defs>
-            <radialGradient id="Gradient" cx="0.5" cy="0.5" r="0.5" fx="0.75" fy="0.25">
-                <stop offset="0%" stop-color="#07365d" />
-                <stop offset="100%" stop-color="#000717" />
-            </radialGradient>
-        </defs>
-        <path d="M0,0 L500,0 L500,55 L0,55 Z" fill="url(#Gradient)" />
-    </svg>
+<div class="bd-bleed">
 
-    <!-- Header Section -->
-    <div class="header flex justify-between items-center relative py-40 px-6">
-        <div class="title">
-            <h1>BidNetra: Smart Bidding Platform</h1>
-            <p>Discover Premium Tenders & Auctions in Real-Time</p>
-            <button class="explore-btn mt-6">
-                <i class="fas fa-search mr-2"></i>
-                Explore Opportunities
-            </button>
-        </div>
+    <!-- HERO -->
+    <div class="bd-hero">
+        <div class="bd-hero-inner">
+            <p class="bd-eyebrow"><span></span> Bidder Dashboard</p>
+            <h1>Find &amp; Win<br><em>Government Tenders</em></h1>
+            <p class="bd-hero-sub">Browse verified tenders, track deadlines, and submit competitive bids — all in one place. Your next contract starts here.</p>
 
-        <div class="flex flex-col items-center">
-            <div class="image-container">
-                <img class="bldrop" src="~/Images/HomeLogo.png" alt="Platform Logo" />
-                <img class="hand-img" src="~/Images/hand.png" alt="Bidding Illustration" />
+            <div class="bd-stats">
+                <div class="bd-stat">
+                    <span class="bd-stat-num">@(tenders?.Count ?? 0)</span>
+                    <span class="bd-stat-label">Open Tenders</span>
+                </div>
+                <div class="bd-stat-div"></div>
+                <div class="bd-stat">
+                    <span class="bd-stat-num">100%</span>
+                    <span class="bd-stat-label">Verified Listings</span>
+                </div>
+                <div class="bd-stat-div"></div>
+                <div class="bd-stat">
+                    <span class="bd-stat-num">Live</span>
+                    <span class="bd-stat-label">Real-time Updates</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- KYC Verification Banner -->
+    <!-- KYC BANNER -->
     @if (kycStatus.HasValue && !hasCompany.GetValueOrDefault())
     {
-        <div class="kyc-banner p-5 @(kycStatus.Value ? "kyc-banner-complete" : "kyc-banner-pending")">
-            <div class="flex items-center justify-between flex-wrap">
-                <div class="flex items-center">
-                    <div class="mr-4 text-2xl">
-                        <i class="fas @(kycStatus.Value ? "fa-check-circle" : "fa-exclamation-triangle")"></i>
+        <div class="bd-kyc-strip @(kycStatus.Value ? "kyc-complete" : "kyc-pending")">
+            <div class="bd-kyc-box">
+                <div class="bd-kyc-left">
+                    <div class="bd-kyc-icon-box">
+                        <i class="fas @(kycStatus.Value ? "fa-shield-alt" : "fa-exclamation-triangle")"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg @(kycStatus.Value ? "text-green-800" : "text-yellow-800")">
-                            @(kycStatus.Value ? "KYC Verification Complete" : "KYC Verification Required")
-                        </h3>
-                        <p class="@(kycStatus.Value ? "text-green-700" : "text-yellow-700")">
-                            @(kycStatus.Value ?
-                                "Your account is fully verified. You can participate in all tenders and auctions." :
-                                "Please complete your KYC verification to unlock full bidding capabilities.")
-                        </p>
+                        <div class="bd-kyc-title">
+                            @(kycStatus.Value ? "Your account is fully verified" : "Action Required: Complete KYC Verification")
+                        </div>
+                        <div class="bd-kyc-desc">
+                            @(kycStatus.Value
+                                                    ? "You can now participate in all tenders and submit bids without restriction."
+                                                    : "You cannot place bids until your identity and company details are verified. It only takes a few minutes.")
+                    </div>
+                    @if (!kycStatus.Value)
+                        {
+                            <div class="bd-kyc-steps">
+                                <span class="bd-kyc-step"><i class="fas fa-building"></i> Register Company</span>
+                                <span class="bd-kyc-step"><i class="fas fa-file-alt"></i> Upload Documents</span>
+                                <span class="bd-kyc-step"><i class="fas fa-check"></i> Get Approved</span>
+                            </div>
+                        }
                     </div>
                 </div>
                 @if (!kycStatus.Value)
                 {
-                    <a asp-action="RegisterCompany" asp-controller="Kyc" class="kyc-button">
-                        <i class="fas fa-id-card mr-2"></i>
-                        Complete Verification
+                    <a asp-action="RegisterCompany" asp-controller="Kyc" class="bd-kyc-cta">
+                        <span class="cta-gold"><i class="fas fa-arrow-right"></i></span>
+                        Complete Verification Now
                     </a>
                 }
             </div>
         </div>
     }
 
-    <!-- Upcoming Tenders Section -->
-    <div class="dashboard-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span class="section-icon">
-                    <i class="fas fa-file-contract"></i>
-                </span>
-                Upcoming Tenders
-            </h2>
-        </div>
-        <div class="section-content">
-            @if (tenders != null && tenders.Any())
-            {
-                <div class="swiper tenderSwiper">
-                    <div class="swiper-wrapper">
+    <!-- CONTENT -->
+    <div class="bd-content">
+
+        <div class="bd-section">
+            <div class="bd-section-header">
+                <div class="bd-section-left">
+                    <div class="bd-section-icon"><i class="fas fa-file-contract"></i></div>
+                    <h2 class="bd-section-title">Upcoming Tenders</h2>
+                </div>
+                @if (tenders != null && tenders.Any())
+                {
+                    <span class="bd-section-count">@tenders.Count tender@(tenders.Count != 1 ? "s" : "") available</span>
+                }
+            </div>
+
+            <div class="bd-section-body">
+                @if (tenders != null && tenders.Any())
+                {
+                    <div class="bd-tender-grid">
                         @foreach (var tender in tenders)
                         {
-                            <div class="swiper-slide">
-                                <div class="swiper-slide-content">
-                                    <h3 class="card-title">@tender.Title</h3>
-                                    <p class="card-issuer">
-                                        <i class="fas fa-building mr-2 text-blue-500"></i>
+                            <div class="bd-tender-card">
+                                <div class="bd-tc-top">
+                                    <span class="bd-tc-id">#@tender.TenderId</span>
+                                    <span class="bd-tc-type">@tender.TenderType</span>
+                                </div>
+                                <div class="bd-tc-body">
+                                    <h3 class="bd-tc-title" title="@tender.Title">@tender.Title</h3>
+                                    <p class="bd-tc-issuer">
+                                        <i class="fas fa-building"></i>
                                         @tender.IssuedBy
                                     </p>
-                                    <div class="card-footer">
-                                        <span class="countdown">
-                                            <i class="far fa-clock mr-1"></i>
-                                            @tender.ClosingDate.ToString("dd MMM yyyy")
+                                    <div class="bd-tc-footer">
+                                        <span class="bd-tc-date">
+                                            <i class="far fa-clock"></i>
+                                            Closes @tender.ClosingDate.ToString("dd MMM yyyy")
                                         </span>
-                                        
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <i class="fas fa-file-contract empty-state-icon"></i>
-                    <p>No upcoming tenders available at the moment.</p>
-                </div>
-            }
+                }
+                else
+                {
+                    <div class="bd-empty">
+                        <i class="fas fa-file-contract"></i>
+                        <p>No upcoming tenders</p>
+                        <span>Check back soon — new tenders are published regularly.</span>
+                    </div>
+                }
 
-            <div class="view-more-btn">
-                <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="view-more-link">
-                    <i class="fas fa-list-ul mr-2"></i>
-                    View All Tenders
-                </a>
+                <div class="bd-view-all">
+                    <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="bd-view-all-btn">
+                        <span class="btn-accent"><i class="fas fa-arrow-right"></i></span>
+                        View All Tenders
+                    </a>
+                </div>
             </div>
         </div>
+
     </div>
 
-    
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Tender Swiper
-            var tenderSwiper = new Swiper(".tenderSwiper", {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                loop: true,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: ".tenderSwiper .swiper-pagination",
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: ".tenderSwiper .swiper-button-next",
-                    prevEl: ".tenderSwiper .swiper-button-prev",
-                },
-                breakpoints: {
-                    640: { slidesPerView: 1 },
-                    768: { slidesPerView: 2 },
-                    1024: { slidesPerView: 3 },
-                }
-            });
-
-            
-
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <text>
-                        toastr.success('@TempData["SuccessMessage"]', 'Success', {timeOut: 5000 });
-            </text>
-        }
-        });
-    </script>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (TempData["SuccessMessage"] != null)
+        {
+                <text>
+                    toastr.success('@TempData["SuccessMessage"]', 'Success', {timeOut: 5000 });
+                </text>
+        }
+    });
+</script>

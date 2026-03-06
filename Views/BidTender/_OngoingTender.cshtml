@@ -3,199 +3,402 @@
 @{
     ViewData["Title"] = "Open Tenders";
 }
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
 <style>
-    body {
-      background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
-      font-family: 'Segoe UI', Arial, sans-serif;
-      min-height: 100vh;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
     }
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
+    .ot-wrap {
+        padding: 2rem;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--ivory);
     }
 
-    .page-title {
-      text-align: center;
-      margin: 2rem 0 3rem;
-      color: #2d3748;
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      position: relative;
-      padding-bottom: 1rem;
+    /* header */
+    .ot-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.8rem;
     }
 
-    .page-title:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: linear-gradient(90deg, #4c6ef5, #2dce89);
-      border-radius: 2px;
+    .ot-header-left {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
     }
 
-    .tender-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-      padding: 1rem;
+    .ot-section-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: rgba(16,185,129,.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #10b981;
+        font-size: .95rem;
     }
 
-    .tender-card {
-      background: white;
-      border: none;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
+    .ot-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin: 0;
     }
 
-    .tender-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    .ot-count {
+        font-size: .75rem;
+        font-weight: 600;
+        color: var(--slate);
+        letter-spacing: .06em;
+        text-transform: uppercase;
     }
 
-    .card-image {
-      height: 200px;
-      width: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
+    .ot-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem 1rem;
+        border-radius: 7px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .8rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background .2s, transform .2s;
     }
 
-    .tender-card:hover .card-image {
-      transform: scale(1.05);
+        .ot-back:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    /* grid */
+    .ot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.4rem;
     }
 
-    .card-content {
-      padding: 1.5rem;
+    /* card */
+    .ot-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid rgba(11,31,58,.07);
+        box-shadow: 0 4px 18px rgba(11,31,58,.07);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform .25s, box-shadow .25s;
     }
 
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #2d3748;
-      margin-bottom: 1rem;
-      line-height: 1.4;
+        .ot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 36px rgba(11,31,58,.13);
+        }
+
+    /* green accent top strip for open tenders */
+    .ot-card-top {
+        background: var(--navy);
+        padding: .7rem 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
-    .card-text {
-      color: #718096;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+    .ot-card-id {
+        font-family: 'Playfair Display', serif;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--gold-lt);
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      padding: 0.75rem;
-      background: #f8fafc;
-      border-radius: 12px;
+    .ot-live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .2rem .65rem;
+        border-radius: 999px;
+        background: rgba(16,185,129,.18);
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: #6ee7b7;
     }
 
-    .card-header p {
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .ot-live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #6ee7b7;
+        animation: otPulse 1.5s ease-in-out infinite;
     }
 
-    .card-header i {
-      font-size: 1rem;
+    @@keyframes otPulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: .4;
+        }
     }
 
-    .card-footer {
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+    /* body */
+    .ot-card-body {
+        padding: 1.2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
-    .btn {
-      flex: 1;
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: all 0.3s ease;
+    .ot-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .5rem;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    .btn-view {
-      background: linear-gradient(135deg, #4c6ef5, #364fc7);
-      color: white;
+    .ot-card-desc {
+        font-size: .82rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: .75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    .btn-view:hover {
-      background: linear-gradient(135deg, #364fc7, #2b3eb1);
-      transform: translateY(-2px);
+    .ot-card-issuer {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .8rem;
+        color: var(--muted);
+        margin-bottom: 1rem;
     }
 
-    .btn-apply {
-      background: linear-gradient(135deg, #2dce89, #26b37a);
-      color: white;
+        .ot-card-issuer i {
+            color: var(--gold);
+            font-size: .78rem;
+        }
+
+    /* dates */
+    .ot-dates {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        margin-top: auto;
+        padding-top: .9rem;
+        border-top: 1px solid rgba(11,31,58,.06);
+        margin-bottom: .9rem;
     }
 
-    .btn-apply:hover {
-      background: linear-gradient(135deg, #26b37a, #1f925f);
-      transform: translateY(-2px);
+    .ot-date-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .28rem .7rem;
+        border-radius: 6px;
+        font-size: .73rem;
+        font-weight: 600;
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
     }
 
+    .ot-date-open {
+        background: rgba(16,185,129,.08);
+        color: #059669;
+    }
 
+    .ot-date-close {
+        background: rgba(239,68,68,.08);
+        color: #dc2626;
+    }
+
+    /* footer */
+    .ot-card-footer {
+        padding: .9rem 1.2rem;
+        border-top: 1px solid rgba(11,31,58,.05);
+        display: flex;
+        gap: .75rem;
+    }
+
+    .ot-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+        padding: .65rem 1rem;
+        border-radius: 8px;
+        font-size: .82rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+    .ot-btn-view {
+        background: var(--navy);
+        color: var(--white);
+        box-shadow: 0 3px 10px rgba(11,31,58,.15);
+    }
+
+        .ot-btn-view:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(11,31,58,.22);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    .ot-btn-apply {
+        background: #10b981;
+        color: var(--white);
+        box-shadow: 0 3px 10px rgba(16,185,129,.2);
+    }
+
+        .ot-btn-apply:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(16,185,129,.3);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    /* empty */
+    .ot-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+        .ot-empty i {
+            font-size: 2.5rem;
+            color: #10b981;
+            opacity: .35;
+            margin-bottom: 1rem;
+        }
+
+        .ot-empty p {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--navy);
+            margin-bottom: .3rem;
+        }
+
+        .ot-empty span {
+            font-size: .85rem;
+            color: var(--slate);
+        }
+
+    @@media (max-width: 768px) {
+        .ot-wrap {
+            padding: 1.2rem 1rem;
+        }
+
+        .ot-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
-<body>
-    <div class="container mx-auto px-4">
-        
-            <!-- Header Section -->
-            <div class="flex justify-between items-center mb-8">
-                <a asp-action="Index" asp-controller="BidTender" class="text-blue-600 hover:text-blue-800 transition-colors duration-300 text-2xl">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    <span class="text-lg">Back</span>
-                </a>
-                <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-                    Ongoing Tenders
-                </h2>
-            </div>
-        
+<div class="ot-wrap">
 
-        <div class="tender-grid">
+    <div class="ot-header">
+        <div class="ot-header-left">
+            <div class="ot-section-icon"><i class="fas fa-folder-open"></i></div>
+            <div>
+                <h2 class="ot-title">Open Tenders</h2>
+                <span class="ot-count">@Model.Count() tender@(Model.Count() != 1 ? "s" : "") available</span>
+            </div>
+        </div>
+        <a asp-action="Index" asp-controller="BidTender" class="ot-back">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="ot-grid">
             @foreach (var tender in Model)
             {
-                <div class="tender-card">
-                    <div class="card-content">
-                        <h5 class="card-title">Tender #@tender.TenderId - @tender.Title</h5>
-                        <p class="card-text">@tender.TenderDescription</p>
-                        <p class="card-text">Issued By: <strong>@tender.IssuedBy</strong></p>
-
-                        <div class="card-header">
-                            <p class="text-green-500"><i class="fas fa-calendar-check"></i> <strong>@tender.OpeningDate.ToString("MM/dd/yyyy")</strong></p>
-                            <p class="text-red-500"><i class="fas fa-calendar-times"></i> <strong>@tender.ClosingDate.ToString("MM/dd/yyyy")</strong></p>
+                <div class="ot-card">
+                    <div class="ot-card-top">
+                        <span class="ot-card-id">#@tender.TenderId</span>
+                        <span class="ot-live-badge">
+                            <span class="ot-live-dot"></span> Open
+                        </span>
+                    </div>
+                    <div class="ot-card-body">
+                        <h5 class="ot-card-title">@tender.Title</h5>
+                        <p class="ot-card-desc">@tender.TenderDescription</p>
+                        <p class="ot-card-issuer">
+                            <i class="fas fa-building"></i>
+                            @tender.IssuedBy
+                        </p>
+                        <div class="ot-dates">
+                            <span class="ot-date-pill ot-date-open">
+                                <i class="fas fa-calendar-check"></i>
+                                @tender.OpeningDate.ToString("MM/dd/yyyy")
+                            </span>
+                            <span class="ot-date-pill ot-date-close">
+                                <i class="fas fa-calendar-times"></i>
+                                @tender.ClosingDate.ToString("MM/dd/yyyy")
+                            </span>
                         </div>
                     </div>
-
-                    <div class="card-footer">
-                        <a asp-action="BidderTenderDetails" asp-controller="BidTender" asp-route-id="@tender.EncId" class="btn btn-view">
-                            View Details <i class="fas fa-eye"></i>
+                    <div class="ot-card-footer">
+                        <a asp-action="BidderTenderDetails" asp-controller="BidTender" asp-route-id="@tender.EncId"
+                           class="ot-btn ot-btn-view">
+                            <i class="fas fa-eye"></i> View Details
                         </a>
                         @if (ViewBag.CanApply == true)
                         {
-                            <a asp-action="AppliedTender" asp-controller="BidTender" asp-route-id="@tender.TenderId" class="btn btn-apply">
-                                Apply Now <i class="fas fa-check"></i>
+                            <a asp-action="AppliedTender" asp-controller="BidTender" asp-route-id="@tender.TenderId"
+                               class="ot-btn ot-btn-apply">
+                                <i class="fas fa-check"></i> Apply Now
                             </a>
                         }
                     </div>
                 </div>
             }
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="ot-empty">
+            <i class="fas fa-folder-open"></i>
+            <p>No open tenders</p>
+            <span>There are no open tenders right now. Check back soon.</span>
+        </div>
+    }
 
-
-</body>
+</div>
