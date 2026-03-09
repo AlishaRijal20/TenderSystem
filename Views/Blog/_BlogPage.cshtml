@@ -1,60 +1,315 @@
 ﻿@{
     Layout = "_Layout";
 }
-<div class="bg-gray-50 min-h-screen">
-    <!-- Page Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8">
-        <div class="container mx-auto">
-            <div class="flex justify-between items-center">
-                <div class="hidden sm:block">
-                    <div class="bg-blue-500 bg-opacity-20 rounded-lg p-4">
-                        <div class="text-white">
-                            <i class="fas fa-calendar-alt mr-2"></i>
-                            <span id="current-date"></span>
-                        </div>
-                    </div>
-                </div>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .blt-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO ── */
+    .blt-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2.5rem 4.8rem;
+    }
+
+        .blt-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .blt-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .blt-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1300px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .blt-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .4rem;
+    }
+
+        .blt-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .blt-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.2;
+    }
+
+        .blt-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .blt-hero-sub {
+        font-size: .88rem;
+        color: var(--slate);
+        margin: 0;
+    }
+
+    .blt-date-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 8px;
+        background: rgba(200,150,12,.12);
+        border: 1px solid rgba(200,150,12,.25);
+        font-size: .8rem;
+        font-weight: 500;
+        color: var(--gold-lt);
+    }
+
+    /* ── BODY CARD ── */
+    .blt-body {
+        max-width: 1300px;
+        margin: -1.8rem auto 3rem;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .blt-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
+        overflow: hidden;
+    }
+
+    /* ── TABS ── */
+    .blt-tab-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        border-bottom: 1px solid rgba(11,31,58,.08);
+        padding: 0 1rem;
+        background: var(--white);
+    }
+
+    .tab-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: 1.05rem 1.4rem;
+        font-size: .83rem;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+        transition: color .2s, border-color .2s;
+        font-family: 'DM Sans', sans-serif;
+        white-space: nowrap;
+    }
+
+        .tab-link:hover {
+            color: var(--navy);
+        }
+
+        .tab-link.border-b-2 {
+            color: var(--navy) !important;
+            border-bottom: 2px solid var(--gold) !important;
+            background: transparent !important;
+        }
+
+    .tab-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .78rem;
+        flex-shrink: 0;
+    }
+
+    .tab-icon-blue {
+        background: rgba(59,130,246,.1);
+        color: #3b82f6;
+    }
+
+    .tab-icon-green {
+        background: rgba(16,185,129,.1);
+        color: #10b981;
+    }
+
+    .tab-icon-purple {
+        background: rgba(139,92,246,.1);
+        color: #8b5cf6;
+    }
+
+    /* publish btn — pushed to right */
+    .blt-tab-bar .tab-link:last-child {
+        margin-left: auto;
+    }
+
+    /* ── CONTENT ── */
+    #tender-content {
+        background: var(--ivory);
+        min-height: 500px;
+    }
+
+    /* loading */
+    .blt-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 420px;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .blt-spinner {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 3px solid rgba(200,150,12,.2);
+        border-top-color: var(--gold);
+        animation: bltSpin .8s linear infinite;
+    }
+
+    @@keyframes bltSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .blt-loading-text {
+        font-size: .85rem;
+        color: var(--slate);
+        font-weight: 500;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    @@media (max-width: 768px) {
+        .blt-hero {
+            padding: 2rem 1.2rem 3.5rem;
+        }
+
+        .blt-body {
+            padding: 0 .75rem;
+        }
+
+        .blt-tab-bar {
+            padding: 0 .5rem;
+        }
+
+        .tab-link {
+            padding: .85rem .75rem;
+            font-size: .78rem;
+        }
+    }
+</style>
+
+<div class="blt-bleed">
+
+    <!-- HERO -->
+    <div class="blt-hero">
+        <div class="blt-hero-inner">
+            <div>
+                <p class="blt-eyebrow"><span></span> Portal Blog</p>
+                <h1>Blog <em>Hub</em></h1>
+                <p class="blt-hero-sub">Browse, publish and manage all blog posts in one place</p>
+            </div>
+            <div class="blt-date-chip">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="current-date"></span>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 -mt-8">
-        <div class="bg-white rounded-lg shadow-xl p-6">
-            <!-- Tabs Navigation -->
-            <div class="mb-8">
-                <div class="flex flex-wrap gap-2 border-b border-gray-200">
-                    <button data-action="@Url.Action("BlogList", "Blog")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-file-alt text-lg mr-3 text-blue-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Blog List</span>
-                    </button>
+    <!-- CARD + TABS -->
+    <div class="blt-body">
+        <div class="blt-card">
 
-                    <button data-action="@Url.Action("MyBlog", "Blog")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all">
-                        <i class="fas fa-door-open text-lg mr-3 text-green-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">My Blog</span>
-                    </button>
+            <div class="blt-tab-bar">
+                <button data-action="@Url.Action("BlogList", "Blog")" class="tab-link">
+                    <span class="tab-icon tab-icon-blue"><i class="fas fa-file-alt"></i></span>
+                    Blog List
+                </button>
+                <button data-action="@Url.Action("MyBlog", "Blog")" class="tab-link">
+                    <span class="tab-icon tab-icon-green"><i class="fas fa-user-edit"></i></span>
+                    My Blog
+                </button>
+                <button data-action="@Url.Action("PublishBlog", "Blog")" class="tab-link">
+                    <span class="tab-icon tab-icon-purple"><i class="fas fa-plus-circle"></i></span>
+                    Publish New Blog
+                </button>
+            </div>
 
-
-
-                    <button data-action="@Url.Action("PublishBlog", "Blog")"
-                            class="tab-link group inline-flex items-center px-6 py-4 text-sm font-medium rounded-t-lg hover:bg-gray-50 transition-all ml-auto">
-                        <i class="fas fa-plus-circle text-lg mr-3 text-purple-600"></i>
-                        <span class="text-gray-700 group-hover:text-blue-600">Publish New Blog</span>
-                    </button>
+            <div id="tender-content">
+                <div class="blt-loading">
+                    <div class="blt-spinner"></div>
+                    <span class="blt-loading-text">Loading posts...</span>
                 </div>
             </div>
 
-            <!-- Content Area -->
-            <div id="tender-content" class="bg-gray-50 rounded-lg p-6 min-h-[500px]">
-                <!-- Content will be loaded via AJAX -->
-                <div class="animate-pulse flex justify-center items-center h-full">
-                    <i class="fas fa-circle-notch fa-spin text-4xl text-blue-600"></i>
-                </div>
-            </div>
         </div>
     </div>
+
 </div>
 
 @section Scripts {
@@ -76,10 +331,11 @@
 
                 // Show loading animation
                 $('#tender-content').html(`
-                                <div class="animate-pulse flex justify-center items-center h-full">
-                                    <i class="fas fa-circle-notch fa-spin text-4xl text-blue-600"></i>
-                                </div>
-                            `);
+                    <div class="blt-loading">
+                        <div class="blt-spinner"></div>
+                        <span class="blt-loading-text">Loading posts...</span>
+                    </div>
+                `);
 
                 // Load content
                 $('#tender-content').load(url);
@@ -99,12 +355,12 @@
         @if (TempData["SuccessMessage"] != null)
         {
                 <text>
-                        toastr.success('@TempData["SuccessMessage"]', 'Success', {
-                            timeOut: 5000,
+                    toastr.success('@TempData["SuccessMessage"]', 'Success', {
+                        timeOut: 5000,
                         closeButton: true,
                         progressBar: true,
                         positionClass: "toast-top-right",
-                                    });
+                    });
                 </text>
         }
     </script>

@@ -1,81 +1,151 @@
 ﻿@model IEnumerable<TenderSystem.Models.BlogContentEdit>
 
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
-    .blog-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
     }
 
+    .pbl-wrap {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 2rem 1.2rem;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .pbl-section-hd {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        margin-bottom: 1.6rem;
+    }
+
+    .pbl-section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .88rem;
+    }
+
+    .pbl-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin: 0;
+    }
+
+    /* ── BLOG CARD ── */
     .blog-card {
-        border-radius: 12px;
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 2rem;
-        background-color: #fff;
-        border: none;
+        box-shadow: 0 5px 24px rgba(11,31,58,.08);
+        transition: transform .3s ease, box-shadow .3s ease;
+        margin-bottom: 1.8rem;
+        background: var(--white);
+        border: 1px solid rgba(11,31,58,.06);
     }
 
         .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 36px rgba(11,31,58,.13);
         }
 
+    /* header — navy top bar */
     .blog-header {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid #f0f0f0;
+        padding: .9rem 1.3rem;
+        border-bottom: 1px solid rgba(11,31,58,.05);
         display: flex;
         align-items: center;
+        gap: .75rem;
+        background: var(--navy);
     }
 
     .user-photo {
-        width: 48px;
-        height: 48px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(200,150,12,.3);
+        box-shadow: 0 2px 8px rgba(11,31,58,.15);
+        flex-shrink: 0;
+    }
+
+    .user-photo-placeholder {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(200,150,12,.25);
+        color: var(--gold);
+        font-size: 1.1rem;
+        flex-shrink: 0;
     }
 
     .user-info {
-        margin-left: 1rem;
+        flex: 1;
     }
 
     .user-name {
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 0.2rem;
-        font-size: 1rem;
+        font-weight: 700;
+        color: var(--white);
+        font-size: .9rem;
+        margin: 0 0 .1rem;
     }
 
     .post-date {
-        color: #6c757d;
-        font-size: 0.85rem;
+        font-size: .72rem;
+        color: var(--slate);
+        display: flex;
+        align-items: center;
+        gap: .3rem;
     }
 
+        .post-date i {
+            color: var(--gold);
+            font-size: .68rem;
+        }
+
+    /* content */
     .blog-content {
-        padding: 1.5rem;
+        padding: 1.3rem 1.4rem;
     }
 
     .blog-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #2d3748;
-        margin-bottom: 1rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin: 0 0 .9rem;
+        line-height: 1.3;
     }
 
     .blog-description {
-        color: #4a5568;
-        line-height: 1.6;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: .88rem;
         overflow: hidden;
         position: relative;
         max-height: 100px;
-        transition: max-height 0.3s ease;
+        transition: max-height .3s ease;
     }
 
         .blog-description.expanded {
@@ -89,24 +159,27 @@
             left: 0;
             width: 100%;
             height: 70px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
             pointer-events: none;
         }
 
     .read-more-btn {
-        display: inline-block;
-        color: #3b82f6;
-        font-weight: 600;
-        margin-top: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        color: var(--gold);
+        font-weight: 700;
+        font-size: .82rem;
+        margin-top: .75rem;
         cursor: pointer;
-        transition: color 0.2s ease;
+        transition: color .2s;
     }
 
         .read-more-btn:hover {
-            color: #2563eb;
-            text-decoration: underline;
+            color: var(--gold-lt);
         }
 
+    /* image */
     .blog-image-container {
         width: 100%;
         max-height: 400px;
@@ -117,14 +190,16 @@
         width: 100%;
         height: auto;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        display: block;
+        transition: transform .3s ease;
+        cursor: pointer;
     }
 
         .blog-image:hover {
             transform: scale(1.02);
         }
 
-
+    /* image modal */
     .image-modal {
         display: none;
         position: fixed;
@@ -134,7 +209,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0, 0, 0, 0.9);
+        background-color: rgba(0,0,0,.9);
         cursor: pointer;
     }
 
@@ -154,8 +229,8 @@
         max-width: 90%;
         max-height: 90%;
         object-fit: contain;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(255,255,255,.1);
+        border-radius: 6px;
     }
 
     .image-modal-close {
@@ -167,22 +242,27 @@
         font-weight: bold;
         cursor: pointer;
         z-index: 1001;
-        transition: 0.3s;
+        transition: .3s;
     }
 
         .image-modal-close:hover {
-            color: #3b82f6;
+            color: var(--gold-lt);
             transform: scale(1.1);
         }
 
-
-    .blog-image {
-        cursor: pointer;
+    @@media (max-width: 768px) {
+        .pbl-wrap {
+            padding: 1.2rem .75rem;
+        }
     }
 </style>
 
-<div class="blog-container">
+<div class="pbl-wrap">
 
+    <div class="pbl-section-hd">
+        <div class="pbl-section-icon"><i class="fas fa-newspaper"></i></div>
+        <h2 class="pbl-section-title">Latest Blog Posts</h2>
+    </div>
 
     @foreach (var blog in Model)
     {
@@ -194,8 +274,8 @@
                 }
                 else
                 {
-                    <div class="user-photo d-flex align-items-center justify-content-center bg-light">
-                        <i class="fas fa-user text-secondary"></i>
+                    <div class="user-photo-placeholder">
+                        <i class="fas fa-user"></i>
                     </div>
                 }
                 <div class="user-info">
@@ -205,7 +285,7 @@
                         @blog.LastName
                     </h6>
                     <span class="post-date">
-                        <i class="far fa-calendar-alt me-1"></i>
+                        <i class="far fa-calendar-alt"></i>
                         @blog.Postdate.ToString("MMMM dd, yyyy")
                     </span>
                 </div>
@@ -230,66 +310,64 @@
         </div>
     }
 
+</div>
 
+<script>
+    $(document).ready(function () {
+        $('.read-more-btn').each(function () {
+            var button = $(this);
+            var description = button.prev('.blog-description');
 
-    <script>
-        $(document).ready(function () {
-            $('.read-more-btn').each(function () {
-                var button = $(this);
-                var description = button.prev('.blog-description');
+            // Check if description needs a "Read More" button
+            if (description.prop('scrollHeight') <= 100) {
+                button.hide();
+                description.removeClass('collapsed');
+            }
 
-                // Check if description needs a "Read More" button
-                if (description.prop('scrollHeight') <= 100) {
-                    button.hide();
-                    description.removeClass('collapsed');
+            // Add click event
+            button.on('click', function () {
+                var isCollapsed = description.hasClass('collapsed');
+
+                if (isCollapsed) {
+                    description.removeClass('collapsed').addClass('expanded');
+                    button.html('Show Less <i class="fas fa-chevron-up ms-1"></i>');
+                } else {
+                    description.removeClass('expanded').addClass('collapsed');
+                    button.html('Read More <i class="fas fa-chevron-down ms-1"></i>');
+
+                    // Smooth scroll
+                    $('html, body').animate({
+                        scrollTop: button.closest('.blog-card').offset().top - 20
+                    }, 300);
                 }
-
-                // Add click event
-                button.on('click', function () {
-                    var isCollapsed = description.hasClass('collapsed');
-
-                    if (isCollapsed) {
-                        description.removeClass('collapsed').addClass('expanded');
-                        button.html('Show Less <i class="fas fa-chevron-up ms-1"></i>');
-                    } else {
-                        description.removeClass('expanded').addClass('collapsed');
-                        button.html('Read More <i class="fas fa-chevron-down ms-1"></i>');
-
-                        // Smooth scroll
-                        $('html, body').animate({
-                            scrollTop: button.closest('.blog-card').offset().top - 20
-                        }, 300);
-                    }
-                });
-
-            });
-            // New image viewer functionality
-            $('.blog-image').on('click', function () {
-                var imageUrl = $(this).attr('src');
-
-                // Create modal for full-size image view
-                var imageModal = $('<div id="imageModal" class="image-modal">' +
-                    '<div class="image-modal-content">' +
-                    '<span class="image-modal-close">&times;</span>' +
-                    '<img src="' + imageUrl + '" class="image-modal-img">' +
-                    '</div></div>');
-
-                // Add modal to body
-                $('body').append(imageModal);
-
-                // Show the modal
-                $('#imageModal').fadeIn(300);
-
-                // Close modal when clicking X or outside the image
-                $('.image-modal-close, .image-modal').on('click', function (e) {
-                    if (e.target === this || $(e.target).hasClass('image-modal-close')) {
-                        $('#imageModal').fadeOut(300, function () {
-                            $(this).remove();
-                        });
-                    }
-                });
             });
         });
 
-    </script>
-</div>
+        // New image viewer functionality
+        $('.blog-image').on('click', function () {
+            var imageUrl = $(this).attr('src');
+
+            // Create modal for full-size image view
+            var imageModal = $('<div id="imageModal" class="image-modal">' +
+                '<div class="image-modal-content">' +
+                '<span class="image-modal-close">&times;</span>' +
+                '<img src="' + imageUrl + '" class="image-modal-img">' +
+                '</div></div>');
+
+            // Add modal to body
+            $('body').append(imageModal);
+
+            // Show the modal
+            $('#imageModal').fadeIn(300);
+
+            // Close modal when clicking X or outside the image
+            $('.image-modal-close, .image-modal').on('click', function (e) {
+                if (e.target === this || $(e.target).hasClass('image-modal-close')) {
+                    $('#imageModal').fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }
+            });
+        });
+    });
+</script>
