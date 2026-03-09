@@ -1,0 +1,885 @@
+﻿@model ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "_Layout";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    /* ── BLEED ── */
+    .pf-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO BANNER ── */
+    .pf-banner {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        height: 160px;
+    }
+
+        .pf-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .pf-banner::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(200,150,12,.18) 0%, transparent 65%);
+        }
+
+    /* ── PROFILE HEADER CARD ── */
+    .pf-body {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 1.5rem 3rem;
+    }
+
+    .pf-header-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 40px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-top: -60px;
+        position: relative;
+        z-index: 2;
+        margin-bottom: 1.5rem;
+    }
+
+    .pf-header-inner {
+        padding: 1.5rem 2rem 1.8rem;
+        display: flex;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 1.4rem;
+    }
+
+    /* avatar ring */
+    .pf-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+        margin-top: -56px;
+    }
+
+    .pf-avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--white);
+        box-shadow: 0 6px 24px rgba(11,31,58,.18);
+        display: block;
+    }
+
+    .pf-avatar-ring {
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid rgba(200,150,12,.4);
+        pointer-events: none;
+    }
+
+    /* info block */
+    .pf-info {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .pf-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .pf-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .6rem 1.4rem;
+        margin-bottom: .6rem;
+    }
+
+    .pf-meta-item {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .82rem;
+        color: var(--muted);
+    }
+
+        .pf-meta-item i {
+            color: var(--gold);
+            font-size: .78rem;
+        }
+
+    .pf-role-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .25rem .8rem;
+        border-radius: 999px;
+        background: rgba(200,150,12,.1);
+        border: 1px solid rgba(200,150,12,.25);
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--gold);
+    }
+
+    /* edit button */
+    .pf-edit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1.3rem;
+        border-radius: 8px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .82rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 3px 14px rgba(11,31,58,.18);
+        align-self: center;
+    }
+
+        .pf-edit-btn:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(11,31,58,.25);
+        }
+
+        .pf-edit-btn .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .7rem;
+        }
+
+    /* ── EDIT FORM CARD ── */
+    .pf-edit-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 40px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .pf-edit-hd {
+        padding: 1.1rem 2rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+    }
+
+    .pf-edit-hd-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .85rem;
+    }
+
+    .pf-edit-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .pf-edit-body {
+        padding: 2rem;
+    }
+
+    /* sub-sections inside form */
+    .pf-sub-section {
+        background: var(--ivory);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.06);
+        padding: 1.2rem 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .pf-sub-title {
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .pf-sub-title i {
+            color: var(--gold);
+        }
+
+    /* photo preview */
+    .pf-photo-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: .25rem;
+    }
+
+    .pf-photo-thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--white);
+        box-shadow: 0 2px 10px rgba(11,31,58,.12);
+    }
+
+    /* inputs */
+    .pf-input {
+        width: 100%;
+        padding: .75rem 1rem;
+        border: 1.5px solid rgba(11,31,58,.13);
+        border-radius: 8px;
+        font-size: .87rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--white);
+        transition: border-color .2s, box-shadow .2s;
+        outline: none;
+    }
+
+        .pf-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+        .pf-input::placeholder {
+            color: var(--slate);
+            font-size: .84rem;
+        }
+
+    .pf-select {
+        width: 100%;
+        padding: .75rem 1rem;
+        border: 1.5px solid rgba(11,31,58,.13);
+        border-radius: 8px;
+        font-size: .87rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--white);
+        transition: border-color .2s, box-shadow .2s;
+        outline: none;
+        cursor: pointer;
+    }
+
+        .pf-select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+    .pf-label {
+        display: block;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .4rem;
+    }
+
+    .pf-val-error {
+        font-size: .72rem;
+        color: #ef4444;
+        margin-top: .25rem;
+        display: block;
+    }
+
+    /* file input */
+    .pf-file-input {
+        display: block;
+        width: 100%;
+        font-size: .82rem;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .pf-file-input::file-selector-button {
+            margin-right: .75rem;
+            padding: .35rem .9rem;
+            border-radius: 999px;
+            border: none;
+            background: rgba(200,150,12,.1);
+            color: var(--navy);
+            font-weight: 700;
+            font-size: .78rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .pf-file-input::file-selector-button:hover {
+                background: rgba(200,150,12,.2);
+            }
+
+    /* grid helpers */
+    .pf-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 1rem;
+    }
+
+    .pf-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 1rem;
+    }
+
+    /* form actions */
+    .pf-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: .75rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pf-cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .65rem 1.3rem;
+        border-radius: 8px;
+        background: var(--ivory);
+        border: 1.5px solid rgba(11,31,58,.12);
+        color: var(--muted);
+        font-size: .82rem;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, border-color .2s;
+    }
+
+        .pf-cancel-btn:hover {
+            background: #ede9e0;
+            border-color: rgba(11,31,58,.2);
+            color: var(--navy);
+        }
+
+    .pf-save-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .65rem 1.4rem;
+        border-radius: 8px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: .82rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        box-shadow: 0 3px 14px rgba(200,150,12,.3);
+        transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+        .pf-save-btn:hover {
+            background: var(--gold-lt);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(200,150,12,.4);
+        }
+
+    /* ── INFO CARDS (Company / Bank) ── */
+    .pf-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-top: 0;
+    }
+
+    .pf-info-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(11,31,58,.07);
+        overflow: hidden;
+        border: 1px solid rgba(11,31,58,.06);
+        transition: box-shadow .3s;
+    }
+
+        .pf-info-card:hover {
+            box-shadow: 0 8px 36px rgba(11,31,58,.11);
+        }
+
+    .pf-ic-hd {
+        padding: 1rem 1.4rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .pf-ic-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .9rem;
+        flex-shrink: 0;
+    }
+
+    .pf-ic-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .9rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .pf-ic-body {
+        padding: 1.4rem;
+    }
+
+    .pf-ic-row {
+        display: flex;
+        align-items: flex-start;
+        gap: .5rem;
+        padding: .65rem 0;
+        border-bottom: 1px solid rgba(11,31,58,.05);
+    }
+
+        .pf-ic-row:last-child {
+            border-bottom: none;
+        }
+
+    .pf-ic-label {
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        color: var(--slate);
+        flex: 0 0 120px;
+        padding-top: .05rem;
+    }
+
+    .pf-ic-value {
+        font-size: .88rem;
+        font-weight: 600;
+        color: var(--navy);
+    }
+
+    /* empty state */
+    .pf-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2.5rem 1rem;
+        text-align: center;
+    }
+
+        .pf-empty i {
+            font-size: 1.8rem;
+            color: var(--gold);
+            opacity: .35;
+            margin-bottom: .75rem;
+        }
+
+        .pf-empty p {
+            font-size: .85rem;
+            color: var(--slate);
+        }
+
+    @@media (max-width: 768px) {
+        .pf-body {
+            padding: 0 .75rem 2rem;
+        }
+
+        .pf-header-inner {
+            padding: 1.2rem;
+        }
+
+        .pf-edit-body {
+            padding: 1.2rem 1rem;
+        }
+
+        .pf-grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .pf-grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .pf-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pf-avatar {
+            width: 88px;
+            height: 88px;
+        }
+
+        .pf-avatar-wrap {
+            margin-top: -44px;
+        }
+    }
+</style>
+
+<div class="pf-bleed">
+
+    <!-- BANNER -->
+    <div class="pf-banner"></div>
+
+    <div class="pf-body">
+
+        <!-- PROFILE HEADER CARD -->
+        <div class="pf-header-card">
+            <div class="pf-header-inner">
+                <div class="pf-avatar-wrap">
+                    <img src="~/UserImage/@Model.User.UserPhoto" alt="Profile Picture" class="pf-avatar" />
+                    <div class="pf-avatar-ring"></div>
+                </div>
+
+                <div class="pf-info">
+                    <h1 class="pf-name">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</h1>
+                    <div class="pf-meta">
+                        <span class="pf-meta-item"><i class="fas fa-envelope"></i> @Model.User.EmailAddress</span>
+                        <span class="pf-meta-item"><i class="fas fa-map-marker-alt"></i> @Model.User.Province, @Model.User.District, @Model.User.City</span>
+                        <span class="pf-meta-item"><i class="fas fa-phone-alt"></i> @Model.User.Phone</span>
+                    </div>
+                    <span class="pf-role-pill"><i class="fas fa-user-tag"></i> @Model.User.UserRole</span>
+                </div>
+
+                <button id="editProfileBtn" class="pf-edit-btn">
+                    <span class="btn-gold"><i class="fas fa-pen"></i></span>
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- EDIT PROFILE FORM (Initially hidden) -->
+        <div id="editProfileForm" class="pf-edit-card hidden">
+            <div class="pf-edit-hd">
+                <div class="pf-edit-hd-icon"><i class="fas fa-user-edit"></i></div>
+                <h2>Edit Your Profile</h2>
+            </div>
+            <div class="pf-edit-body">
+                <form method="post" asp-action="EditProfile" asp-controller="Home" enctype="multipart/form-data">
+                    <input asp-for="User.Gender" hidden />
+                    <input asp-for="User.UserRole" hidden />
+                    <input asp-for="User.UserPassword" hidden />
+                    <input asp-for="User.UserPhoto" hidden />
+
+                    <!-- Profile Photo -->
+                    <div class="pf-sub-section">
+                        <div class="pf-sub-title"><i class="fas fa-camera"></i> Profile Photo</div>
+                        <div class="pf-photo-row">
+                            <img src="~/UserImage/@Model.User.UserPhoto" alt="Current Profile"
+                                 class="pf-photo-thumb" id="profilePreview" />
+                            <div style="flex:1;">
+                                <input asp-for="User.UserFile" type="file" id="userFile"
+                                       class="pf-file-input"
+                                       onchange="previewImage(this)" />
+                                <p style="font-size:.72rem;color:var(--slate);margin-top:.3rem;">PNG, JPG or JPEG (max. 2MB)</p>
+                                <span asp-validation-for="User.UserFile" class="pf-val-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="pf-sub-section">
+                        <div class="pf-sub-title"><i class="fas fa-user"></i> Personal Information</div>
+                        <div class="pf-grid-3">
+                            <div>
+                                <label class="pf-label">First Name</label>
+                                <input asp-for="User.FirstName" type="text" class="pf-input" placeholder="First Name" required />
+                                <span asp-validation-for="User.FirstName" class="pf-val-error"></span>
+                            </div>
+                            <div>
+                                <label class="pf-label">Middle Name</label>
+                                <input asp-for="@Model.User.MiddleName" type="text" class="pf-input" placeholder="Middle Name" required />
+                                <span asp-validation-for="@Model.User.MiddleName" class="pf-val-error"></span>
+                            </div>
+                            <div>
+                                <label class="pf-label">Last Name</label>
+                                <input asp-for="@Model.User.LastName" type="text" class="pf-input" placeholder="Last Name" required />
+                                <span asp-validation-for="@Model.User.LastName" class="pf-val-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location Information -->
+                    <div class="pf-sub-section">
+                        <div class="pf-sub-title"><i class="fas fa-map-marker-alt"></i> Location Information</div>
+                        <div class="pf-grid-3">
+                            <div>
+                                <label for="provinceDropdown" class="pf-label">Province</label>
+                                <select asp-for="@Model.User.Province" id="provinceDropdown" class="pf-select" required>
+                                    <option value="" disabled selected>Select Province</option>
+                                    <option value="Koshi">Koshi</option>
+                                    <option value="Madhesh">Madhesh</option>
+                                    <option value="Bagmati">Bagmati</option>
+                                    <option value="Gandaki">Gandaki</option>
+                                    <option value="Lumbini">Lumbini</option>
+                                    <option value="Karnali">Karnali</option>
+                                    <option value="Sudurpashchim">Sudurpashchim</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="districtDropdown" class="pf-label">District</label>
+                                <select asp-for="@Model.User.District" id="districtDropdown" class="pf-select" required>
+                                    <option value="" disabled selected>Select District</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="city" class="pf-label">City</label>
+                                <input asp-for="@Model.User.City" type="text" id="city" class="pf-input" placeholder="City" required />
+                                <span asp-validation-for="@Model.User.City" class="pf-val-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="pf-sub-section">
+                        <div class="pf-sub-title"><i class="fas fa-address-book"></i> Contact Information</div>
+                        <div class="pf-grid-2">
+                            <div>
+                                <label for="email" class="pf-label">Email Address</label>
+                                <input asp-for="@Model.User.EmailAddress" type="email" id="email" class="pf-input" placeholder="Email Address" required />
+                                <span asp-validation-for="@Model.User.EmailAddress" class="pf-val-error"></span>
+                            </div>
+                            <div>
+                                <label for="phone" class="pf-label">Phone Number</label>
+                                <input asp-for="@Model.User.Phone" id="phone" class="pf-input" placeholder="Phone Number" required />
+                                <span asp-validation-for="@Model.User.Phone" class="pf-val-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="pf-form-actions">
+                        <button type="button" id="cancelEditBtn" class="pf-cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="pf-save-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- BIDDER COMPANY & BANK CARDS -->
+        @if (User.FindFirst("Role")?.Value == "Bidder")
+        {
+            <div class="pf-info-grid">
+
+                <!-- Company Information -->
+                <div class="pf-info-card">
+                    <div class="pf-ic-hd">
+                        <div class="pf-ic-icon"><i class="fas fa-building"></i></div>
+                        <h2 class="pf-ic-title">Company Details</h2>
+                    </div>
+                    <div class="pf-ic-body">
+                        @if (Model.Company != null)
+                        {
+                            <div class="pf-ic-row">
+                                <span class="pf-ic-label">Company Name</span>
+                                <span class="pf-ic-value">@Model.Company.CompanyName</span>
+                            </div>
+                            <div class="pf-ic-row">
+                                <span class="pf-ic-label">Registration</span>
+                                <span class="pf-ic-value">@Model.Company.RegistrationNumber</span>
+                            </div>
+                            <div class="pf-ic-row">
+                                <span class="pf-ic-label">Type</span>
+                                <span class="pf-ic-value">@Model.Company.CompanyType</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="pf-empty">
+                                <i class="fas fa-building"></i>
+                                <p>No company information available</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Bank Information -->
+                <div class="pf-info-card">
+                    <div class="pf-ic-hd">
+                        <div class="pf-ic-icon"><i class="fas fa-university"></i></div>
+                        <h2 class="pf-ic-title">Bank Details</h2>
+                    </div>
+                    <div class="pf-ic-body">
+                        @if (Model.Bank != null)
+                        {
+                            <div class="pf-ic-row">
+                                <span class="pf-ic-label">Bank Name</span>
+                                <span class="pf-ic-value">@Model.Bank.BankName</span>
+                            </div>
+                            <div class="pf-ic-row">
+                                <span class="pf-ic-label">Account No</span>
+                                <span class="pf-ic-value" style="font-family:monospace;letter-spacing:.05em;">
+                                    ••••••@Model.Bank.AccountNumber.Substring(Math.Max(0, Model.Bank.AccountNumber.Length - 4))
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="pf-empty">
+                                <i class="fas fa-university"></i>
+                                <p>No bank information available</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script>
+    // JavaScript to toggle visibility of the edit profile form
+    document.getElementById('editProfileBtn').addEventListener('click', function () {
+        document.getElementById('editProfileForm').classList.toggle('hidden');
+    });
+
+    document.getElementById('cancelEditBtn').addEventListener('click', function () {
+        document.getElementById('editProfileForm').classList.add('hidden');
+    });
+
+    // Preview image before upload
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById('profilePreview').src = e.target.result;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // District options based on province selection
+    const districtOptions = {
+        Koshi: [
+            "Bhojpur", "Dhankuta", "Ilam", "Jhapa", "Khotang", "Morang", "Okhaldhunga", "Panchthar", "Sankhuwasabha", "Solukhumbu", "Sunsari", "Taplejung", "Terhathum", "Udayapur",
+        ],
+        Madhesh: [
+            "Bara", "Dhanusa", "Mahottari", "Parsa", "Rautahat", "Saptari", "Sarlahi", "Siraha",
+        ],
+        Bagmati: [
+            "Bhaktapur", "Chitwan", "Dhading", "Dolakha", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Makawanpur", "Nuwakot", "Ramechhap", "Rasuwa", "Sindhuli", "Sindhupalchok",
+        ],
+        Gandaki: [
+            "Baglung", "Gorkha", "Kaski", "Lamjung", "Manang", "Mustang", "Myagdi", "Nawalpur", "Parbat", "Syangja", "Tanahu District",
+        ],
+        Lumbini: [
+            "Arghakhanchi", "Banke", "Bardiya", "Dang", "Gulmi", "Kapilvastu", "Parasi", "Palpa", "Pyuthan", "Rolpa", "Rukum", "Rupandehi",
+        ],
+        Karnali: [
+            "Dailekh District", "Dolpa District", "Humla District", "Jajarkot District", "Jumla District", "Kalikot District", "Mugu District", "Rukum Paschim District", "Salyan District", "Surkhet District",
+        ],
+        Sudurpashchim: [
+            "Achham", "Baitadi", "Bajhang", "Bajura", "Dadeldhura", "Darchula", "Doti", "Kailali", "Kanchanpur",
+        ],
+    };
+
+    const provinceDropdown = document.getElementById("provinceDropdown");
+    const districtDropdown = document.getElementById("districtDropdown");
+
+    // Set initial district options if province is already selected
+    window.addEventListener('DOMContentLoaded', () => {
+        const selectedProvince = provinceDropdown.value;
+        if (selectedProvince) {
+            updateDistrictOptions(selectedProvince);
+
+            // Select the current district if it exists
+            const currentDistrict = "@Model.User.District";
+            if (currentDistrict) {
+                for (let i = 0; i < districtDropdown.options.length; i++) {
+                    if (districtDropdown.options[i].value === currentDistrict) {
+                        districtDropdown.options[i].selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    provinceDropdown.addEventListener("change", () => {
+        const selectedProvince = provinceDropdown.value;
+        updateDistrictOptions(selectedProvince);
+    });
+
+    function updateDistrictOptions(province) {
+        const districts = districtOptions[province] || [];
+
+        // Clear existing district options
+        districtDropdown.innerHTML = '<option value="" disabled selected>Select District</option>';
+
+        // Populate district dropdown
+        if (districts.length > 0) {
+            districts.forEach((district) => {
+                const option = document.createElement("option");
+                option.value = district;
+                option.textContent = district;
+                districtDropdown.appendChild(option);
+            });
+        } else {
+            const option = document.createElement("option");
+            option.textContent = "No districts available";
+            districtDropdown.appendChild(option);
+        }
+    }
+</script>
