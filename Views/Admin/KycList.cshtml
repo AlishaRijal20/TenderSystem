@@ -4,413 +4,1124 @@
     Layout = "_Layout";
 }
 
-<!-- Add these script references at the top of your file -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
-    .kyc-container {
-        padding: 1.5rem;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
     }
 
-    .kyc-header {
+    .kyl-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO ── */
+    .kyl-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2.5rem 5rem;
+    }
+
+        .kyl-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .kyl-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .kyl-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1300px;
+        margin: 0 auto;
         display: flex;
+        align-items: flex-start;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.2rem;
     }
 
-    .kyc-title {
-        display: flex;
+    .kyl-eyebrow {
+        display: inline-flex;
         align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
     }
 
-    .kyc-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        border-radius: 10px;
-        margin-right: 12px;
+        .kyl-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .kyl-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.2;
     }
 
-    .kyc-heading {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1e3a8a;
+        .kyl-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .kyl-hero-sub {
+        font-size: .88rem;
+        color: var(--slate);
         margin: 0;
     }
 
-    .kyc-stats {
-        display: flex;
-        gap: 1rem;
+    .kyl-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        color: var(--slate);
+        font-size: .82rem;
+        font-weight: 500;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: color .2s, transform .2s;
+        padding: 0;
+        margin-bottom: .8rem;
     }
 
-    .stat-card {
+        .kyl-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-2px);
+        }
+
+    .kyl-stats {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        align-self: flex-start;
+        margin-top: .35rem;
+    }
+
+    .kyl-stat {
         display: flex;
         align-items: center;
-        padding: 0.75rem 1.25rem;
+        gap: .65rem;
+        padding: .6rem 1.1rem;
         border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(200,150,12,.25);
+        background: rgba(200,150,12,.1);
     }
 
-    .stat-pending {
-        background-color: #fef9c3;
-        border-left: 4px solid #f59e0b;
+    .kyl-stat-icon {
+        font-size: .95rem;
     }
 
-    .stat-verified {
-        background-color: #dcfce7;
-        border-left: 4px solid #10b981;
-    }
+        .kyl-stat-icon.pending-icon {
+            color: var(--gold-lt);
+        }
 
-    .stat-icon {
-        margin-right: 0.75rem;
-        font-size: 1.25rem;
-    }
-
-    .pending-icon {
-        color: #f59e0b;
-    }
-
-    .verified-icon {
-        color: #10b981;
-    }
-
-    .stat-content {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .stat-value {
-        font-size: 1.25rem;
-        font-weight: 700;
+    .kyl-stat-val {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--white);
         line-height: 1;
     }
 
-    .stat-label {
-        font-size: 0.75rem;
-        color: #64748b;
-        margin-top: 0.25rem;
+    .kyl-stat-lbl {
+        font-size: .65rem;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-top: .15rem;
     }
 
-    .kyc-card {
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    /* ── BODY ── */
+    .kyl-body {
+        max-width: 1300px;
+        margin: -2rem auto 3rem;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .kyl-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 40px rgba(11,31,58,.1);
         overflow: hidden;
-        border: 1px solid #e5e7eb;
     }
 
+    /* ── TABLE ── */
     .kyc-table {
         width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
+        border-collapse: collapse;
     }
 
-        .kyc-table th {
-            background-color: #f8fafc;
-            color: #1e293b;
-            font-weight: 600;
-            text-align: left;
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 0.875rem;
+        .kyc-table thead tr {
+            background: var(--navy);
         }
+
+        .kyc-table th {
+            padding: 1rem 1.3rem;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--white);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+            .kyc-table th i {
+                color: var(--gold);
+                margin-right: .35rem;
+            }
+
+        .kyc-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .15s;
+        }
+
+            .kyc-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .kyc-table tbody tr:hover td {
+                background: rgba(200,150,12,.03);
+            }
 
         .kyc-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 1.3rem;
+            font-size: .84rem;
+            color: var(--navy);
             vertical-align: middle;
-            font-size: 0.875rem;
-            color: #334155;
-        }
-
-        .kyc-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .kyc-table tr:hover td {
-            background-color: #f8fafc;
         }
 
     .user-cell {
         display: flex;
         align-items: center;
+        gap: .75rem;
     }
 
     .user-avatar {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
-        background-color: #3b82f6;
-        color: white;
+        background: var(--navy);
+        color: var(--gold-lt);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
-        margin-right: 0.75rem;
+        font-family: 'Playfair Display', serif;
+        font-size: .82rem;
+        font-weight: 700;
         flex-shrink: 0;
-    }
-
-    .user-info {
-        display: flex;
-        flex-direction: column;
+        border: 2px solid rgba(200,150,12,.25);
     }
 
     .user-name {
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 0.25rem;
+        font-weight: 700;
+        color: var(--navy);
+        font-size: .88rem;
+        margin-bottom: .15rem;
     }
 
     .user-email, .user-phone {
-        font-size: 0.75rem;
-        color: #64748b;
+        font-size: .73rem;
+        color: var(--slate);
+    }
+
+    .td-muted {
+        color: var(--muted);
+        font-size: .84rem;
     }
 
     .status-badge {
         display: inline-flex;
         align-items: center;
-        padding: 0.375rem 0.75rem;
-        border-radius: 9999px;
-        font-weight: 500;
-        font-size: 0.75rem;
-    }
-
-    .status-pending {
-        background-color: #fef9c3;
-        color: #854d0e;
+        gap: .3rem;
+        padding: .28rem .8rem;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
     }
 
     .status-verified {
-        background-color: #dcfce7;
+        background: #dcfce7;
         color: #166534;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
     }
 
     .action-cell {
         display: flex;
-        gap: 0.5rem;
+        gap: .5rem;
+        flex-wrap: wrap;
     }
 
     .btn-view {
         display: inline-flex;
         align-items: center;
-        padding: 0.5rem 0.75rem;
-        background-color: #e0f2fe;
-        color: #0369a1;
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-        border: none;
+        gap: .35rem;
+        padding: .42rem .9rem;
+        border-radius: 7px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .75rem;
+        font-weight: 700;
         text-decoration: none;
+        border: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 2px 8px rgba(11,31,58,.15);
     }
 
         .btn-view:hover {
-            background-color: #bae6fd;
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(11,31,58,.22);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .btn-view i {
+            color: var(--gold-lt);
+            font-size: .72rem;
         }
 
     .btn-verify {
         display: inline-flex;
         align-items: center;
-        padding: 0.5rem 0.75rem;
-        background-color: #d1fae5;
-        color: #047857;
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+        gap: .35rem;
+        padding: .42rem .9rem;
+        border-radius: 7px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: .75rem;
+        font-weight: 700;
         border: none;
         cursor: pointer;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 2px 10px rgba(200,150,12,.25);
     }
 
         .btn-verify:hover {
-            background-color: #a7f3d0;
+            background: var(--gold-lt);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(200,150,12,.35);
         }
 
-    .btn-icon {
-        margin-right: 0.375rem;
-    }
+        .btn-verify:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-    .empty-state {
+    .kyl-empty {
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+        .kyl-empty i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: .3;
+            margin-bottom: 1rem;
+        }
+
+        .kyl-empty p {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--navy);
+        }
+
+    .badge-success {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .28rem .8rem;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    /* ── VERIFY OVERLAY ── */
+    .vfy-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        padding: 3rem 0;
-        color: #64748b;
+        background: rgba(11,31,58,.88);
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s ease;
     }
 
-    .empty-icon {
-        font-size: 3rem;
-        color: #cbd5e1;
-        margin-bottom: 1rem;
+        .vfy-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    .vfy-card {
+        background: var(--white);
+        border-radius: 22px;
+        padding: 2.6rem 2.4rem;
+        width: min(400px, 92vw);
+        text-align: center;
+        box-shadow: 0 40px 90px rgba(11,31,58,.4);
+        transform: translateY(24px) scale(.96);
+        transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+        overflow: hidden;
     }
 
-    .empty-text {
-        font-size: 1rem;
-        color: #64748b;
+    .vfy-overlay.active .vfy-card {
+        transform: translateY(0) scale(1);
     }
 
+    /* shimmer top bar */
+    .vfy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+        background-size: 200% 100%;
+        animation: vfy-shimmer 1.8s linear infinite;
+    }
+    @@keyframes vfy-shimmer {
+        0%
+
+    {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+
+    }
+
+    /* particles */
+    .vfy-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 22px;
+    }
+
+    .vfy-particle {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--gold-lt);
+        opacity: 0;
+        animation: vfy-float 3s ease-in-out infinite;
+    }
+
+        .vfy-particle:nth-child(1) {
+            width: 5px;
+            height: 5px;
+            left: 12%;
+            animation-delay: 0s;
+        }
+
+        .vfy-particle:nth-child(2) {
+            width: 4px;
+            height: 4px;
+            left: 30%;
+            animation-delay: .5s;
+            background: var(--gold);
+        }
+
+        .vfy-particle:nth-child(3) {
+            width: 6px;
+            height: 6px;
+            left: 55%;
+            animation-delay: 1.0s;
+        }
+
+        .vfy-particle:nth-child(4) {
+            width: 4px;
+            height: 4px;
+            left: 74%;
+            animation-delay: 1.6s;
+            background: var(--gold);
+        }
+
+        .vfy-particle:nth-child(5) {
+            width: 5px;
+            height: 5px;
+            left: 88%;
+            animation-delay: 0.3s;
+        }
+    @@keyframes vfy-float {
+        0%
+
+    {
+        transform: translateY(100px) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    80% {
+        opacity: .4;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+
+    }
+
+    /* icon ring */
+    .vfy-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(200,150,12,.14), rgba(200,150,12,.04));
+        border: 2px solid rgba(200,150,12,.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: vfy-pulse 2s ease-in-out infinite;
+    }
+    @@keyframes vfy-pulse {
+        0%,100%
+
+    {
+        box-shadow: 0 0 0 0 rgba(200,150,12,.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 14px rgba(200,150,12,.0);
+    }
+
+    }
+
+    .vfy-ring i {
+        font-size: 1.8rem;
+        color: var(--gold);
+        animation: vfy-bounce 1.6s ease-in-out infinite;
+    }
+    @@keyframes vfy-bounce {
+        0%,100%
+
+    {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.15) rotate(-5deg);
+    }
+
+    65% {
+        transform: scale(1.07) rotate(3deg);
+    }
+
+    }
+
+    /* dots */
+    .vfy-dots {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin: 1.1rem 0 .4rem;
+    }
+
+        .vfy-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: vfy-dot .9s ease-in-out infinite;
+        }
+
+            .vfy-dots span:nth-child(2) {
+                animation-delay: .15s;
+                background: var(--gold-lt);
+            }
+
+            .vfy-dots span:nth-child(3) {
+                animation-delay: .30s;
+            }
+    @@keyframes vfy-dot {
+        0%,80%,100%
+
+    {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    40% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+
+    }
+
+    /* progress */
+    .vfy-progress-track {
+        height: 5px;
+        background: rgba(11,31,58,.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: .9rem 0 1.4rem;
+    }
+
+    .vfy-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+        border-radius: 99px;
+        transition: width .5s ease;
+    }
+
+    /* text */
+    .vfy-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-sub {
+        font-size: .85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* steps */
+    .vfy-steps {
+        list-style: none;
+        padding: 0;
+        margin: 1.2rem 0 0;
+        text-align: left;
+    }
+
+        .vfy-steps li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--muted);
+            padding: .36rem 0;
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: color .3s;
+        }
+
+            .vfy-steps li:last-child {
+                border-bottom: none;
+            }
+
+            .vfy-steps li .s-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(11,31,58,.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                color: var(--slate);
+                flex-shrink: 0;
+                transition: all .3s;
+            }
+
+            .vfy-steps li.done .s-icon {
+                background: #22c55e;
+                border-color: #22c55e;
+                color: white;
+            }
+
+            .vfy-steps li.active {
+                color: var(--navy);
+                font-weight: 600;
+            }
+
+                .vfy-steps li.active .s-icon {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                    animation: vfy-spin 1.4s linear infinite;
+                }
+    @@keyframes vfy-spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* ── SUCCESS STATE ── */
+    .vfy-success {
+        display: none;
+    }
+
+        .vfy-success.show {
+            display: block;
+        }
+
+    .vfy-success-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(34,197,94,.15), rgba(34,197,94,.04));
+        border: 2px solid rgba(34,197,94,.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: success-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @@keyframes success-pop {
+        from
+
+    {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    .vfy-success-ring i {
+        font-size: 2rem;
+        color: #22c55e;
+    }
+
+    .vfy-success-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-success-sub {
+        font-size: .85rem;
+        color: var(--muted);
+    }
+
+    /* ── ERROR STATE ── */
+    .vfy-error {
+        display: none;
+    }
+
+        .vfy-error.show {
+            display: block;
+        }
+
+    .vfy-error-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: rgba(239,68,68,.1);
+        border: 2px solid rgba(239,68,68,.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: success-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+        .vfy-error-ring i {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+
+    .vfy-error-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #991b1b;
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-error-sub {
+        font-size: .84rem;
+        color: var(--muted);
+    }
+
+    .vfy-dismiss {
+        margin-top: 1.2rem;
+        padding: .55rem 1.6rem;
+        border-radius: 8px;
+        background: var(--navy);
+        color: var(--white);
+        border: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .vfy-dismiss:hover {
+            background: var(--navy-mid);
+        }
+
+    @@media (max-width: 768px) {
+        .kyl-hero
+
+    {
+        padding: 2rem 1.2rem 4rem;
+    }
+
+    .kyl-body {
+        padding: 0 .75rem;
+    }
+
+    .kyc-table th:nth-child(3), .kyc-table th:nth-child(4),
+    .kyc-table td:nth-child(3), .kyc-table td:nth-child(4) {
+        display: none;
+    }
+
+    }
 </style>
 
-<div class="kyc-container">
-    <!-- Back Button -->
-    <div class="mb-6">
-        <button onclick="history.back()" class="text-gray-600 hover:text-gray-800 transition-all duration-300 flex items-center gap-2 hover:translate-x-[-5px]">
-            <i class="fas fa-arrow-left text-xl"></i>
-            <span class="font-medium">Back</span>
-        </button>
-    </div>
-    <div class="kyc-header">
-        <div class="kyc-title">
-            <div class="kyc-icon">
-                <i class="fas fa-id-card"></i>
+<div class="kyl-bleed">
+
+    <!-- HERO -->
+    <div class="kyl-hero">
+        <div class="kyl-hero-inner">
+            <div>
+                <button onclick="history.back()" class="kyl-back">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <p class="kyl-eyebrow"><span></span> Admin Panel</p>
+                <h1>KYC <em>Verification</em></h1>
+                <p class="kyl-hero-sub">Review and approve company KYC submissions from bidders</p>
             </div>
-            <h1 class="kyc-heading">KYC Verification List</h1>
-        </div>
-
-        <div class="kyc-stats">
-            <div class="stat-card stat-pending">
-                <div class="stat-icon pending-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-content">
-                    <span class="stat-value">@ViewBag.TotalPending</span>
-                    <span class="stat-label">Pending</span>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-
-    <div class="kyc-card">
-        <div class="table-responsive">
-            @if (Model != null && Model.Any())
-            {
-                <table class="kyc-table" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Company</th>
-                            <th>Registration No.</th>
-                            <th>PAN No.</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <div class="user-cell">
-                                        <div class="user-avatar">
-                                            @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
-                                        </div>
-                                        <div class="user-info">
-                                            <div class="user-name">@item.FirstName @item.LastName</div>
-                                            <div class="user-email">@item.EmailAddress</div>
-                                            <div class="user-phone">@item.Phone</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>@(item.CompanyName ?? "N/A")</td>
-                                <td>@(item.RegistrationNumber ?? "N/A")</td>
-                                <td>@(item.PanNumber ?? "N/A")</td>
-                                <td>
-                                    @if (item.IsVerified)
-                                    {
-                                        <span class="status-badge status-verified">
-                                            <i class="fas fa-check-circle mr-1"></i> Verified
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="status-badge status-pending">
-                                            <i class="fas fa-clock mr-1"></i> Pending
-                                        </span>
-                                    }
-                                </td>
-                                <td>
-                                    <div class="action-cell">
-                                        <a asp-action="KycDetails" asp-route-id="@item.UserEncId" class="btn-view">
-                                            <i class="fas fa-eye btn-icon"></i> View
-                                        </a>
-                                        @if (!item.IsVerified)
-                                        {
-                                            <button class="btn-verify verify-btn"
-                                                    data-userid="@item.UserId"
-                                                    data-companyid="@item.CompanyId"
-                                                    data-bankid="@item.BankId">
-                                                <i class="fas fa-check btn-icon"></i> Verify
-                                            </button>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-id-card"></i>
+            <div class="kyl-stats">
+                <div class="kyl-stat">
+                    <div class="kyl-stat-icon pending-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <div class="kyl-stat-val">@ViewBag.TotalPending</div>
+                        <div class="kyl-stat-lbl">Pending</div>
                     </div>
-                    <p class="empty-text">No KYC verification requests found.</p>
                 </div>
-            }
+            </div>
         </div>
     </div>
 
-
-
-    <script>
-        $(document).ready(function () {
-            $('.verify-btn').click(function () {
-                var userId = $(this).data('userid');
-                var companyId = $(this).data('companyid');
-                var bankId = $(this).data('bankid');
-                var btn = $(this);
-
-                if (confirm('Are you sure you want to verify this KYC?')) {
-                    $.ajax({
-                        url: '@Url.Action("UpdateKycStatus", "Admin")',
-                        type: 'POST',
-                        data: {
-                            userId: userId,
-                            companyId: companyId,
-                            bankId: bankId,
-                            isVerified: true,
-                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                btn.closest('tr').find('td:nth-child(5)').html(
-                                    '<span class="badge badge-success">Verified</span>'
-                                );
-                                btn.remove();
-                                toastr.success('KYC verified successfully');
-                            } else {
-                                toastr.error(response.error || 'Failed to verify KYC');
+    <!-- TABLE CARD -->
+    <div class="kyl-body">
+        <div class="kyl-card">
+            <div style="overflow-x:auto;">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="kyc-table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> User</th>
+                                <th><i class="fas fa-building"></i> Company</th>
+                                <th><i class="fas fa-file-contract"></i> Registration No.</th>
+                                <th><i class="fas fa-id-card"></i> PAN No.</th>
+                                <th><i class="fas fa-shield-alt"></i> Status</th>
+                                <th><i class="fas fa-cogs"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar">
+                                                @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
+                                            </div>
+                                            <div class="user-info">
+                                                <div class="user-name">@item.FirstName @item.LastName</div>
+                                                <div class="user-email">@item.EmailAddress</div>
+                                                <div class="user-phone">@item.Phone</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="td-muted">@(item.CompanyName ?? "N/A")</td>
+                                    <td class="td-muted">@(item.RegistrationNumber ?? "N/A")</td>
+                                    <td class="td-muted">@(item.PanNumber ?? "N/A")</td>
+                                    <td>
+                                        @if (item.IsVerified)
+                                        {
+                                            <span class="status-badge status-verified">
+                                                <i class="fas fa-check-circle"></i> Verified
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge status-pending">
+                                                <i class="fas fa-clock"></i> Pending
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="action-cell">
+                                            <a asp-action="KycDetails" asp-route-id="@item.UserEncId" class="btn-view">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            @if (!item.IsVerified)
+                                            {
+                                                <button class="btn-verify verify-btn"
+                                                        data-userid="@item.UserId"
+                                                        data-companyid="@item.CompanyId"
+                                                        data-bankid="@item.BankId"
+                                                        data-name="@item.FirstName @item.LastName">
+                                                    <i class="fas fa-check"></i> Verify
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            toastr.error('An error occurred while verifying KYC: ' + error);
-                        }
-                    });
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="kyl-empty">
+                        <i class="fas fa-id-card"></i>
+                        <p>No KYC verification requests found.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VERIFY OVERLAY ── -->
+    <div class="vfy-overlay" id="vfyOverlay">
+        <div class="vfy-card" id="vfyCard">
+
+            <div class="vfy-particles">
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="vfyLoading">
+                <div class="vfy-ring">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="vfy-title">Verifying KYC…</h3>
+                <p class="vfy-sub" id="vfySubText">Sending verification email to bidder</p>
+                <div class="vfy-dots"><span></span><span></span><span></span></div>
+                <div class="vfy-progress-track">
+                    <div class="vfy-progress-fill" id="vfyProgressFill"></div>
+                </div>
+                <ul class="vfy-steps">
+                    <li id="vfyStep1"><div class="s-icon"><i class="fas fa-check"></i></div> Authenticating request</li>
+                    <li id="vfyStep2"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Updating KYC status</li>
+                    <li id="vfyStep3"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Sending email to bidder</li>
+                    <li id="vfyStep4"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Finalising verification</li>
+                </ul>
+            </div>
+
+            <!-- SUCCESS STATE -->
+            <div class="vfy-success" id="vfySuccess">
+                <div class="vfy-success-ring"><i class="fas fa-check-circle"></i></div>
+                <h3 class="vfy-success-title">KYC Verified!</h3>
+                <p class="vfy-success-sub" id="vfySuccessMsg">The bidder has been successfully verified.</p>
+            </div>
+
+            <!-- ERROR STATE -->
+            <div class="vfy-error" id="vfyError">
+                <div class="vfy-error-ring"><i class="fas fa-times-circle"></i></div>
+                <h3 class="vfy-error-title">Verification Failed</h3>
+                <p class="vfy-error-sub" id="vfyErrorMsg">Something went wrong. Please try again.</p>
+                <button class="vfy-dismiss" onclick="closeVfyOverlay()">Close</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* ── Overlay helpers ── */
+    const vfyOverlay  = document.getElementById('vfyOverlay');
+    const vfyProgress = document.getElementById('vfyProgressFill');
+    const vfyStepEls  = [
+        document.getElementById('vfyStep1'),
+        document.getElementById('vfyStep2'),
+        document.getElementById('vfyStep3'),
+        document.getElementById('vfyStep4'),
+    ];
+    let stepTimers = [];
+
+    function setVfyStep(index) {
+        vfyStepEls.forEach((el, i) => {
+            el.classList.remove('done', 'active');
+            if (i < index)  el.classList.add('done');
+            if (i === index) el.classList.add('active');
+        });
+    }
+
+    function showVfyOverlay(name) {
+        // Reset states
+        document.getElementById('vfyLoading').style.display = 'block';
+        document.getElementById('vfySuccess').classList.remove('show');
+        document.getElementById('vfyError').classList.remove('show');
+        vfyProgress.style.width = '0%';
+        vfyStepEls.forEach(el => el.classList.remove('done', 'active'));
+        document.getElementById('vfySubText').textContent = 'Sending verification email to ' + (name || 'bidder');
+
+        vfyOverlay.classList.add('active');
+
+        // Animate steps
+        const timeline = [
+            { delay: 200,  pct: 20 },
+            { delay: 900,  pct: 50 },
+            { delay: 1600, pct: 78 },
+        ];
+        stepTimers = timeline.map(({ delay, pct }, i) =>
+            setTimeout(() => { setVfyStep(i); vfyProgress.style.width = pct + '%'; }, delay)
+        );
+    }
+
+    function showVfySuccess(name) {
+        // Complete progress first
+        setVfyStep(3);
+        vfyProgress.style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('vfyLoading').style.display = 'none';
+            document.getElementById('vfySuccessMsg').textContent =
+                (name || 'The bidder') + ' has been successfully verified.';
+            document.getElementById('vfySuccess').classList.add('show');
+            // Auto-close after 1.8s
+            setTimeout(closeVfyOverlay, 1800);
+        }, 600);
+    }
+
+    function showVfyError(msg) {
+        clearStepTimers();
+        document.getElementById('vfyLoading').style.display = 'none';
+        document.getElementById('vfyErrorMsg').textContent = msg || 'Something went wrong. Please try again.';
+        document.getElementById('vfyError').classList.add('show');
+    }
+
+    function closeVfyOverlay() {
+        vfyOverlay.classList.remove('active');
+    }
+
+    function clearStepTimers() {
+        stepTimers.forEach(clearTimeout);
+    }
+
+    /* ── Verify button click ── */
+    $(document).ready(function () {
+        $('.verify-btn').click(function () {
+            var userId    = $(this).data('userid');
+            var companyId = $(this).data('companyid');
+            var bankId    = $(this).data('bankid');
+            var name      = $(this).data('name');
+            var btn       = $(this);
+
+            if (!confirm('Are you sure you want to verify KYC for ' + name + '?')) return;
+
+            btn.prop('disabled', true);
+            showVfyOverlay(name);
+
+            $.ajax({
+                url: '@Url.Action("UpdateKycStatus", "Admin")',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    companyId: companyId,
+                    bankId: bankId,
+                    isVerified: true,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showVfySuccess(name);
+                        btn.closest('tr').find('td:nth-child(5)').html(
+                            '<span class="status-badge status-verified"><i class="fas fa-check-circle"></i> Verified</span>'
+                        );
+                        btn.remove();
+                        toastr.success('KYC verified successfully');
+                    } else {
+                        showVfyError(response.error || 'Failed to verify KYC.');
+                        btn.prop('disabled', false);
+                        toastr.error(response.error || 'Failed to verify KYC');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showVfyError('An error occurred: ' + error);
+                    btn.prop('disabled', false);
+                    toastr.error('An error occurred: ' + error);
                 }
             });
         });
-    </script>
-</div>
+    });
+</script>

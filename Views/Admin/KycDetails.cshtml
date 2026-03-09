@@ -1,606 +1,1287 @@
 ﻿@model KycDetailsViewModel
 @{
     ViewData["Title"] = "KYC Details";
+    Layout = "_Layout";
 }
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
 <style>
-    .kyc-details-container {
-        padding: 1.5rem;
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --navy-light: #1a3357;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+        --success: #22c55e;
+        --danger: #ef4444;
     }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
+    *, *::before, *::after {
+        box-sizing: border-box;
     }
 
-    .page-title {
-        display: flex;
-        align-items: center;
+    /* ── BLEED ── */
+    .kd-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'DM Sans', sans-serif;
     }
 
-    .page-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        border-radius: 10px;
-        margin-right: 12px;
+    /* ── HERO ── */
+    .kd-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.5rem 2.5rem 5.5rem;
     }
 
-    .page-heading {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1e3a8a;
-        margin: 0;
-    }
-
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
-        font-weight: 600;
-        font-size: 0.875rem;
-    }
-
-    .status-verified {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-
-    .verify-btn {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.625rem 1.25rem;
-        background: linear-gradient(45deg, #15803d, #22c55e);
-        color: white;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-        .verify-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        .kd-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px,transparent 1px), linear-gradient(90deg,rgba(200,150,12,.05) 1px,transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
 
-    .verify-icon {
-        margin-right: 0.5rem;
-    }
+        .kd-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle,rgba(200,150,12,.15) 0%,transparent 65%);
+            pointer-events: none;
+        }
 
-    .info-card {
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-        margin-bottom: 1.5rem;
-    }
-
-    .card-header {
-        padding: 1.25rem;
-        border-bottom: 1px solid #f3f4f6;
-        background: linear-gradient(to right, #f9fafb, white);
-        display: flex;
-        align-items: center;
-    }
-
-    .card-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #1e3a8a;
-        margin: 0;
-    }
-
-    .card-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(45deg, #1e40af, #3b82f6);
-        color: white;
-        border-radius: 8px;
-        margin-right: 10px;
-    }
-
-    .card-body {
-        padding: 1.5rem;
-    }
-
-    .user-profile {
+    .kd-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1000px;
+        margin: 0 auto;
         display: flex;
         align-items: flex-start;
-        gap: 1.5rem;
-    }
-
-    .user-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #f1f5f9;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .avatar-placeholder {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background-color: #f1f5f9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #94a3b8;
-        font-size: 3rem;
-    }
-
-    .user-details {
-        flex: 1;
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        justify-content: space-between;
+        flex-wrap: wrap;
         gap: 1rem;
     }
 
-    .info-item {
-        margin-bottom: 0.75rem;
-    }
-
-    .info-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #64748b;
-        margin-bottom: 0.25rem;
-        display: block;
-    }
-
-    .info-value {
-        font-size: 0.875rem;
-        color: #1e293b;
-    }
-
-    .documents-section {
-        margin-top: 1.5rem;
-    }
-
-    .documents-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #1e3a8a;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .documents-icon {
-        color: #3b82f6;
-        margin-right: 0.5rem;
-    }
-
-    .documents-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-
-    .document-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .document-header {
-        padding: 0.75rem;
-        background-color: #f8fafc;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #475569;
-        display: flex;
-        align-items: center;
-    }
-
-    .document-icon {
-        color: #3b82f6;
-        margin-right: 0.5rem;
-    }
-
-    .document-image-container {
-        position: relative;
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .document-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-
-        .document-image:hover {
-            transform: scale(1.05);
-        }
-
-    .document-actions {
-        display: flex;
-        justify-content: flex-end;
-        padding: 0.75rem;
-        background-color: #f8fafc;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .document-button {
+    .kd-back {
         display: inline-flex;
         align-items: center;
-        padding: 0.5rem 0.75rem;
-        background-color: #e0f2fe;
-        color: #0369a1;
-        border-radius: 6px;
+        gap: .45rem;
+        color: var(--slate);
+        font-size: .82rem;
         font-weight: 500;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+        background: none;
         border: none;
-        text-decoration: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: color .2s, transform .2s;
+        padding: 0;
+        margin-bottom: .8rem;
     }
 
-        .document-button:hover {
-            background-color: #bae6fd;
+        .kd-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-2px);
         }
 
-    .document-button-icon {
-        margin-right: 0.375rem;
+    .kd-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
     }
 
-    .zoom-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
+        .kd-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .kd-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem,3vw,1.9rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.2;
+    }
+
+        .kd-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .kd-hero-sub {
+        font-size: .85rem;
+        color: var(--slate);
+        margin: 0;
+    }
+
+    /* status / verify area */
+    .kd-hero-actions {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        align-self: flex-start;
+        margin-top: .4rem;
+    }
+
+    .kd-verified-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem 1.1rem;
+        border-radius: 999px;
+        background: rgba(34,197,94,.15);
+        border: 1px solid rgba(34,197,94,.35);
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: #86efac;
+    }
+
+    .btn-verify-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .65rem 1.4rem;
+        border-radius: 9px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: .85rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 4px 16px rgba(200,150,12,.35);
+    }
+
+        .btn-verify-hero:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(200,150,12,.45);
+        }
+
+        .btn-verify-hero:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    /* ── BODY ── */
+    .kd-body {
+        max-width: 1000px;
+        margin: -2.5rem auto 3rem;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── CARD ── */
+    .kd-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 10px 44px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        animation: kd-fadeup .5s ease-out both;
+    }
+
+        .kd-card:nth-child(2) {
+            animation-delay: .08s;
+        }
+
+        .kd-card:nth-child(3) {
+            animation-delay: .16s;
+        }
+
+        .kd-card:nth-child(4) {
+            animation-delay: .24s;
+        }
+    @@keyframes kd-fadeup {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .kd-card-hd {
+        padding: 1rem 1.6rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+    }
+
+    .kd-card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
+        color: var(--gold);
+        font-size: .85rem;
+        flex-shrink: 0;
     }
 
-        .zoom-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+    .kd-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .kd-card-body {
+        padding: 1.8rem 1.8rem;
+    }
+
+    /* ── USER PROFILE ── */
+    .kd-profile {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .kd-avatar-wrap {
+        flex-shrink: 0;
+    }
+
+    .kd-avatar-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(200,150,12,.3);
+        box-shadow: 0 4px 14px rgba(11,31,58,.12);
+    }
+
+    .kd-avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: var(--navy);
+        border: 3px solid rgba(200,150,12,.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+    }
+
+    .kd-profile-info {
+        flex: 1;
+    }
+
+    /* ── INFO GRID ── */
+    .kd-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 1.2rem;
+    }
+
+    .kd-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 1.2rem;
+    }
+
+    .kd-info-item {
+    }
+
+    .kd-info-label {
+        display: block;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .3rem;
+    }
+
+    .kd-info-value {
+        font-size: .88rem;
+        color: var(--navy);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .kd-info-value a {
+            color: var(--gold);
+            font-weight: 600;
+            text-decoration: none;
         }
 
-    .zoom-image {
-        max-width: 90%;
-        max-height: 90%;
+            .kd-info-value a:hover {
+                color: var(--gold-lt);
+                text-decoration: underline;
+            }
+
+    .kd-divider {
+        height: 1px;
+        background: rgba(11,31,58,.06);
+        margin: 1.4rem 0;
+    }
+
+    /* ── DOCUMENTS ── */
+    .kd-docs-title {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 1.2rem;
+    }
+
+        .kd-docs-title i {
+            color: var(--gold);
+        }
+
+    .kd-docs-grid {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 1.4rem;
+    }
+
+    .kd-doc-card {
+        border: 1px solid rgba(11,31,58,.08);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: box-shadow .2s, transform .2s;
+    }
+
+        .kd-doc-card:hover {
+            box-shadow: 0 6px 24px rgba(11,31,58,.1);
+            transform: translateY(-2px);
+        }
+
+    .kd-doc-hd {
+        padding: .7rem 1rem;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--white);
+    }
+
+        .kd-doc-hd i {
+            color: var(--gold);
+        }
+
+    .kd-doc-img-wrap {
+        height: 220px;
+        overflow: hidden;
+        background: var(--ivory);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: zoom-in;
+    }
+
+    .kd-doc-img {
+        width: 100%;
+        height: 100%;
         object-fit: contain;
+        transition: transform .3s ease;
     }
 
-    .zoom-close {
+    .kd-doc-img-wrap:hover .kd-doc-img {
+        transform: scale(1.06);
+    }
+
+    /* ── ZOOM OVERLAY ── */
+    .kd-zoom {
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: rgba(0,0,0,.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s;
+    }
+
+        .kd-zoom.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    .kd-zoom-img {
+        max-width: 92%;
+        max-height: 92%;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .kd-zoom-close {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 18px;
+        right: 22px;
         color: white;
-        font-size: 2rem;
+        font-size: 1.6rem;
         cursor: pointer;
+        opacity: .7;
+        transition: opacity .2s, transform .2s;
     }
 
+        .kd-zoom-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+    /* ── VERIFY OVERLAY ── */
+    .vfy-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(11,31,58,.9);
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s ease;
+    }
+
+        .vfy-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    .vfy-card {
+        background: var(--white);
+        border-radius: 22px;
+        padding: 2.6rem 2.4rem;
+        width: min(400px,92vw);
+        text-align: center;
+        box-shadow: 0 40px 90px rgba(11,31,58,.4);
+        transform: translateY(24px) scale(.96);
+        transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .vfy-overlay.active .vfy-card {
+        transform: translateY(0) scale(1);
+    }
+
+    .vfy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold));
+        background-size: 200% 100%;
+        animation: vfy-shimmer 1.8s linear infinite;
+    }
+    @@keyframes vfy-shimmer {
+        0%
+
+    {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+
+    }
+
+    .vfy-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 22px;
+    }
+
+    .vfy-particle {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--gold-lt);
+        opacity: 0;
+        animation: vfy-float 3s ease-in-out infinite;
+    }
+
+        .vfy-particle:nth-child(1) {
+            width: 5px;
+            height: 5px;
+            left: 12%;
+            animation-delay: 0s;
+        }
+
+        .vfy-particle:nth-child(2) {
+            width: 4px;
+            height: 4px;
+            left: 30%;
+            animation-delay: .5s;
+            background: var(--gold);
+        }
+
+        .vfy-particle:nth-child(3) {
+            width: 6px;
+            height: 6px;
+            left: 55%;
+            animation-delay: 1.0s;
+        }
+
+        .vfy-particle:nth-child(4) {
+            width: 4px;
+            height: 4px;
+            left: 74%;
+            animation-delay: 1.6s;
+            background: var(--gold);
+        }
+
+        .vfy-particle:nth-child(5) {
+            width: 5px;
+            height: 5px;
+            left: 88%;
+            animation-delay: 0.3s;
+        }
+    @@keyframes vfy-float {
+        0%
+
+    {
+        transform: translateY(100px) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    80% {
+        opacity: .4;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+
+    }
+
+    .vfy-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,rgba(200,150,12,.14),rgba(200,150,12,.04));
+        border: 2px solid rgba(200,150,12,.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: vfy-pulse 2s ease-in-out infinite;
+    }
+    @@keyframes vfy-pulse {
+        0%,100%
+
+    {
+        box-shadow: 0 0 0 0 rgba(200,150,12,.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 14px rgba(200,150,12,.0);
+    }
+
+    }
+
+    .vfy-ring i {
+        font-size: 1.8rem;
+        color: var(--gold);
+        animation: vfy-bounce 1.6s ease-in-out infinite;
+    }
+    @@keyframes vfy-bounce {
+        0%,100%
+
+    {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.15) rotate(-5deg);
+    }
+
+    65% {
+        transform: scale(1.07) rotate(3deg);
+    }
+
+    }
+
+    .vfy-dots {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin: 1.1rem 0 .4rem;
+    }
+
+        .vfy-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: vfy-dot .9s ease-in-out infinite;
+        }
+
+            .vfy-dots span:nth-child(2) {
+                animation-delay: .15s;
+                background: var(--gold-lt);
+            }
+
+            .vfy-dots span:nth-child(3) {
+                animation-delay: .30s;
+            }
+    @@keyframes vfy-dot {
+        0%,80%,100%
+
+    {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    40% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+
+    }
+
+    .vfy-progress-track {
+        height: 5px;
+        background: rgba(11,31,58,.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: .9rem 0 1.4rem;
+    }
+
+    .vfy-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg,var(--gold),var(--gold-lt));
+        border-radius: 99px;
+        transition: width .5s ease;
+    }
+
+    .vfy-title {
+        font-family: 'Playfair Display',serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-sub {
+        font-size: .85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .vfy-steps-list {
+        list-style: none;
+        padding: 0;
+        margin: 1.2rem 0 0;
+        text-align: left;
+    }
+
+        .vfy-steps-list li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--muted);
+            padding: .36rem 0;
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: color .3s;
+        }
+
+            .vfy-steps-list li:last-child {
+                border-bottom: none;
+            }
+
+            .vfy-steps-list li .s-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(11,31,58,.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                color: var(--slate);
+                flex-shrink: 0;
+                transition: all .3s;
+            }
+
+            .vfy-steps-list li.done .s-icon {
+                background: #22c55e;
+                border-color: #22c55e;
+                color: white;
+            }
+
+            .vfy-steps-list li.active {
+                color: var(--navy);
+                font-weight: 600;
+            }
+
+                .vfy-steps-list li.active .s-icon {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                    animation: vfy-spin 1.4s linear infinite;
+                }
+    @@keyframes vfy-spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* success / error states */
+    .vfy-success, .vfy-error {
+        display: none;
+    }
+
+        .vfy-success.show, .vfy-error.show {
+            display: block;
+        }
+
+    .vfy-success-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: rgba(34,197,94,.12);
+        border: 2px solid rgba(34,197,94,.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: vfy-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .vfy-error-ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: rgba(239,68,68,.1);
+        border: 2px solid rgba(239,68,68,.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.4rem;
+        animation: vfy-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @@keyframes vfy-pop {
+        from
+
+    {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    .vfy-success-ring i {
+        font-size: 2rem;
+        color: #22c55e;
+    }
+
+    .vfy-error-ring i {
+        font-size: 2rem;
+        color: #ef4444;
+    }
+
+    .vfy-success-title {
+        font-family: 'Playfair Display',serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-success-sub, .vfy-error-sub {
+        font-size: .85rem;
+        color: var(--muted);
+    }
+
+    .vfy-error-title {
+        font-family: 'Playfair Display',serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #991b1b;
+        margin: 0 0 .3rem;
+    }
+
+    .vfy-dismiss {
+        margin-top: 1.2rem;
+        padding: .55rem 1.6rem;
+        border-radius: 8px;
+        background: var(--navy);
+        color: var(--white);
+        border: none;
+        font-family: 'DM Sans',sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .vfy-dismiss:hover {
+            background: var(--navy-mid);
+        }
+
+    @@media (max-width: 640px) {
+        .kd-hero
+
+    {
+        padding: 2rem 1.2rem 4rem;
+    }
+
+    .kd-body {
+        padding: 0 .75rem;
+    }
+
+    .kd-card-body {
+        padding: 1.2rem;
+    }
+
+    .kd-grid-2, .kd-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-docs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kd-profile {
+        flex-direction: column;
+    }
+
+    }
 </style>
 
-<div class="kyc-details-container">
-    <button onclick="history.back()" class="back-button">
-        <i class="fas fa-arrow-left text-xl"></i>
-        <span class="hidden sm:inline">Back</span>
-    </button>
-    <div class="page-header">
-        <div class="page-title">
-            <div class="page-icon">
-                <i class="fas fa-id-card"></i>
-            </div>
-            <h1 class="page-heading">KYC Details</h1>
-        </div>
+<div class="kd-bleed">
 
-        <div>
-            @if (Model.Company.IsVerified)
-            {
-                <span class="status-badge status-verified">
-                    <i class="fas fa-check-circle mr-2"></i> Verified
-                </span>
-            }
-            else
-            {
-
-                <button class="btn-verify verify-btn"
-                        data-userid="@Model.User.UserId"
-                        data-companyid="@Model.Company.CompanyId"
-                        data-bankid="@Model.Bank.BankId">
-                    <i class="fas fa-check btn-icon"></i> Verify
+    <!-- ── HERO ── -->
+    <div class="kd-hero">
+        <div class="kd-hero-inner">
+            <div>
+                <button onclick="history.back()" class="kd-back">
+                    <i class="fas fa-arrow-left"></i> Back
                 </button>
-
-
-            }
-        </div>
-    </div>
-
-    <!-- User Information Card -->
-    <div class="info-card">
-        <div class="card-header">
-            <div class="card-icon">
-                <i class="fas fa-user"></i>
+                <p class="kd-eyebrow"><span></span> Admin Panel</p>
+                <h1>KYC <em>Details</em></h1>
+                <p class="kd-hero-sub">Review company verification documents and approve or reject the submission.</p>
             </div>
-            <h2 class="card-title">User Information</h2>
-        </div>
-        <div class="card-body">
-            <div class="user-profile">
-                <div>
-                    @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
-                    {
-                        <img src="~/UserImage/@Model.User.UserPhoto" class="user-avatar" alt="User Photo">
-                    }
-                    else
-                    {
-                        <div class="avatar-placeholder">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    }
-                </div>
 
-                <div class="user-details">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Full Name</span>
-                            <span class="info-value">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</span>
-                        </div>
-
-                        <div class="info-item">
-                            <span class="info-label">Email Address</span>
-                            <span class="info-value">@Model.User.EmailAddress</span>
-                        </div>
-
-                        <div class="info-item">
-                            <span class="info-label">Phone Number</span>
-                            <span class="info-value">@Model.User.Phone</span>
-                        </div>
-
-
-                    </div>
-
-                    <div class="info-item">
-                        <span class="info-label">Address</span>
-                        <span class="info-value">@Model.User.City, @Model.User.District, @Model.User.Province</span>
-                    </div>
-                </div>
+            <div class="kd-hero-actions">
+                @if (Model.Company.IsVerified)
+                {
+                    <span class="kd-verified-pill">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                }
+                else
+                {
+                    <button class="btn-verify-hero verify-btn"
+                            id="verifyBtn"
+                            data-userid="@Model.User.UserId"
+                            data-companyid="@Model.Company.CompanyId"
+                            data-bankid="@Model.Bank.BankId"
+                            data-name="@Model.User.FirstName @Model.User.LastName">
+                        <i class="fas fa-check"></i> Verify KYC
+                    </button>
+                }
             </div>
         </div>
     </div>
 
-    <!-- Company Information Card -->
-    <div class="info-card">
-        <div class="card-header">
-            <div class="card-icon">
-                <i class="fas fa-building"></i>
+    <div class="kd-body">
+
+        <!-- ── USER INFO ── -->
+        <div class="kd-card">
+            <div class="kd-card-hd">
+                <div class="kd-card-icon"><i class="fas fa-user"></i></div>
+                <h2 class="kd-card-title">User Information</h2>
             </div>
-            <h2 class="card-title">Company Information</h2>
-        </div>
-        <div class="card-body">
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">Company Name</span>
-                    <span class="info-value">@Model.Company.CompanyName</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Company Type</span>
-                    <span class="info-value">@Model.Company.CompanyType</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Position</span>
-                    <span class="info-value">@Model.Company.Position</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Registration Number</span>
-                    <span class="info-value">@Model.Company.RegistrationNumber</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">PAN Number</span>
-                    <span class="info-value">@Model.Company.PanNumber</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Office Email</span>
-                    <span class="info-value">@Model.Company.OfficeEmail</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Website</span>
-                    <span class="info-value">
-                        @if (!string.IsNullOrEmpty(Model.Company.CompanyWebsiteUrl))
+            <div class="kd-card-body">
+                <div class="kd-profile">
+                    <div class="kd-avatar-wrap">
+                        @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
                         {
-                            <a href="@Model.Company.CompanyWebsiteUrl" target="_blank" class="text-blue-600 hover:underline">
-                                @Model.Company.CompanyWebsiteUrl
-                            </a>
+                            <img src="~/UserImage/@Model.User.UserPhoto" class="kd-avatar-img" alt="User Photo" />
                         }
                         else
                         {
-                            <span>N/A</span>
+                            <div class="kd-avatar-placeholder">
+                                @(Model.User.FirstName?.Substring(0, 1))@(Model.User.LastName?.Substring(0, 1))
+                            </div>
                         }
-                    </span>
-                </div>
-            </div>
-
-            <div class="info-item">
-                <span class="info-label">Full Address</span>
-                <span class="info-value">@Model.Company.FullAddress</span>
-            </div>
-
-            <!-- Document Images Section -->
-            <div class="documents-section">
-                <h3 class="documents-title">
-                    <i class="fas fa-file-alt documents-icon"></i>
-                    Verification Documents
-                </h3>
-
-                <div class="documents-grid">
-                    <!-- Registration Document -->
-                    <div class="document-card">
-                        <div class="document-header">
-                            <i class="fas fa-file-contract document-icon"></i>
-                            Registration Document
-                        </div>
-                        <div class="document-image-container">
-                            <img src="~/RegisterImage/@Model.Company.RegistrationDocument"
-                                 alt="Registration Document"
-                                 class="document-image"
-                                 onclick="openZoomView(this.src)">
-                        </div>
-
                     </div>
-
-                    <!-- PAN Document -->
-                    <div class="document-card">
-                        <div class="document-header">
-                            <i class="fas fa-id-card document-icon"></i>
-                            PAN Document
+                    <div class="kd-profile-info">
+                        <div class="kd-grid-3">
+                            <div class="kd-info-item">
+                                <span class="kd-info-label">Full Name</span>
+                                <span class="kd-info-value">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</span>
+                            </div>
+                            <div class="kd-info-item">
+                                <span class="kd-info-label">Email Address</span>
+                                <span class="kd-info-value"><i class="fas fa-envelope" style="color:var(--gold);font-size:.75rem;"></i> @Model.User.EmailAddress</span>
+                            </div>
+                            <div class="kd-info-item">
+                                <span class="kd-info-label">Phone Number</span>
+                                <span class="kd-info-value"><i class="fas fa-phone" style="color:var(--gold);font-size:.75rem;"></i> @Model.User.Phone</span>
+                            </div>
                         </div>
-                        <div class="document-image-container">
-                            <img src="~/PanImage/@Model.Company.PanDocument"
-                                 alt="PAN Document"
-                                 class="document-image"
-                                 onclick="openZoomView(this.src)">
+                        <div class="kd-divider"></div>
+                        <div class="kd-info-item">
+                            <span class="kd-info-label">Address</span>
+                            <span class="kd-info-value"><i class="fas fa-map-marker-alt" style="color:var(--gold);font-size:.75rem;"></i> @Model.User.City, @Model.User.District, @Model.User.Province</span>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Bank Information Card -->
-    <div class="info-card">
-        <div class="card-header">
-            <div class="card-icon">
-                <i class="fas fa-university"></i>
+        <!-- ── COMPANY INFO ── -->
+        <div class="kd-card">
+            <div class="kd-card-hd">
+                <div class="kd-card-icon"><i class="fas fa-building"></i></div>
+                <h2 class="kd-card-title">Company Information</h2>
             </div>
-            <h2 class="card-title">Bank Information</h2>
-        </div>
-        <div class="card-body">
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">Bank Name</span>
-                    <span class="info-value">@Model.Bank.BankName</span>
+            <div class="kd-card-body">
+                <div class="kd-grid-3">
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Company Name</span>
+                        <span class="kd-info-value">@Model.Company.CompanyName</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Company Type</span>
+                        <span class="kd-info-value">@Model.Company.CompanyType</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Position</span>
+                        <span class="kd-info-value">@Model.Company.Position</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Registration Number</span>
+                        <span class="kd-info-value"><i class="fas fa-hashtag" style="color:var(--gold);font-size:.75rem;"></i> @Model.Company.RegistrationNumber</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">PAN Number</span>
+                        <span class="kd-info-value"><i class="fas fa-id-card" style="color:var(--gold);font-size:.75rem;"></i> @Model.Company.PanNumber</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Office Email</span>
+                        <span class="kd-info-value">@Model.Company.OfficeEmail</span>
+                    </div>
+                    <div class="kd-info-item" style="grid-column: span 2;">
+                        <span class="kd-info-label">Full Address</span>
+                        <span class="kd-info-value">@Model.Company.FullAddress</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Website</span>
+                        <span class="kd-info-value">
+                            @if (!string.IsNullOrEmpty(Model.Company.CompanyWebsiteUrl))
+                            {
+                                <a href="@Model.Company.CompanyWebsiteUrl" target="_blank">@Model.Company.CompanyWebsiteUrl</a>
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--slate)">N/A</span>
+                            }
+                        </span>
+                    </div>
                 </div>
 
-                <div class="info-item">
-                    <span class="info-label">Account Number</span>
-                    <span class="info-value">
-                        @if (!string.IsNullOrEmpty(Model.Bank.AccountNumber))
-                        {
-                            <span>@(new string('*', Model.Bank.AccountNumber.Length - 4) + Model.Bank.AccountNumber.Substring(Model.Bank.AccountNumber.Length - 4))</span>
-                        }
-                        else
-                        {
-                            <span>N/A</span>
-                        }
-                    </span>
-                </div>
+                <div class="kd-divider"></div>
 
-                <div class="info-item">
-                    <span class="info-label">Account Type</span>
-                    <span class="info-value">@Model.Bank.AccountType</span>
-                </div>
-
-                <div class="info-item">
-                    <span class="info-label">Account Holder Name</span>
-                    <span class="info-value">@Model.Bank.AccountHolderName</span>
+                <!-- Documents -->
+                <h3 class="kd-docs-title"><i class="fas fa-file-alt"></i> Verification Documents</h3>
+                <div class="kd-docs-grid">
+                    <div class="kd-doc-card">
+                        <div class="kd-doc-hd"><i class="fas fa-file-contract"></i> Registration Document</div>
+                        <div class="kd-doc-img-wrap" onclick="openZoomView(this.querySelector('img').src)">
+                            <img src="~/RegisterImage/@Model.Company.RegistrationDocument" alt="Registration Document" class="kd-doc-img" />
+                        </div>
+                    </div>
+                    <div class="kd-doc-card">
+                        <div class="kd-doc-hd"><i class="fas fa-id-card"></i> PAN Document</div>
+                        <div class="kd-doc-img-wrap" onclick="openZoomView(this.querySelector('img').src)">
+                            <img src="~/PanImage/@Model.Company.PanDocument" alt="PAN Document" class="kd-doc-img" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Image Zoom Overlay -->
-<div id="zoomOverlay" class="zoom-overlay" onclick="closeZoomView()">
-    <img id="zoomImage" class="zoom-image" src="/placeholder.svg" alt="Zoomed Document" />
-    <div class="zoom-close" onclick="closeZoomView()">
-        <i class="fas fa-times"></i>
+        <!-- ── BANK INFO ── -->
+        <div class="kd-card">
+            <div class="kd-card-hd">
+                <div class="kd-card-icon"><i class="fas fa-university"></i></div>
+                <h2 class="kd-card-title">Bank Information</h2>
+            </div>
+            <div class="kd-card-body">
+                <div class="kd-grid-2">
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Bank Name</span>
+                        <span class="kd-info-value"><i class="fas fa-university" style="color:var(--gold);font-size:.75rem;"></i> @Model.Bank.BankName</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Account Number</span>
+                        <span class="kd-info-value" style="font-family:monospace;">
+                            @if (!string.IsNullOrEmpty(Model.Bank.AccountNumber))
+                            {
+                                @(new string('•', Model.Bank.AccountNumber.Length - 4) + Model.Bank.AccountNumber.Substring(Model.Bank.AccountNumber.Length - 4))
+                            }
+                            else
+                            {
+
+                                <span style="color:var(--slate)">N/A</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Account Type</span>
+                        <span class="kd-info-value">@Model.Bank.AccountType</span>
+                    </div>
+                    <div class="kd-info-item">
+                        <span class="kd-info-label">Account Holder Name</span>
+                        <span class="kd-info-value">@Model.Bank.AccountHolderName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <!-- ── IMAGE ZOOM OVERLAY ── -->
+    <div id="kdZoom" class="kd-zoom" onclick="closeZoomView()">
+        <img id="kdZoomImg" class="kd-zoom-img" src="" alt="Zoomed Document" onclick="event.stopPropagation()" />
+        <div class="kd-zoom-close" onclick="closeZoomView()"><i class="fas fa-times"></i></div>
+    </div>
+
+    <!-- ── VERIFY OVERLAY ── -->
+    <div class="vfy-overlay" id="vfyOverlay">
+        <div class="vfy-card">
+            <div class="vfy-particles">
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+                <div class="vfy-particle"></div>
+            </div>
+
+            <!-- LOADING -->
+            <div id="vfyLoading">
+                <div class="vfy-ring"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="vfy-title">Verifying KYC…</h3>
+                <p class="vfy-sub" id="vfySubText">Sending verification email to bidder</p>
+                <div class="vfy-dots"><span></span><span></span><span></span></div>
+                <div class="vfy-progress-track">
+                    <div class="vfy-progress-fill" id="vfyProgressFill"></div>
+                </div>
+                <ul class="vfy-steps-list">
+                    <li id="vfyStep1"><div class="s-icon"><i class="fas fa-check"></i></div> Authenticating request</li>
+                    <li id="vfyStep2"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Updating KYC status</li>
+                    <li id="vfyStep3"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Sending email to bidder</li>
+                    <li id="vfyStep4"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Finalising verification</li>
+                </ul>
+            </div>
+
+            <!-- SUCCESS -->
+            <div class="vfy-success" id="vfySuccess">
+                <div class="vfy-success-ring"><i class="fas fa-check-circle"></i></div>
+                <h3 class="vfy-success-title">KYC Verified!</h3>
+                <p class="vfy-success-sub" id="vfySuccessMsg">The bidder has been successfully verified.</p>
+            </div>
+
+            <!-- ERROR -->
+            <div class="vfy-error" id="vfyError">
+                <div class="vfy-error-ring"><i class="fas fa-times-circle"></i></div>
+                <h3 class="vfy-error-title">Verification Failed</h3>
+                <p class="vfy-error-sub" id="vfyErrorMsg">Something went wrong. Please try again.</p>
+                <button class="vfy-dismiss" onclick="closeVfyOverlay()">Close</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    // Function to open the zoom view
-    function openZoomView(imageSrc) {
-        document.getElementById('zoomImage').src = imageSrc;
-        document.getElementById('zoomOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when zoom is active
+    /* ── Zoom ── */
+    function openZoomView(src) {
+        document.getElementById('kdZoomImg').src = src;
+        document.getElementById('kdZoom').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
-
-    // Function to close the zoom view
     function closeZoomView() {
-        document.getElementById('zoomOverlay').classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
+        document.getElementById('kdZoom').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeZoomView(); closeVfyOverlay(); } });
+
+    /* ── Verify overlay ── */
+    const vfyOverlay  = document.getElementById('vfyOverlay');
+    const vfyProgress = document.getElementById('vfyProgressFill');
+    const vfyStepEls  = [
+        document.getElementById('vfyStep1'),
+        document.getElementById('vfyStep2'),
+        document.getElementById('vfyStep3'),
+        document.getElementById('vfyStep4'),
+    ];
+    let stepTimers = [];
+
+    function setVfyStep(index) {
+        vfyStepEls.forEach((el, i) => {
+            el.classList.remove('done', 'active');
+            if (i < index)  el.classList.add('done');
+            if (i === index) el.classList.add('active');
+        });
     }
 
-    // Close zoom view when pressing Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeZoomView();
-        }
-    });
+    function showVfyOverlay(name) {
+        document.getElementById('vfyLoading').style.display = 'block';
+        document.getElementById('vfySuccess').classList.remove('show');
+        document.getElementById('vfyError').classList.remove('show');
+        vfyProgress.style.width = '0%';
+        vfyStepEls.forEach(el => el.classList.remove('done', 'active'));
+        document.getElementById('vfySubText').textContent = 'Sending verification email to ' + (name || 'bidder');
+        vfyOverlay.classList.add('active');
 
+        const timeline = [
+            { delay: 200,  pct: 20 },
+            { delay: 900,  pct: 50 },
+            { delay: 1600, pct: 78 },
+        ];
+        stepTimers = timeline.map(({ delay, pct }, i) =>
+            setTimeout(() => { setVfyStep(i); vfyProgress.style.width = pct + '%'; }, delay)
+        );
+    }
+
+    function showVfySuccess(name) {
+        setVfyStep(3); vfyProgress.style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('vfyLoading').style.display = 'none';
+            document.getElementById('vfySuccessMsg').textContent = (name || 'The bidder') + ' has been successfully verified.';
+            document.getElementById('vfySuccess').classList.add('show');
+            setTimeout(closeVfyOverlay, 1800);
+        }, 600);
+    }
+
+    function showVfyError(msg) {
+        stepTimers.forEach(clearTimeout);
+        document.getElementById('vfyLoading').style.display = 'none';
+        document.getElementById('vfyErrorMsg').textContent = msg || 'Something went wrong. Please try again.';
+        document.getElementById('vfyError').classList.add('show');
+    }
+
+    function closeVfyOverlay() { vfyOverlay.classList.remove('active'); }
+
+    /* ── Verify button ── */
     $(document).ready(function () {
         $('.verify-btn').click(function () {
-            var userId = $(this).data('userid');
+            var userId    = $(this).data('userid');
             var companyId = $(this).data('companyid');
-            var bankId = $(this).data('bankid');
-            var btn = $(this);
+            var bankId    = $(this).data('bankid');
+            var name      = $(this).data('name');
+            var btn       = $(this);
 
-            if (confirm('Are you sure you want to verify this KYC?')) {
-                $.ajax({
-                    url: '@Url.Action("UpdateKycStatus", "Admin")',
-                    type: 'POST',
-                    data: {
-                        userId: userId,
-                        companyId: companyId,
-                        bankId: bankId,
-                        isVerified: true,
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            btn.closest('tr').find('td:nth-child(5)').html(
-                                '<span class="badge badge-success">Verified</span>'
-                            );
-                            btn.remove();
-                            toastr.success('KYC verified successfully');
-                        } else {
-                            toastr.error(response.error || 'Failed to verify KYC');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        toastr.error('An error occurred while verifying KYC: ' + error);
+            if (!confirm('Are you sure you want to verify KYC for ' + name + '?')) return;
+
+            btn.prop('disabled', true);
+            showVfyOverlay(name);
+
+            $.ajax({
+                url: '@Url.Action("UpdateKycStatus", "Admin")',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    companyId: companyId,
+                    bankId: bankId,
+                    isVerified: true,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showVfySuccess(name);
+                        // Replace button with verified pill after overlay closes
+                        setTimeout(() => {
+                            btn.replaceWith('<span class="kd-verified-pill" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;border-radius:999px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#86efac;"><i class=\'fas fa-check-circle\'></i> Verified</span>');
+                        }, 2600);
+                        toastr.success('KYC verified successfully');
+                    } else {
+                        showVfyError(response.error || 'Failed to verify KYC.');
+                        btn.prop('disabled', false);
+                        toastr.error(response.error || 'Failed to verify KYC');
                     }
-                });
-            }
+                },
+                error: function (xhr, status, error) {
+                    showVfyError('An error occurred: ' + error);
+                    btn.prop('disabled', false);
+                    toastr.error('An error occurred: ' + error);
+                }
+            });
         });
     });
 </script>
