@@ -2,76 +2,501 @@
 
 @{
     ViewData["Title"] = "Edit Blog";
-
     Layout = "_Layout";
 }
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Update an existing Blog Post</h2>
-            <p class="text-gray-600">Share your thoughts and insights with the community</p>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .eb-bleed {
+        position: relative;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        margin-top: -1.5rem;
+        background: var(--ivory);
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HERO ── */
+    .eb-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2.5rem 5rem;
+    }
+
+        .eb-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .eb-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .eb-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .eb-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
+
+        .eb-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .eb-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .3rem;
+        line-height: 1.2;
+    }
+
+        .eb-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .eb-hero-sub {
+        font-size: .87rem;
+        color: var(--slate);
+        margin: 0;
+    }
+
+    /* ── BODY ── */
+    .eb-body {
+        max-width: 860px;
+        margin: -2rem auto 3rem;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── CARD ── */
+    .eb-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
+        overflow: hidden;
+    }
+
+    .eb-card-header {
+        background: var(--navy-mid);
+        padding: .85rem 1.6rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        border-bottom: 1px solid rgba(200,150,12,.15);
+    }
+
+    .eb-card-header-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: .8rem;
+    }
+
+    .eb-card-header-title {
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--white);
+        letter-spacing: .04em;
+    }
+
+    .eb-card-body {
+        padding: 2rem 1.8rem;
+    }
+
+    /* ── FIELD ── */
+    .eb-field {
+        margin-bottom: 1.6rem;
+    }
+
+    .eb-label {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .5rem;
+    }
+
+        .eb-label i {
+            color: var(--gold);
+            font-size: .78rem;
+        }
+
+    .eb-input,
+    .eb-textarea {
+        width: 100%;
+        padding: .85rem 1rem;
+        border: 1.5px solid rgba(11,31,58,.13);
+        border-radius: 9px;
+        font-size: .9rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--white);
+        transition: border-color .2s, box-shadow .2s;
+        outline: none;
+    }
+
+        .eb-input::placeholder,
+        .eb-textarea::placeholder {
+            color: var(--slate);
+            font-size: .87rem;
+        }
+
+        .eb-input:focus,
+        .eb-textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+    .eb-textarea {
+        resize: vertical;
+        min-height: 180px;
+        line-height: 1.7;
+    }
+
+    .eb-val-error {
+        font-size: .72rem;
+        color: #ef4444;
+        margin-top: .3rem;
+        display: block;
+    }
+
+    /* divider */
+    .eb-divider {
+        height: 1px;
+        background: rgba(11,31,58,.06);
+        margin: 1.6rem 0;
+    }
+
+    /* ── IMAGE SECTION ── */
+    .eb-image-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.4rem;
+        flex-wrap: wrap;
+    }
+
+    .eb-current-img-wrap {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid rgba(200,150,12,.25);
+        box-shadow: 0 4px 14px rgba(11,31,58,.1);
+        background: var(--ivory);
+    }
+
+        .eb-current-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .eb-img-badge {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(11,31,58,.7);
+        color: var(--gold-lt);
+        font-size: .58rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        text-align: center;
+        padding: .25rem 0;
+    }
+
+    .eb-file-side {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .eb-file-zone {
+        width: 100%;
+        padding: 1rem;
+        background: var(--ivory);
+        border: 1.5px dashed rgba(11,31,58,.18);
+        border-radius: 9px;
+        transition: border-color .2s, background .2s;
+        cursor: pointer;
+    }
+
+        .eb-file-zone:hover {
+            border-color: var(--gold);
+            background: rgba(200,150,12,.04);
+        }
+
+    .eb-file-input {
+        display: block;
+        width: 100%;
+        font-size: .84rem;
+        color: var(--muted);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .eb-file-input::file-selector-button {
+            margin-right: .75rem;
+            padding: .38rem 1rem;
+            border-radius: 999px;
+            border: none;
+            background: rgba(200,150,12,.12);
+            color: var(--navy);
+            font-weight: 700;
+            font-size: .78rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .2s;
+        }
+
+            .eb-file-input::file-selector-button:hover {
+                background: rgba(200,150,12,.22);
+            }
+
+    .eb-file-hint {
+        font-size: .72rem;
+        color: var(--slate);
+        margin-top: .4rem;
+    }
+
+        .eb-file-hint i {
+            color: var(--gold);
+            margin-right: .2rem;
+        }
+
+    /* ── ACTIONS ── */
+    .eb-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1.2rem 1.8rem;
+        border-top: 1px solid rgba(11,31,58,.06);
+        background: var(--ivory);
+    }
+
+    .eb-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .85rem 2rem;
+        border-radius: 9px;
+        background: var(--navy);
+        color: var(--white);
+        font-size: .9rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 5px 20px rgba(11,31,58,.2);
+    }
+
+        .eb-submit:hover {
+            background: var(--navy-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(11,31,58,.28);
+        }
+
+        .eb-submit .btn-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .78rem;
+            transition: transform .2s;
+        }
+
+        .eb-submit:hover .btn-badge {
+            transform: scale(1.1);
+        }
+
+    @@media (max-width: 768px) {
+        .eb-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .eb-body {
+            padding: 0 .75rem;
+        }
+
+        .eb-card-body {
+            padding: 1.4rem 1rem;
+        }
+
+        .eb-image-row {
+            flex-direction: column;
+        }
+
+        .eb-current-img-wrap {
+            width: 100%;
+            height: 180px;
+        }
+    }
+</style>
+
+<div class="eb-bleed">
+
+    <!-- HERO -->
+    <div class="eb-hero">
+        <div class="eb-hero-inner">
+            <p class="eb-eyebrow"><span></span> Portal Blog</p>
+            <h1>Edit <em>Blog Post</em></h1>
+            <p class="eb-hero-sub">Update your existing post — changes will be reflected immediately</p>
         </div>
+    </div>
 
-        <form asp-action="EditBlog" asp-controller="Blog" method="post" enctype="multipart/form-data" class="space-y-6">
-            <div class="space-y-4">
-                <input type="hidden" asp-for="Bid" />
-                <div>
-                    <label asp-for="SectionHeading" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-heading mr-2"></i>Blog Title
-                    </label>
-                    <input asp-for="SectionHeading" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Enter blog title" required />
-                    <span asp-validation-for="SectionHeading" class="text-red-500 text-sm"></span>
-                </div>
+    <!-- FORM CARD -->
+    <div class="eb-body">
+        <div class="eb-card">
 
-                <div>
-                    <label asp-for="SectionDescription" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-paragraph mr-2"></i>Blog Content
-                    </label>
-                    <textarea asp-for="SectionDescription" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Write your blog content here..." required></textarea>
-                    <span asp-validation-for="SectionDescription" class="text-red-500 text-sm"></span>
-                </div>
+            <div class="eb-card-header">
+                <div class="eb-card-header-icon"><i class="fas fa-edit"></i></div>
+                <span class="eb-card-header-title">Post Details</span>
+            </div>
 
-                <div>
-                    <label asp-for="BlogFile" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-image mr-2"></i>Blog Image
-                    </label>
-                    <div class="flex items-center">
-                        <div class="w-32 h-32 bg-gray-200 overflow-hidden mr-4 rounded-lg">
-                            <img src="~/BlogImage/@Model.SectionImage" alt="Current Blog Image" class="w-full h-full object-cover" id="imagePreview">
-                        </div>
-                        <div class="flex-1">
-                            <input asp-for="BlogFile" type="file" accept="image/*"
-                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                            <p class="mt-1 text-xs text-gray-500">PNG, JPG or JPEG (max. 2MB)</p>
-                            <span asp-validation-for="BlogFile" class="text-red-500 text-sm"></span>
+            <form asp-action="EditBlog" asp-controller="Blog" method="post" enctype="multipart/form-data">
+
+                <div class="eb-card-body">
+
+                    <input type="hidden" asp-for="Bid" />
+
+                    <!-- Blog Title -->
+                    <div class="eb-field">
+                        <label asp-for="SectionHeading" class="eb-label">
+                            <i class="fas fa-heading"></i> Blog Title
+                        </label>
+                        <input asp-for="SectionHeading" class="eb-input"
+                               placeholder="Enter blog title" required />
+                        <span asp-validation-for="SectionHeading" class="eb-val-error"></span>
+                    </div>
+
+                    <div class="eb-divider"></div>
+
+                    <!-- Blog Content -->
+                    <div class="eb-field">
+                        <label asp-for="SectionDescription" class="eb-label">
+                            <i class="fas fa-paragraph"></i> Blog Content
+                        </label>
+                        <textarea asp-for="SectionDescription" rows="6" class="eb-textarea"
+                                  placeholder="Write your blog content here..." required></textarea>
+                        <span asp-validation-for="SectionDescription" class="eb-val-error"></span>
+                    </div>
+
+                    <div class="eb-divider"></div>
+
+                    <!-- Blog Image -->
+                    <div class="eb-field">
+                        <label asp-for="BlogFile" class="eb-label">
+                            <i class="fas fa-image"></i> Blog Image
+                        </label>
+                        <div class="eb-image-row">
+                            <div class="eb-current-img-wrap">
+                                <img src="~/BlogImage/@Model.SectionImage"
+                                     alt="Current Blog Image" id="imagePreview" />
+                                <div class="eb-img-badge">Current</div>
+                            </div>
+                            <div class="eb-file-side">
+                                <div class="eb-file-zone">
+                                    <input asp-for="BlogFile" type="file" accept="image/*"
+                                           class="eb-file-input" />
+                                </div>
+                                <p class="eb-file-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    PNG, JPG or JPEG (max. 2MB). Uploading a new image will replace the current one.
+                                </p>
+                                <span asp-validation-for="BlogFile" class="eb-val-error"></span>
+                            </div>
                         </div>
                     </div>
+
                 </div>
-            </div>
 
-            <div class="flex justify-end space-x-4">
+                <!-- Footer Actions -->
+                <div class="eb-actions">
+                    <button type="submit" class="eb-submit">
+                        <span class="btn-badge"><i class="fas fa-save"></i></span>
+                        Update Blog
+                    </button>
+                </div>
 
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-paper-plane mr-2"></i>Publish Blog
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-    <script>
-        document.getElementById('BlogFile').addEventListener('change', function (e) {
-            if (e.target.files && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const preview = document.createElement('img');
-                    preview.src = e.target.result;
-                    preview.className = 'max-h-64 rounded-lg';
-                    const previewDiv = document.getElementById('imagePreview');
-                    previewDiv.innerHTML = '';
-                    previewDiv.appendChild(preview);
-                }
-                reader.readAsDataURL(e.target.files[0]);
-            }
-        });
-    </script>
+
 </div>
+
+<script>
+    document.getElementById('BlogFile').addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.className = 'max-h-64 rounded-lg';
+                const previewDiv = document.getElementById('imagePreview');
+                previewDiv.innerHTML = '';
+                previewDiv.appendChild(preview);
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+</script>
