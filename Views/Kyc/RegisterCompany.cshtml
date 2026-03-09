@@ -19,7 +19,6 @@
         --muted: #5a6a80;
     }
 
-    /* ── BLEED ── */
     .kyc-bleed {
         position: relative;
         left: 50%;
@@ -106,7 +105,6 @@
         margin: 0;
     }
 
-    /* steps indicator */
     .kyc-steps {
         display: flex;
         gap: 1.5rem;
@@ -153,7 +151,6 @@
         overflow: hidden;
     }
 
-    /* validation summary */
     .kyc-val-summary {
         padding: 1rem 1.5rem;
         background: #fee2e2;
@@ -162,7 +159,7 @@
         color: #991b1b;
     }
 
-    /* ── SECTION ── */
+    /* ── SECTIONS ── */
     .kyc-section {
         border-bottom: 1px solid rgba(11,31,58,.06);
     }
@@ -204,7 +201,7 @@
         padding: 1.8rem 2rem;
     }
 
-    /* ── INPUT GRID ── */
+    /* ── GRIDS ── */
     .kyc-grid-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -217,7 +214,7 @@
         gap: 1.4rem;
     }
 
-    /* ── FLOATING LABEL INPUT ── */
+    /* ── FLOATING LABEL ── */
     .kyc-field {
         position: relative;
         margin-bottom: .25rem;
@@ -225,7 +222,7 @@
 
     .form-input {
         width: 100%;
-        padding: .85rem 1rem .85rem 1rem;
+        padding: .85rem 1rem;
         border: 1.5px solid rgba(11,31,58,.15);
         border-radius: 8px;
         font-size: .88rem;
@@ -396,7 +393,7 @@
                 text-decoration: underline;
             }
 
-    /* ── SUBMIT BUTTON ── */
+    /* ── SUBMIT ── */
     .kyc-submit-wrap {
         display: flex;
         justify-content: center;
@@ -457,32 +454,358 @@
             transform: scale(1.1);
         }
 
-    @@media (max-width: 900px) {
-        .kyc-hero {
-            padding: 2rem 1.2rem 4rem;
-        }
-
-        .kyc-body {
-            padding: 0 .75rem;
-        }
-
-        .kyc-section-body {
-            padding: 1.2rem 1rem;
-        }
-
-        .kyc-grid-3 {
-            grid-template-columns: 1fr;
-        }
-
-        .kyc-grid-2 {
-            grid-template-columns: 1fr;
-        }
+    /* ── REGISTRATION OVERLAY ── */
+    .reg-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(11,31,58,.88);
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .35s ease;
     }
 
-    @@media (min-width: 640px) and (max-width: 900px) {
-        .kyc-grid-3 {
-            grid-template-columns: repeat(2, 1fr);
+        .reg-overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
+
+    .reg-overlay-card {
+        background: var(--white);
+        border-radius: 22px;
+        padding: 2.8rem 2.5rem;
+        width: min(440px, 92vw);
+        text-align: center;
+        box-shadow: 0 40px 90px rgba(11,31,58,.4);
+        transform: translateY(28px) scale(.95);
+        transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .reg-overlay.active .reg-overlay-card {
+        transform: translateY(0) scale(1);
+    }
+
+    .reg-overlay-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+        background-size: 200% 100%;
+        animation: reg-shimmer 1.8s linear infinite;
+    }
+    @@keyframes reg-shimmer {
+        0%
+
+    {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+
+    }
+
+    /* particles */
+    .reg-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 22px;
+    }
+
+    .reg-particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold-lt);
+        opacity: 0;
+        animation: reg-float 3s ease-in-out infinite;
+    }
+
+        .reg-particle:nth-child(1) {
+            left: 12%;
+            animation-delay: 0s;
+            width: 5px;
+            height: 5px;
+        }
+
+        .reg-particle:nth-child(2) {
+            left: 30%;
+            animation-delay: .5s;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .reg-particle:nth-child(3) {
+            left: 52%;
+            animation-delay: 1.0s;
+            width: 6px;
+            height: 6px;
+        }
+
+        .reg-particle:nth-child(4) {
+            left: 72%;
+            animation-delay: 1.6s;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+        }
+
+        .reg-particle:nth-child(5) {
+            left: 88%;
+            animation-delay: 0.3s;
+            width: 5px;
+            height: 5px;
+        }
+    @@keyframes reg-float {
+        0%
+
+    {
+        transform: translateY(110px) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    80% {
+        opacity: .4;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+
+    }
+
+    /* icon ring */
+    .reg-anim-ring {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(200,150,12,.14), rgba(200,150,12,.04));
+        border: 2px solid rgba(200,150,12,.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        animation: reg-pulse 2s ease-in-out infinite;
+    }
+    @@keyframes reg-pulse {
+        0%,100%
+
+    {
+        box-shadow: 0 0 0 0 rgba(200,150,12,.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 16px rgba(200,150,12,.0);
+    }
+
+    }
+
+    .reg-anim-ring i {
+        font-size: 1.9rem;
+        color: var(--gold);
+        animation: reg-bounce 1.6s ease-in-out infinite;
+    }
+    @@keyframes reg-bounce {
+        0%,100%
+
+    {
+        transform: translateY(0) scale(1);
+    }
+
+    45% {
+        transform: translateY(-6px) scale(1.08);
+    }
+
+    65% {
+        transform: translateY(-3px) scale(1.04);
+    }
+
+    }
+
+    /* dots */
+    .reg-dots {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin: 1.2rem 0 .4rem;
+    }
+
+        .reg-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: reg-dot .9s ease-in-out infinite;
+        }
+
+            .reg-dots span:nth-child(2) {
+                animation-delay: .15s;
+                background: var(--gold-lt);
+            }
+
+            .reg-dots span:nth-child(3) {
+                animation-delay: .30s;
+            }
+    @@keyframes reg-dot {
+        0%,80%,100%
+
+    {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    40% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+
+    }
+
+    /* progress */
+    .reg-progress-track {
+        height: 5px;
+        background: rgba(11,31,58,.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: .9rem 0 1.4rem;
+    }
+
+    .reg-progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+        border-radius: 99px;
+        transition: width .5s ease;
+    }
+
+    /* text */
+    .reg-overlay-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .35rem;
+    }
+
+    .reg-overlay-sub {
+        font-size: .86rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* steps list */
+    .reg-steps-list {
+        list-style: none;
+        padding: 0;
+        margin: 1.3rem 0 0;
+        text-align: left;
+    }
+
+        .reg-steps-list li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--muted);
+            padding: .38rem 0;
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: color .3s;
+        }
+
+            .reg-steps-list li:last-child {
+                border-bottom: none;
+            }
+
+            .reg-steps-list li .s-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(11,31,58,.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                color: var(--slate);
+                flex-shrink: 0;
+                transition: all .3s;
+            }
+
+            .reg-steps-list li.done .s-icon {
+                background: #22c55e;
+                border-color: #22c55e;
+                color: white;
+            }
+
+            .reg-steps-list li.active {
+                color: var(--navy);
+                font-weight: 600;
+            }
+
+                .reg-steps-list li.active .s-icon {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                    animation: reg-spin 1.4s linear infinite;
+                }
+    @@keyframes reg-spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    @@media (max-width: 900px) {
+        .kyc-hero
+
+    {
+        padding: 2rem 1.2rem 4rem;
+    }
+
+    .kyc-body {
+        padding: 0 .75rem;
+    }
+
+    .kyc-section-body {
+        padding: 1.2rem 1rem;
+    }
+
+    .kyc-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .kyc-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    }
+    @@media (min-width: 640px) and (max-width: 900px) {
+        .kyc-grid-3
+
+    {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     }
 </style>
 
@@ -494,7 +817,6 @@
             <p class="kyc-eyebrow"><span></span> Bidder KYC</p>
             <h1>Company <em>Verification</em></h1>
             <p class="kyc-hero-sub">Complete your KYC to unlock full bidding capabilities and participate in all tenders.</p>
-
             <div class="kyc-steps">
                 <div class="kyc-step"><div class="kyc-step-dot">1</div> Company Details</div>
                 <div class="kyc-step"><div class="kyc-step-dot">2</div> Document Upload</div>
@@ -507,10 +829,10 @@
     <div class="kyc-body">
         <div class="kyc-card">
 
-            <form asp-action="RegisterCompany" asp-controller="Kyc" method="post" enctype="multipart/form-data">
+            <form asp-action="RegisterCompany" asp-controller="Kyc" method="post" enctype="multipart/form-data" id="kycRegForm">
                 <div asp-validation-summary="ModelOnly" class="kyc-val-summary"></div>
 
-                <!-- ── COMPANY DETAILS ── -->
+                <!-- COMPANY DETAILS -->
                 <div class="kyc-section">
                     <div class="kyc-section-hd">
                         <div class="kyc-section-icon"><i class="fas fa-building"></i></div>
@@ -518,55 +840,46 @@
                     </div>
                     <div class="kyc-section-body">
                         <div class="kyc-grid-3">
-
                             <div class="kyc-field">
                                 <input asp-for="CompanyName" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="CompanyName" class="form-label">Company Name</label>
                                 <span asp-validation-for="CompanyName" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="FullAddress" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="FullAddress" class="form-label">Full Address</label>
                                 <span asp-validation-for="FullAddress" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="CompanyWebsiteUrl" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="CompanyWebsiteUrl" class="form-label">Company URL</label>
                                 <span asp-validation-for="CompanyWebsiteUrl" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="RegistrationNumber" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="RegistrationNumber" class="form-label">Registration Number</label>
                                 <span asp-validation-for="RegistrationNumber" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="PanNumber" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="PanNumber" class="form-label">PAN Number</label>
                                 <span asp-validation-for="PanNumber" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="CompanyType" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="CompanyType" class="form-label">Company Type</label>
                                 <span asp-validation-for="CompanyType" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="OfficeEmail" type="email" class="form-input" placeholder=" " required />
                                 <label asp-for="OfficeEmail" class="form-label">Company Email</label>
                                 <span asp-validation-for="OfficeEmail" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="Position" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="Position" class="form-label">Your Position in Company</label>
                                 <span asp-validation-for="Position" class="validation-error"></span>
                             </div>
-
                         </div>
 
                         <!-- Registration Document -->
@@ -578,7 +891,7 @@
                             <div class="file-input-container">
                                 <label for="RegisterFile" class="file-input-label">
                                     <i class="fas fa-file-upload"></i>
-                                    <span>Choose file or drag & drop</span>
+                                    <span>Choose file or drag &amp; drop</span>
                                 </label>
                                 <input asp-for="RegisterFile" id="RegisterFile" type="file" class="file-input"
                                        onchange="previewImage(event, 'RegDocPreview')" required />
@@ -602,7 +915,7 @@
                             <div class="file-input-container">
                                 <label for="PanFile" class="file-input-label">
                                     <i class="fas fa-file-upload"></i>
-                                    <span>Choose file or drag & drop</span>
+                                    <span>Choose file or drag &amp; drop</span>
                                 </label>
                                 <input asp-for="PanFile" id="PanFile" type="file" class="file-input"
                                        onchange="previewImage(event, 'PanDocPreview')" required />
@@ -616,11 +929,10 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                <!-- ── BANK DETAILS ── -->
+                <!-- BANK DETAILS -->
                 <div class="kyc-section">
                     <div class="kyc-section-hd">
                         <div class="kyc-section-icon"><i class="fas fa-university"></i></div>
@@ -628,48 +940,41 @@
                     </div>
                     <div class="kyc-section-body">
                         <div class="kyc-grid-2">
-
                             <div class="kyc-field">
                                 <input asp-for="BankName" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="BankName" class="form-label">Bank Name</label>
                                 <span asp-validation-for="BankName" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="AccountNumber" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="AccountNumber" class="form-label">Account Number</label>
                                 <span asp-validation-for="AccountNumber" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="AccountType" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="AccountType" class="form-label">Account Type</label>
                                 <span asp-validation-for="AccountType" class="validation-error"></span>
                             </div>
-
                             <div class="kyc-field">
                                 <input asp-for="AccountHolderName" type="text" class="form-input" placeholder=" " required />
                                 <label asp-for="AccountHolderName" class="form-label">Account Holder Name</label>
                                 <span asp-validation-for="AccountHolderName" class="validation-error"></span>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
-                <!-- ── TERMS & SUBMIT ── -->
+                <!-- TERMS & SUBMIT -->
                 <div class="kyc-section">
                     <div class="kyc-section-body">
                         <div class="kyc-terms">
-                            <input type="checkbox" id="agreeTerms" name="agreeTerms"
-                                   class="checkbox-input" required />
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" class="checkbox-input" required />
                             <label for="agreeTerms" class="checkbox-label">
                                 I agree to the <a href="#" target="_blank">terms and conditions</a> and confirm that all information provided is accurate and complete.
                             </label>
                         </div>
-
                         <div class="kyc-submit-wrap">
-                            <button type="submit" class="submit-button">
+                            <button type="submit" class="submit-button" id="kycRegSubmitBtn">
                                 <span class="btn-gold"><i class="fas fa-check"></i></span>
                                 Complete Registration
                             </button>
@@ -681,16 +986,62 @@
         </div>
     </div>
 
+    <!-- ── REGISTRATION OVERLAY ── -->
+    <div class="reg-overlay" id="regOverlay">
+        <div class="reg-overlay-card">
+
+            <div class="reg-particles">
+                <div class="reg-particle"></div>
+                <div class="reg-particle"></div>
+                <div class="reg-particle"></div>
+                <div class="reg-particle"></div>
+                <div class="reg-particle"></div>
+            </div>
+
+            <div class="reg-anim-ring">
+                <i class="fas fa-user-shield"></i>
+            </div>
+
+            <h3 class="reg-overlay-title">Registering KYC…</h3>
+            <p class="reg-overlay-sub">Please wait while we send your details to the admin for verification</p>
+
+            <div class="reg-dots">
+                <span></span><span></span><span></span>
+            </div>
+
+            <div class="reg-progress-track">
+                <div class="reg-progress-fill" id="regProgressFill"></div>
+            </div>
+
+            <ul class="reg-steps-list">
+                <li id="regStep1">
+                    <div class="s-icon"><i class="fas fa-check"></i></div>
+                    Validating company details
+                </li>
+                <li id="regStep2">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Uploading KYC documents
+                </li>
+                <li id="regStep3">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Sending verification email to admin
+                </li>
+                <li id="regStep4">
+                    <div class="s-icon"><i class="fas fa-circle-notch"></i></div>
+                    Completing registration
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    // Function to preview image when a file is selected
     function previewImage(event, previewId) {
         const file = event.target.files[0];
         const reader = new FileReader();
         const previewElement = document.getElementById(previewId);
         const previewContainer = document.getElementById(previewId + 'Container');
-
         if (file) {
             reader.onload = function (e) {
                 previewElement.src = e.target.result;
@@ -700,29 +1051,64 @@
         }
     }
 
-    // Function to remove image preview
     function removeImage(previewId, containerId) {
         const previewElement = document.getElementById(previewId);
         const previewContainer = document.getElementById(containerId);
         const fileInput = document.getElementById(previewId === 'RegDocPreview' ? 'RegisterFile' : 'PanFile');
-
         previewElement.src = '#';
         previewContainer.classList.add('hidden');
         fileInput.value = '';
     }
 
+    /* ── Overlay ── */
+    const regOverlay  = document.getElementById('regOverlay');
+    const regProgress = document.getElementById('regProgressFill');
+    const regSteps    = [
+        document.getElementById('regStep1'),
+        document.getElementById('regStep2'),
+        document.getElementById('regStep3'),
+        document.getElementById('regStep4'),
+    ];
+
+    function setRegStep(index) {
+        regSteps.forEach((el, i) => {
+            el.classList.remove('done', 'active');
+            if (i < index)  el.classList.add('done');
+            if (i === index) el.classList.add('active');
+        });
+    }
+
+    function showRegOverlay() {
+        regOverlay.classList.add('active');
+        const timeline = [
+            { delay: 200,  pct: 20  },
+            { delay: 950,  pct: 50  },
+            { delay: 1800, pct: 78  },
+            { delay: 2700, pct: 100 },
+        ];
+        timeline.forEach(({ delay, pct }, i) => {
+            setTimeout(() => {
+                setRegStep(i);
+                regProgress.style.width = pct + '%';
+            }, delay);
+        });
+    }
+
+    document.getElementById('kycRegForm').addEventListener('submit', function (e) {
+        if (!this.checkValidity()) return;
+        showRegOverlay();
+    });
+
     @if (TempData["ErrorMessage"] != null)
     {
             <text>
-                Toastify({
-                    text: '@TempData["ErrorMessage"]',
-                    duration: 5000,
-                    close: true,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                    stopOnFocus: true
-                }).showToast();
+            Toastify({
+                text: '@TempData["ErrorMessage"]',
+                duration: 5000, close: true,
+                gravity: "top", position: "right",
+                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                stopOnFocus: true
+            }).showToast();
             </text>
     }
 </script>
