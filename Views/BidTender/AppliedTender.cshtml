@@ -6,481 +6,646 @@
 
 <!-- Flowbite CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.css">
-<!-- Flowbite JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"></script>
-<!-- FontAwesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
     body {
-        background-color: #f9fafb;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background: var(--ivory);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
     }
-    
-    .page-container {
-        max-width: 1000px;
+
+    /* ── LAYOUT ── */
+    .at-page {
+        max-width: 860px;
         margin: 0 auto;
-        padding: 2rem 1rem;
+        padding: 2.5rem 1.5rem 5rem;
     }
-    
-    .header-card {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        color: white;
-        border-radius: 1rem 1rem 0 0;
-        padding: 2.5rem 2rem;
+
+    /* back button */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: .84rem;
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        margin-bottom: 1.4rem;
+        padding: 0;
+        transition: color .2s, transform .2s;
+    }
+
+        .back-button:hover {
+            color: var(--navy);
+            transform: translateX(-3px);
+        }
+
+        .back-button i {
+            font-size: .9rem;
+            transition: transform .2s;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-4px);
+        }
+
+    /* ── HERO ── */
+    .at-hero {
+        background: var(--navy);
+        border-radius: 16px 16px 0 0;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+        padding: 2.4rem 2.2rem 3.8rem;
     }
-    
-    .header-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
-        z-index: 0;
-    }
-    
-    .header-card * {
+
+        .at-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .at-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 360px;
+            height: 360px;
+            background: radial-gradient(circle, rgba(200,150,12,.15) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .at-hero-inner {
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
-    
-    .section-card {
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s ease;
-        margin-bottom: 1.5rem;
+
+    .at-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 600;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
+
+        .at-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .at-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .35rem;
+        line-height: 1.2;
+    }
+
+        .at-hero h1 em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+    .at-hero p {
+        font-size: .87rem;
+        color: var(--slate);
+        margin: 0;
+    }
+
+    /* ── MAIN CARD ── */
+    .at-card {
+        background: var(--white);
+        border-radius: 0 0 16px 16px;
+        box-shadow: 0 14px 50px rgba(11,31,58,.12);
         overflow: hidden;
+        margin-top: -1.6rem;
+        position: relative;
+        z-index: 2;
     }
-    
-    .section-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* validation summary */
+    .at-val-summary {
+        margin: 1.4rem 1.8rem 0;
+        padding: .9rem 1.2rem;
+        background: #fef2f2;
+        border: 1px solid #fca5a5;
+        border-radius: 9px;
+        font-size: .82rem;
+        color: #b91c1c;
     }
-    
-    .section-header {
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #f3f4f6;
+
+    /* ── SECTION ── */
+    .at-section {
+        border-bottom: 1px solid rgba(11,31,58,.06);
+    }
+
+        .at-section:last-of-type {
+            border-bottom: none;
+        }
+
+    .at-section-hd {
         display: flex;
         align-items: center;
+        gap: .75rem;
+        padding: 1.2rem 1.8rem;
+        background: var(--navy-mid);
+        border-bottom: 1px solid rgba(200,150,12,.12);
     }
-    
-    .section-body {
-        padding: 2rem;
-    }
-    
-    .section-icon {
+
+    .at-section-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 3rem;
-        height: 3rem;
-        background: rgba(99, 102, 241, 0.1);
-        color: #6366f1;
-        border-radius: 0.75rem;
-        margin-right: 1rem;
+        color: var(--gold);
+        font-size: .85rem;
+        flex-shrink: 0;
     }
-    
+
+    .at-section-title {
+        font-size: .88rem;
+        font-weight: 700;
+        color: var(--white);
+        letter-spacing: .03em;
+    }
+
+    .at-section-body {
+        padding: 1.8rem;
+    }
+
+    /* grid */
+    .at-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.4rem;
+    }
+
+    /* ── FIELD ── */
     .input-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
     }
-    
+
     .input-label {
-        display: block;
-        font-weight: 600;
-        font-size: 0.875rem;
-        color: #374151;
-        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .45rem;
     }
-    
+
+        .input-label .req {
+            color: #ef4444;
+        }
+
     .input-field {
         width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .input-field:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        padding: .82rem 1rem;
+        border: 1.5px solid rgba(11,31,58,.13);
+        border-radius: 9px;
+        font-size: .88rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--white);
+        transition: border-color .2s, box-shadow .2s;
         outline: none;
     }
-    
-    .file-input-wrapper {
-        position: relative;
+
+        .input-field::placeholder {
+            color: var(--slate);
+            font-size: .84rem;
+        }
+
+        .input-field:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+    .at-hint {
+        font-size: .72rem;
+        color: var(--slate);
+        margin-top: .3rem;
+    }
+
+        .at-hint i {
+            color: var(--gold);
+            margin-right: .2rem;
+        }
+
+    .validation-error {
+        display: block;
+        font-size: .72rem;
+        color: #ef4444;
+        margin-top: .3rem;
+    }
+
+    /* file input */
+    .at-file-zone {
         width: 100%;
-        height: 10rem;
-        border: 2px dashed #e5e7eb;
-        border-radius: 0.5rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    
-    .file-input-wrapper:hover {
-        border-color: #6366f1;
-        background-color: rgba(99, 102, 241, 0.05);
-    }
-    
-    .file-input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
+        padding: 1rem;
+        background: var(--ivory);
+        border: 1.5px dashed rgba(11,31,58,.18);
+        border-radius: 9px;
+        transition: border-color .2s, background .2s;
         cursor: pointer;
     }
-    
-    .file-icon {
-        font-size: 2rem;
-        color: #6366f1;
-        margin-bottom: 0.5rem;
+
+        .at-file-zone:hover {
+            border-color: var(--gold);
+            background: rgba(200,150,12,.04);
+        }
+
+        .at-file-zone input[type="file"] {
+            display: block;
+            width: 100%;
+            font-size: .84rem;
+            color: var(--muted);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+            .at-file-zone input[type="file"]::file-selector-button {
+                margin-right: .75rem;
+                padding: .35rem .9rem;
+                border-radius: 999px;
+                border: none;
+                background: rgba(200,150,12,.12);
+                color: var(--navy);
+                font-weight: 700;
+                font-size: .76rem;
+                cursor: pointer;
+                font-family: 'DM Sans', sans-serif;
+                transition: background .2s;
+            }
+
+                .at-file-zone input[type="file"]::file-selector-button:hover {
+                    background: rgba(200,150,12,.22);
+                }
+
+    /* ── TERMS + SUBMIT ── */
+    .at-footer-section {
+        padding: 1.6rem 1.8rem;
     }
-    
-    .file-name {
-        margin-top: 0.5rem;
-        font-size: 0.875rem;
-        color: #6b7280;
-    }
-    
+
     .checkbox-wrapper {
         display: flex;
         align-items: flex-start;
-        margin-bottom: 1.5rem;
+        gap: .75rem;
+        margin-bottom: 1.4rem;
     }
-    
+
     .checkbox {
-        width: 1.25rem;
-        height: 1.25rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 0.25rem;
-        margin-right: 0.75rem;
-        margin-top: 0.125rem;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        border: 2px solid rgba(11,31,58,.2);
+        border-radius: 4px;
+        margin-top: .1rem;
         appearance: none;
         -webkit-appearance: none;
         cursor: pointer;
         position: relative;
-        transition: all 0.2s ease;
+        transition: all .2s;
+        background: var(--white);
     }
-    
-    .checkbox:checked {
-        background-color: #6366f1;
-        border-color: #6366f1;
+
+        .checkbox:checked {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+            .checkbox:checked::after {
+                content: '✓';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--navy);
+                font-size: .72rem;
+                font-weight: 700;
+            }
+
+    .checkbox-wrapper label {
+        font-size: .84rem;
+        color: var(--muted);
+        line-height: 1.55;
     }
-    
-    .checkbox:checked::after {
-        content: '✓';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 0.75rem;
-    }
-    
+
+        .checkbox-wrapper label a {
+            color: var(--gold);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+            .checkbox-wrapper label a:hover {
+                color: var(--gold-lt);
+            }
+
     .submit-btn {
         width: 100%;
         padding: 1rem;
-        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
-        color: white;
+        background: var(--navy);
+        color: var(--white);
         border: none;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 1rem;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: .95rem;
         cursor: pointer;
-        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: .6rem;
+        font-family: 'DM Sans', sans-serif;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 5px 20px rgba(11,31,58,.2);
+        position: relative;
+        overflow: hidden;
     }
-    
-    .submit-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
-    }
-    
-    .submit-btn:active {
-        transform: translateY(0);
-    }
-    
-    .validation-error {
-        color: #ef4444;
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
-    }
-    
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,150,12,.15), transparent);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--navy-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(11,31,58,.28);
+        }
+
+            .submit-btn:hover::before {
+                opacity: 1;
+            }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn .btn-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .8rem;
+        }
+
+    /* ── LOADING OVERLAY ── */
     .loading-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(17, 24, 39, 0.7);
+        inset: 0;
+        background: rgba(11,31,58,.7);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 50;
         backdrop-filter: blur(4px);
     }
-    
+
     .loading-card {
-        background-color: white;
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        background: var(--white);
+        border-radius: 14px;
+        padding: 2.2rem 2rem;
+        box-shadow: 0 25px 50px rgba(11,31,58,.25);
         text-align: center;
-        max-width: 20rem;
+        max-width: 18rem;
         width: 100%;
     }
-    
+
     .spinner {
-        width: 3rem;
-        height: 3rem;
-        border: 3px solid #e5e7eb;
-        border-top-color: #6366f1;
+        width: 44px;
+        height: 44px;
+        border: 3px solid rgba(200,150,12,.15);
+        border-top-color: var(--gold);
         border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 1rem;
+        animation: atSpin .8s linear infinite;
+        margin: 0 auto 1.1rem;
     }
-    
-    
-    
-    .progress-steps {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
+
+    @@keyframes atSpin {
+        to
+
+    {
+        transform: rotate(360deg);
     }
-    
-    .progress-steps::before {
-        content: '';
-        position: absolute;
-        top: 1rem;
-        left: 2.5rem;
-        right: 2.5rem;
-        height: 2px;
-        background-color: #e5e7eb;
-        z-index: 0;
+
     }
-    
-    .step {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
+
+    .loading-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin-bottom: .3rem;
     }
-    
-    .step-circle {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        background-color: white;
-        border: 2px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.875rem;
-        color: #6b7280;
-        margin-bottom: 0.5rem;
-    }
-    
-    .step.active .step-circle {
-        background-color: #6366f1;
-        border-color: #6366f1;
-        color: white;
-    }
-    
-    .step.completed .step-circle {
-        background-color: #10b981;
-        border-color: #10b981;
-        color: white;
-    }
-    
-    .step-label {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #6b7280;
-    }
-    
-    .step.active .step-label {
-        color: #6366f1;
-        font-weight: 600;
-    }
-    
-    .step.completed .step-label {
-        color: #10b981;
-        font-weight: 600;
+
+    .loading-card p {
+        font-size: .8rem;
+        color: var(--slate);
     }
 
     .hidden {
-        display: none;
+        display: none !important;
     }
 
-    /* Add these new styles */
-    .back-button {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.75rem 1.5rem;
-        background-color: white;
-        border: 2px solid #e5e7eb;
-        border-radius: 0.5rem;
-        color: #374151;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        margin-bottom: 1.5rem;
+    @@media (max-width: 640px) {
+        .at-page
+
+    {
+        padding: 1.5rem .75rem 4rem;
     }
 
-        .back-button:hover {
-            background-color: #f3f4f6;
-            border-color: #d1d5db;
-            transform: translateX(-5px);
-        }
+    .at-hero {
+        padding: 1.8rem 1.2rem 3rem;
+    }
 
-        .back-button i {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
-            transition: transform 0.3s ease;
-        }
+    .at-section-body {
+        padding: 1.2rem 1rem;
+    }
 
-        .back-button:hover i {
-            transform: translateX(-5px);
-        }
-    
-    
+    .at-footer-section {
+        padding: 1.2rem 1rem;
+    }
+
+    .at-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    }
 </style>
 
-<body>
-    <div class="page-container">
-        <button type="button" class="back-button" id="backButton">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back</span>
-        </button>
+<div class="at-page">
 
-        <div class="header-card">
-            <h1 class="text-3xl font-bold mb-2">Tender Proposal Application</h1>
-            <p class="text-white opacity-90">Complete your proposal details to participate in the tender process</p>
+    <!-- BACK -->
+    <button type="button" class="back-button" id="backButton">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+    </button>
+
+    <!-- HERO -->
+    <div class="at-hero">
+        <div class="at-hero-inner">
+            <p class="at-eyebrow"><span></span> Tender Application</p>
+            <h1>Proposal <em>Submission</em></h1>
+            <p>Complete your proposal details to participate in the tender process</p>
         </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="at-card">
 
         <form asp-action="AppliedTender" asp-controller="BidTender" enctype="multipart/form-data" method="Post" id="proposalForm">
-            
-            <div asp-validation-summary="ModelOnly" class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-50"></div>
+
+            <div asp-validation-summary="ModelOnly" class="at-val-summary"></div>
 
             <input asp-for="CompanyApplyId" type="hidden" value="@Model.CompanyApplyId" />
             <input asp-for="TenderAppllyId" type="hidden" value="@Model.TenderAppllyId" />
 
-            <div class="section-card">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800">Tender Details</h2>
+            <!-- Tender Details -->
+            <div class="at-section">
+                <div class="at-section-hd">
+                    <div class="at-section-icon"><i class="fas fa-file-contract"></i></div>
+                    <span class="at-section-title">Tender Details</span>
                 </div>
-                <div class="section-body">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="at-section-body">
+                    <div class="at-grid-2">
                         <div class="input-group">
                             <label asp-for="ProposedDuration" class="input-label">
-                                Proposed Duration <span class="text-red-500">*</span>
+                                Proposed Duration <span class="req">*</span>
                             </label>
                             <input asp-for="ProposedDuration" type="text" class="input-field"
                                    placeholder="e.g., 6 months, 30 days, 1 year" required
-                                   pattern="^\d+\s+(day|days|month|months|year|years)$">
-                            <small class="text-gray-500">Format: number followed by days, months, or years</small>
+                                   pattern="^\d+\s+(day|days|month|months|year|years)$" />
+                            <p class="at-hint"><i class="fas fa-info-circle"></i>Format: number followed by days, months, or years</p>
                             <span asp-validation-for="ProposedDuration" class="validation-error"></span>
                         </div>
 
                         <div class="input-group">
                             <label asp-for="ProposedBudget" class="input-label">
-                                Proposal Amount (NPR) <span class="text-red-500">*</span>
+                                Proposal Amount (NPR) <span class="req">*</span>
                             </label>
-                            <input asp-for="ProposedBudget" type="number" class="input-field" placeholder="e.g., 500000" required>
+                            <input asp-for="ProposedBudget" type="number" class="input-field"
+                                   placeholder="e.g., 500000" required />
                             <span asp-validation-for="ProposedBudget" class="validation-error"></span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="section-card">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800">Required Documents</h2>
+            <!-- Documents -->
+            <div class="at-section">
+                <div class="at-section-hd">
+                    <div class="at-section-icon"><i class="fas fa-upload"></i></div>
+                    <span class="at-section-title">Required Documents</span>
                 </div>
-                <div class="section-body">
+                <div class="at-section-body">
                     <div class="input-group">
                         <label asp-for="TenderFile" class="input-label">
-                            Proposal Document (PDF only) <span class="text-red-500">*</span>
+                            Proposal Document (PDF only) <span class="req">*</span>
                         </label>
-                        <input asp-for="TenderFile" type="file" class="input-field" accept=".pdf" required>
+                        <div class="at-file-zone">
+                            <input asp-for="TenderFile" type="file" accept=".pdf" required />
+                        </div>
                         <span asp-validation-for="TenderFile" class="validation-error"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="section-card">
-                <div class="section-body">
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="terms" class="checkbox" required>
-                        <label for="terms" class="text-sm text-gray-700">
-                            I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">terms and conditions</a>
-                            and agree to pay NPR 10 application fee <span class="text-red-500">*</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane mr-2"></i> Submit Proposal
-                    </button>
+            <!-- Terms + Submit -->
+            <div class="at-footer-section">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="terms" class="checkbox" required />
+                    <label for="terms">
+                        I agree to the <a href="#">terms and conditions</a>
+                        and agree to pay NPR 10 application fee <span style="color:#ef4444;">*</span>
+                    </label>
                 </div>
+                <button type="submit" class="submit-btn">
+                    <span class="btn-badge"><i class="fas fa-paper-plane"></i></span>
+                    Submit Proposal
+                </button>
             </div>
+
         </form>
     </div>
+</div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="loading-card">
-            <div class="spinner"></div>
-            <p class="text-lg font-medium text-gray-800">Processing Payment</p>
-            <p class="text-sm text-gray-500 mt-2">Please wait while we process your payment...</p>
-        </div>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-card">
+        <div class="spinner"></div>
+        <h3>Processing Payment</h3>
+        <p>Please wait while we process your payment...</p>
     </div>
+</div>
 
-    <script>
-        function showLoading() {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
+<script>
+    function showLoading() {
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    function updateFileName(input) {
+        const fileName = input.files[0] ? input.files[0].name : '';
+        document.getElementById('fileName').textContent = fileName;
+
+        if (fileName) {
+            document.getElementById('fileName').classList.remove('hidden');
+        } else {
+            document.getElementById('fileName').classList.add('hidden');
         }
+    }
 
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
-
-        function updateFileName(input) {
-            const fileName = input.files[0] ? input.files[0].name : '';
-            document.getElementById('fileName').textContent = fileName;
-
-            if (fileName) {
-                document.getElementById('fileName').classList.remove('hidden');
-            } else {
-                document.getElementById('fileName').classList.add('hidden');
-            }
-        }
-
-        document.getElementById('proposalForm').addEventListener('submit', function (e) {
+    document.getElementById('proposalForm').addEventListener('submit', function (e) {
         const proposedDuration = document.querySelector('[name="ProposedDuration"]').value;
         const proposedBudget = parseFloat(document.querySelector('[name="ProposedBudget"]').value);
         const fileInput = document.querySelector('[name="TenderFile"]');
@@ -490,6 +655,7 @@
 
         // Clear previous error messages
         document.querySelectorAll('.validation-error').forEach(el => el.remove());
+
         // Validate proposed duration
         const durationPattern = /^\d+\s+(day|days|month|months|year|years)$/;
         if (!durationPattern.test(proposedDuration)) {
@@ -498,6 +664,7 @@
             addErrorMessage(durationInput, 'Please enter duration in format: number followed by days, months, or years');
             isValid = false;
         }
+
         // Validate proposed budget
         if (proposedBudget <= 0 || isNaN(proposedBudget)) {
             e.preventDefault();
@@ -546,47 +713,36 @@
         element.parentNode.appendChild(errorDiv);
     }
 
-    // Existing functions
-    function showLoading() {
-        document.getElementById('loadingOverlay').classList.remove('hidden');
-    }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').classList.add('hidden');
-    }
-
     // Back button functionality
     document.getElementById('backButton').addEventListener('click', function() {
         window.history.back();
     });
 
-        document.getElementById('proposalForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+    document.getElementById('proposalForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-            showLoading();
+        showLoading();
 
-            // Submit form via AJAX
-            var formData = new FormData(this);
+        // Submit form via AJAX
+        var formData = new FormData(this);
 
-            fetch('/BidTender/AppliedTender', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Redirect directly to eSewa
-                        window.location.href = data.redirectUrl;
-                    } else {
-                        hideLoading();
-                        alert(data.message || 'Submission failed');
-                    }
-                })
-                .catch(error => {
+        fetch('/BidTender/AppliedTender', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect directly to eSewa
+                    window.location.href = data.redirectUrl;
+                } else {
                     hideLoading();
-                    alert('An error occurred');
-                });
-        });
-        
-    </script>
-</body>
+                    alert(data.message || 'Submission failed');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('An error occurred');
+            });
+    });
+</script>
