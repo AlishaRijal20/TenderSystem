@@ -30,7 +30,6 @@ namespace TenderSystem.Controllers
             return View();
         }
 
-
         public IActionResult BlogList()
         {
             var blog = _context.BlogContents
@@ -52,5 +51,7 @@ namespace TenderSystem.Controllers
                 .ToList();
             return View(blog);
         }
+
+
     }
 }
