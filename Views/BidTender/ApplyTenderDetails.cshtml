@@ -936,17 +936,7 @@
         </div>
     </div>
 
-    <!-- CONTRACT BTN (won only) -->
-    @if (Model.Application.ApplicationStatus.ToLower() == "won")
-    {
-        <div style="display:flex;justify-content:center;background:var(--white);padding:.9rem 1.5rem;border-bottom:1px solid rgba(11,31,58,.06);">
-            <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId" class="contract-button">
-                <i class="fas fa-file-contract"></i>
-                Generate Contract
-            </a>
-        </div>
-    }
-
+   
     <!-- TABS -->
     <div class="tabs-container">
         <div class="tabs-wrapper">
