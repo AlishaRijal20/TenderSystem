@@ -106,95 +106,67 @@ namespace TenderSystem.Controllers
                     From = new MailAddress("rijalalisha20@gmail.com"),
                     Subject = "Email Verification for Registration",
                     Body = $@"
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Email Verification</title>
-    <style>
-        /* Base styles */
-        body, html {{
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }}
-        .container {{
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }}
-        .header {{
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
-        }}
-        .content {{
-            padding: 40px 30px;
-            background-color: #ffffff;
-        }}
-        .footer {{
-            background-color: #f8f8f8;
-            padding: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #ddd;
-        }}
-        .token-box {{
-            background-color: #f1f5f9;
-            padding: 15px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-            color: #1e40af;
-        }}
-        .security-note {{
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: #64748b;
-        }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            <h1 style='margin:0;'>Email Verification</h1>
-        </div>
-        <div class='content'>
-            <h2 style='color:#0056b3;'>Welcome to Tender System</h2>
-            <p>Thank you for registering with  Tender System. Please use the verification code below to complete your registration.</p>
-            
-            <div class='token-box'>
-                {otp}
-            </div>
-            
-            <div class='security-note'>
-                <strong>Security Tip:</strong> This code will expire after use. 
-                Do not share this code with anyone. Tender System representatives will never ask for this code.
-            </div>
-            
-            <p>If you did not request this registration, please ignore this email or contact our support team.</p>
-        </div>
-        <div class='footer'>
-            <p>This is an automated message from Tender System. Please do not reply to this email.</p>
-            <p>&copy; {DateTime.Now.Year}  Tender System. All rights reserved.</p>
-        </div>
-    </div>
-</body>
-</html>",
+                            <!DOCTYPE html>
+                            <html lang='en'>
+                            <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <style>
+                                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                                .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                                .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                                .content {{ background: #ffffff; padding: 32px 28px; }}
+                                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                                .otp-box {{ background: #0B1F3A; border-radius: 12px; padding: 24px 20px; text-align: center; margin: 24px 0; }}
+                                .otp-label {{ font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: #8A9BB5; margin-bottom: 10px; }}
+                                .otp-code {{ font-family: 'Courier New', monospace; font-size: 36px; font-weight: 700; color: #E8B84B; letter-spacing: .25em; }}
+                                .security-note {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin: 20px 0; }}
+                                .security-note strong {{ color: #0B1F3A; }}
+                                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
+                            </style>
+                            </head>
+                            <body>
+                            <div class='wrapper'>
+
+                                <div class='header'>
+                                    <div class='header-badge'>Account Verification</div>
+                                    <h1>Email Verification</h1>
+                                    <p>Nepal Public Procurement Portal</p>
+                                </div>
+                                <div class='gold-line'></div>
+
+                                <div class='content'>
+                                    <h2>Welcome to Nepal Public Procurement Portal</h2>
+                                    <p>Thank you for registering. Please use the verification code below to complete your registration. Enter this code on the verification page to activate your account.</p>
+
+                                    <div class='otp-box'>
+                                        <div class='otp-label'>Your Verification Code</div>
+                                        <div class='otp-code'>{otp}</div>
+                                    </div>
+
+                                    <div class='security-note'>
+                                        <strong>&#128274; Security Notice:</strong> This code expires after use. Never share it with anyone — Nepal Public Procurement Portal representatives will never ask for this code.
+                                    </div>
+
+                                    <p>If you did not request this registration, please ignore this email or contact our support team immediately.</p>
+                                </div>
+
+                                <div class='footer'>
+                                    <p class='brand'>Nepal Public Procurement Portal</p>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                                </div>
+
+                            </div>
+                            </body>
+                            </html>",
                     IsBodyHtml = true,
                 };
 
@@ -478,121 +450,83 @@ namespace TenderSystem.Controllers
                         From = new MailAddress("rijalalisha20@gmail.com"),
                         Subject = "Reset Your Tender System Password",
                         Body = $@"
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Password Reset Request</title>
-    <style>
-        /* Base styles */
-        body, html {{
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }}
-        .container {{
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }}
-        .header {{
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
-        }}
-        .content {{
-            padding: 40px 30px;
-            background-color: #ffffff;
-        }}
-        .footer {{
-            background-color: #f8f8f8;
-            padding: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #ddd;
-        }}
-        .button {{
-            display: inline-block;
-            background-color: #0056b3;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            margin: 15px 0;
-        }}
-        .info-table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }}
-        .info-table td {{
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }}
-        .info-table td:first-child {{
-            font-weight: bold;
-            width: 140px;
-        }}
-        .security-note {{
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 14px;
-            color: #64748b;
-        }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            <h1 style='margin:0;'>Password Reset Request</h1>
-        </div>
-        <div class='content'>
-            <h2 style='color:#0056b3;'>Reset Your Password</h2>
-            <p>We received a request to reset your password for your Tender System account.</p>
-            
-            <table class='info-table'>
-                <tr>
-                    <td>Account Email:</td>
-                    <td>{user.EmailAddress}</td>
-                </tr>
-                <tr>
-                    <td>Request Time:</td>
-                    <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
-                </tr>
-            </table>
-           
-            
-            <div style='text-align: center;'>
-                <strong>Your verification code:</strong> {token}
-            </div>
-            
-           <div class='security-note'>
-                <strong>Security Tip:</strong> For your protection, please never share this email 
-                or your password reset link with anyone. Tender System representatives will never ask 
-                for your password or this reset token.
-                <br><br>
-                
-            </div>
-            
-            <p>If you did not request a password reset, please ignore this email or contact our support team if you have concerns about your account security.</p>
-        </div>
-        <div class='footer'>
-            <p>This is an automated message from Tender System. Please do not reply to this email.</p>
-            <p>&copy; {DateTime.Now.Year} Tender System. All rights reserved.</p>
-        </div>
-    </div>
-</body>
-</html>",
+                            <!DOCTYPE html>
+                            <html lang='en'>
+                            <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <style>
+                                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                                .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                                .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                                .content {{ background: #ffffff; padding: 32px 28px; }}
+                                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                                .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                                .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                                .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 150px; }}
+                                .token-box {{ background: #0B1F3A; border-radius: 12px; padding: 24px 20px; text-align: center; margin: 24px 0; }}
+                                .token-label {{ font-size: 11px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: #8A9BB5; margin-bottom: 10px; }}
+                                .token-code {{ font-family: 'Courier New', monospace; font-size: 36px; font-weight: 700; color: #E8B84B; letter-spacing: .25em; }}
+                                .security-note {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin: 20px 0; }}
+                                .security-note strong {{ color: #0B1F3A; }}
+                                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
+                            </style>
+                            </head>
+                            <body>
+                            <div class='wrapper'>
+
+                                <div class='header'>
+                                    <div class='header-badge'>Account Security</div>
+                                    <h1>Password Reset Request</h1>
+                                    <p>Nepal Public Procurement Portal</p>
+                                </div>
+                                <div class='gold-line'></div>
+
+                                <div class='content'>
+                                    <h2>Reset Your Password</h2>
+                                    <p>We received a request to reset the password for your account. Use the verification code below to proceed. If you did not make this request, you can safely ignore this email.</p>
+
+                                    <table class='info-table'>
+                                        <tr>
+                                            <td>&#128231; Account Email</td>
+                                            <td>{user.EmailAddress}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#128336; Request Time</td>
+                                            <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
+                                        </tr>
+                                    </table>
+
+                                    <div class='token-box'>
+                                        <div class='token-label'>Your Reset Code</div>
+                                        <div class='token-code'>{token}</div>
+                                    </div>
+
+                                    <div class='security-note'>
+                                        <strong>&#128274; Security Notice:</strong> Never share this code with anyone — Nepal Public Procurement Portal representatives will never ask for your password or this reset token. This code expires after use.
+                                    </div>
+
+                                    <p>If you did not request a password reset, please ignore this email or contact our support team immediately if you have concerns about your account security.</p>
+                                </div>
+
+                                <div class='footer'>
+                                    <p class='brand'>Nepal Public Procurement Portal</p>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                                </div>
+
+                            </div>
+                            </body>
+                            </html>",
                         IsBodyHtml = true,
                     };
 

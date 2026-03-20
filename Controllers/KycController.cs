@@ -161,105 +161,85 @@ namespace TenderSystem.Controllers
 
                     var subject = "New KYC Registration Requires Verification";
                     var body = $@"
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>KYC Verification Required</title>
-                    <style>
-                        body {{
-                            font-family: 'Segoe UI', Arial, sans-serif;
-                            line-height: 1.6;
-                            color: #333;
-                            margin: 0;
-                            padding: 0;
-                        }}
-                        .container {{
-                            max-width: 600px;
-                            margin: 0 auto;
-                            padding: 20px;
-                        }}
-                        .header {{
-                            background-color: #0056b3;
-                            padding: 20px;
-                            text-align: center;
-                            color: white;
-                            border-top-left-radius: 5px;
-                            border-top-right-radius: 5px;
-                        }}
-                        .content {{
-                            background-color: #ffffff;
-                            padding: 20px;
-                            border-left: 1px solid #ddd;
-                            border-right: 1px solid #ddd;
-                        }}
-                        .footer {{
-                            background-color: #f8f8f8;
-                            padding: 15px;
-                            text-align: center;
-                            font-size: 12px;
-                            color: #666;
-                            border-bottom-left-radius: 5px;
-                            border-bottom-right-radius: 5px;
-                            border: 1px solid #ddd;
-                        }}
-                        .info-table {{
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 15px 0;
-                        }}
-                        .info-table td {{
-                            padding: 8px;
-                            border-bottom: 1px solid #eee;
-                        }}
-                        .info-table td:first-child {{
-                            font-weight: bold;
-                            width: 140px;
-                        }}
-                    </style>
-                </head>
-                <body>
-                    <div class='container'>
-                        <div class='header'>
-                            <h1 style='margin:0;'>KYC Verification</h1>
-                        </div>
-                        <div class='content'>
-                            <h2 style='color:#0056b3;'>New KYC Registration Requires Verification</h2>
-                            <p>A new company has registered in the system and requires your verification before they can participate in tenders.</p>
-        
-                            <table class='info-table'>
-                                <tr>
-                                    <td>Company ID:</td>
-                                    <td>{company.CompanyId}</td>
-                                </tr>
-                                <tr>
-                                    <td>Company Name:</td>
-                                    <td>{company.CompanyName}</td>
-                                </tr>
-                                <tr>
-                                    <td>Company Type:</td>
-                                    <td>{company.CompanyType}</td>
-                                </tr>
-                                <tr>
-                                    <td>Registration Number:</td>
-                                    <td>{company.RegistrationNumber}</td>
-                                </tr>
-                                <tr>
-                                    <td>Date Registered:</td>
-                                    <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
-                                </tr>
-                            </table>
-        
-                            <p>Please review this KYC registration for accuracy and compliance with organizational guidelines.</p>
-                        </div>
-                        <div class='footer'>
-                            <p>This is an automated message from the BidNetra. Please do not reply to this email.</p>
-                            <p>© 2025 BidNetra. All rights reserved.</p>
-                        </div>
-                    </div>
-                </body>
-                </html>";
+                            <!DOCTYPE html>
+                            <html lang='en'>
+                            <head>
+                            <meta charset='UTF-8'>
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                            <style>
+                                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                                .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                                .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                                .content {{ background: #ffffff; padding: 32px 28px; }}
+                                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                                .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                                .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                                .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 170px; }}
+                                .notice {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin-top: 8px; }}
+                                .notice strong {{ color: #0B1F3A; }}
+                                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
+                            </style>
+                            </head>
+                            <body>
+                            <div class='wrapper'>
+
+                                <div class='header'>
+                                    <div class='header-badge'>Admin Action Required</div>
+                                    <h1>KYC Verification</h1>
+                                    <p>Nepal Public Procurement Portal</p>
+                                </div>
+                                <div class='gold-line'></div>
+
+                                <div class='content'>
+                                    <h2>New KYC Registration Requires Verification</h2>
+                                    <p>A new company has registered in the system and requires your verification before they can participate in tenders. Please review the details below.</p>
+
+                                    <table class='info-table'>
+                                        <tr>
+                                            <td>&#35; Company ID</td>
+                                            <td>{company.CompanyId}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#127970; Company Name</td>
+                                            <td>{company.CompanyName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#127991; Company Type</td>
+                                            <td>{company.CompanyType}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#128196; Registration No.</td>
+                                            <td>{company.RegistrationNumber}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>&#128197; Date Registered</td>
+                                            <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
+                                        </tr>
+                                    </table>
+
+                                    <div class='notice'>
+                                        <strong>&#9432; Action Required:</strong> Please review this KYC registration for accuracy and compliance with organizational guidelines before approving or rejecting it.
+                                    </div>
+                                </div>
+
+                                <div class='footer'>
+                                    <p class='brand'>Nepal Public Procurement Portal</p>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                                </div>
+
+                            </div>
+                            </body>
+                            </html>";
 
                     await _emailService.SendEmailAsync(adminEmail, subject, body);
                 }
@@ -460,107 +440,89 @@ namespace TenderSystem.Controllers
                         throw new Exception("Admin email is not configured in appsettings.json");
                     }
 
-                    var subject = "New KYC Registration Requires Verification";
+                    var subject = "Updated KYC Registration Requires Verification";
                     var body = $@"
-                <!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>KYC Verification Required</title>
-                    <style>
-                        body {{
-                            font-family: 'Segoe UI', Arial, sans-serif;
-                            line-height: 1.6;
-                            color: #333;
-                            margin: 0;
-                            padding: 0;
-                        }}
-                        .container {{
-                            max-width: 600px;
-                            margin: 0 auto;
-                            padding: 20px;
-                        }}
-                        .header {{
-                            background-color: #0056b3;
-                            padding: 20px;
-                            text-align: center;
-                            color: white;
-                            border-top-left-radius: 5px;
-                            border-top-right-radius: 5px;
-                        }}
-                        .content {{
-                            background-color: #ffffff;
-                            padding: 20px;
-                            border-left: 1px solid #ddd;
-                            border-right: 1px solid #ddd;
-                        }}
-                        .footer {{
-                            background-color: #f8f8f8;
-                            padding: 15px;
-                            text-align: center;
-                            font-size: 12px;
-                            color: #666;
-                            border-bottom-left-radius: 5px;
-                            border-bottom-right-radius: 5px;
-                            border: 1px solid #ddd;
-                        }}
-                        .info-table {{
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 15px 0;
-                        }}
-                        .info-table td {{
-                            padding: 8px;
-                            border-bottom: 1px solid #eee;
-                        }}
-                        .info-table td:first-child {{
-                            font-weight: bold;
-                            width: 140px;
-                        }}
-                    </style>
-                </head>
-                <body>
-                    <div class='container'>
-                        <div class='header'>
-                            <h1 style='margin:0;'>KYC Verification</h1>
+                        <!DOCTYPE html>
+                        <html lang='en'>
+                        <head>
+                        <meta charset='UTF-8'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <style>
+                            body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                            .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                            .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                            .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                            .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                            .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                            .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                            .content {{ background: #ffffff; padding: 32px 28px; }}
+                            .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                            .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                            .update-pill {{ display: inline-flex; align-items: center; gap: 6px; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.25); color: #92400e; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; margin-bottom: 16px; }}
+                            .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                            .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                            .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                            .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                            .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 170px; }}
+                            .notice {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin-top: 8px; }}
+                            .notice strong {{ color: #0B1F3A; }}
+                            .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                            .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                            .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
+                        </style>
+                        </head>
+                        <body>
+                        <div class='wrapper'>
+
+                            <div class='header'>
+                                <div class='header-badge'>Admin Action Required</div>
+                                <h1>KYC Re-Verification</h1>
+                                <p>Nepal Public Procurement Portal</p>
+                            </div>
+                            <div class='gold-line'></div>
+
+                            <div class='content'>
+                                <div class='update-pill'>&#9881; Details Updated</div>
+                                <h2>Updated KYC Registration Requires Verification</h2>
+                                <p>An existing company has updated their KYC details and requires re-verification before they can continue participating in tenders. Please review the updated information below.</p>
+
+                                <table class='info-table'>
+                                    <tr>
+                                        <td>&#35; Company ID</td>
+                                        <td>{company.CompanyId}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#127970; Company Name</td>
+                                        <td>{company.CompanyName}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#127991; Company Type</td>
+                                        <td>{company.CompanyType}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#128196; Registration No.</td>
+                                        <td>{company.RegistrationNumber}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#128197; Updated On</td>
+                                        <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
+                                    </tr>
+                                </table>
+
+                                <div class='notice'>
+                                    <strong>&#9432; Action Required:</strong> Please review the updated KYC details for accuracy and compliance with organizational guidelines before approving or rejecting the re-verification request.
+                                </div>
+                            </div>
+
+                            <div class='footer'>
+                                <p class='brand'>Nepal Public Procurement Portal</p>
+                                <p>This is an automated message. Please do not reply to this email.</p>
+                                <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                            </div>
+
                         </div>
-                        <div class='content'>
-                            <h2 style='color:#0056b3;'>Updated KYC Registration Requires Verification</h2>
-                            <p>A existing company has updated their details in the system and requires your verification before they can participate in tenders.</p>
-        
-                            <table class='info-table'>
-                                <tr>
-                                    <td>Company ID:</td>
-                                    <td>{company.CompanyId}</td>
-                                </tr>
-                                <tr>
-                                    <td>Company Name:</td>
-                                    <td>{company.CompanyName}</td>
-                                </tr>
-                                <tr>
-                                    <td>Company Type:</td>
-                                    <td>{company.CompanyType}</td>
-                                </tr>
-                                <tr>
-                                    <td>Registration Number:</td>
-                                    <td>{company.RegistrationNumber}</td>
-                                </tr>
-                                <tr>
-                                    <td>Date Registered:</td>
-                                    <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
-                                </tr>
-                            </table>
-        
-                            <p>Please review this KYC registration for accuracy and compliance with organizational guidelines.</p>
-                        </div>
-                        <div class='footer'>
-                            <p>This is an automated message from the BidNetra. Please do not reply to this email.</p>
-                            <p>© 2025 BidNetra. All rights reserved.</p>
-                        </div>
-                    </div>
-                </body>
-                </html>";
+                        </body>
+                        </html>";
 
                     await _emailService.SendEmailAsync(adminEmail, subject, body);
                 }

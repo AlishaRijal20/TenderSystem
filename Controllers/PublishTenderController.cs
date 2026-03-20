@@ -467,108 +467,174 @@ namespace TenderSystem.Controllers
                             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
                             <title>Tender Verification Required</title>
                             <style>
-                                body {{
-                                    font-family: 'Segoe UI', Arial, sans-serif;
-                                    line-height: 1.6;
-                                    color: #333;
-                                    margin: 0;
-                                    padding: 0;
-                                }}
-                                .container {{
-                                    max-width: 600px;
-                                    margin: 0 auto;
-                                    padding: 20px;
-                                }}
+                                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+
+                                /* Header */
                                 .header {{
-                                    background-color: #0056b3;
-                                    padding: 20px;
+                                    background: #0B1F3A;
+                                    padding: 32px 28px;
                                     text-align: center;
-                                    color: white;
-                                    border-top-left-radius: 5px;
-                                    border-top-right-radius: 5px;
+                                    position: relative;
                                 }}
-                                .content {{
-                                    background-color: #ffffff;
-                                    padding: 20px;
-                                    border-left: 1px solid #ddd;
-                                    border-right: 1px solid #ddd;
-                                }}
-                                .footer {{
-                                    background-color: #f8f8f8;
-                                    padding: 15px;
-                                    text-align: center;
-                                    font-size: 12px;
-                                    color: #666;
-                                    border-bottom-left-radius: 5px;
-                                    border-bottom-right-radius: 5px;
-                                    border: 1px solid #ddd;
-                                }}
-                                .button {{
+                                .header-badge {{
                                     display: inline-block;
-                                    background-color: #0056b3;
-                                    color: white;
-                                    padding: 10px 20px;
-                                    text-decoration: none;
-                                    border-radius: 4px;
-                                    margin-top: 15px;
+                                    background: rgba(200,150,12,.15);
+                                    border: 1px solid rgba(200,150,12,.3);
+                                    color: #E8B84B;
+                                    font-size: 11px;
+                                    font-weight: 600;
+                                    letter-spacing: .12em;
+                                    text-transform: uppercase;
+                                    padding: 4px 14px;
+                                    border-radius: 999px;
+                                    margin-bottom: 12px;
                                 }}
+                                .header h1 {{
+                                    margin: 0;
+                                    font-size: 22px;
+                                    font-weight: 700;
+                                    color: #ffffff;
+                                    letter-spacing: .01em;
+                                }}
+                                .header p {{
+                                    margin: 8px 0 0;
+                                    font-size: 13px;
+                                    color: #8A9BB5;
+                                }}
+
+                                /* Gold divider line */
+                                .gold-line {{
+                                    height: 3px;
+                                    background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent);
+                                }}
+
+                                /* Body */
+                                .content {{
+                                    background: #ffffff;
+                                    padding: 32px 28px;
+                                }}
+                                .content h2 {{
+                                    font-size: 17px;
+                                    font-weight: 700;
+                                    color: #0B1F3A;
+                                    margin: 0 0 10px;
+                                }}
+                                .content p {{
+                                    font-size: 14px;
+                                    line-height: 1.7;
+                                    color: #5a6a80;
+                                    margin: 0 0 20px;
+                                }}
+
+                                /* Info table */
                                 .info-table {{
                                     width: 100%;
                                     border-collapse: collapse;
-                                    margin: 15px 0;
+                                    margin: 20px 0;
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                    border: 1px solid rgba(11,31,58,.07);
                                 }}
+                                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
                                 .info-table td {{
-                                    padding: 8px;
-                                    border-bottom: 1px solid #eee;
+                                    padding: 11px 14px;
+                                    font-size: 13.5px;
+                                    border-bottom: 1px solid rgba(11,31,58,.05);
+                                    color: #333;
                                 }}
                                 .info-table td:first-child {{
-                                    font-weight: bold;
-                                    width: 140px;
+                                    font-weight: 700;
+                                    color: #0B1F3A;
+                                    width: 150px;
+                                    white-space: nowrap;
+                                }}
+                                .info-table td:last-child {{ color: #5a6a80; }}
+                                .info-table .icon {{ color: #C8960C; margin-right: 6px; }}
+
+                                /* Notice box */
+                                .notice {{
+                                    background: #F7F3EC;
+                                    border-left: 3px solid #C8960C;
+                                    border-radius: 0 8px 8px 0;
+                                    padding: 13px 16px;
+                                    font-size: 13.5px;
+                                    color: #5a6a80;
+                                    line-height: 1.6;
+                                    margin-top: 8px;
+                                }}
+
+                                /* Footer */
+                                .footer {{
+                                    background: #0B1F3A;
+                                    padding: 18px 28px;
+                                    text-align: center;
+                                }}
+                                .footer p {{
+                                    margin: 4px 0;
+                                    font-size: 12px;
+                                    color: #8A9BB5;
+                                }}
+                                .footer .brand {{
+                                    font-size: 13px;
+                                    font-weight: 600;
+                                    color: #C8960C;
+                                    letter-spacing: .05em;
                                 }}
                             </style>
                         </head>
                         <body>
-                            <div class='container'>
+                            <div class='wrapper'>
+
+                                <!-- Header -->
                                 <div class='header'>
-                                    <h1 style='margin:0;'>Tender Verification</h1>
+                                    <div class='header-badge'>Admin Action Required</div>
+                                    <h1>Tender Verification</h1>
+                                    <p>Nepal Public Procurement Portal</p>
                                 </div>
+                                <div class='gold-line'></div>
+
+                                <!-- Content -->
                                 <div class='content'>
-                                    <h2 style='color:#0056b3;'>New Tender Requires Verification</h2>
-                                    <p>A new tender has been published in the system and requires your verification before it becomes publicly available.</p>
-            
+                                    <h2>New Tender Requires Verification</h2>
+                                    <p>A new tender has been published and is awaiting your review. Please verify the details below before it becomes publicly available to bidders.</p>
+
                                     <table class='info-table'>
                                         <tr>
-                                            <td>Tender ID:</td>
+                                            <td><span class='icon'>&#35;</span> Tender ID</td>
                                             <td>{t.TenderId}</td>
                                         </tr>
                                         <tr>
-                                            <td>Title:</td>
+                                            <td><span class='icon'>&#128196;</span> Title</td>
                                             <td>{t.Title}</td>
                                         </tr>
                                         <tr>
-                                            <td>Published By:</td>
+                                            <td><span class='icon'>&#127970;</span> Published By</td>
                                             <td>{t.IssuedBy}</td>
                                         </tr>
                                         <tr>
-                                            <td>Type:</td>
+                                            <td><span class='icon'>&#127991;</span> Type</td>
                                             <td>{t.TenderType}</td>
                                         </tr>
                                         <tr>
-                                            <td>Date Published:</td>
+                                            <td><span class='icon'>&#128197;</span> Date Published</td>
                                             <td>{DateTime.Now.ToString("dd MMM yyyy, HH:mm")}</td>
                                         </tr>
                                     </table>
-            
-                                    <p>Please review this tender for accuracy and compliance with organizational guidelines.</p>
-            
-                                    <div style='text-align: center;'>
-               
+
+                                    <div class='notice'>
+                                        Please review this tender for accuracy and compliance with organizational guidelines before approving or rejecting it.
                                     </div>
                                 </div>
+
+                                <!-- Footer -->
                                 <div class='footer'>
-                                    <p>This is an automated message from the Tender System. Please do not reply to this email.</p>
-                                    <p>© 2025 Tender System. All rights reserved.</p>
+                                    <p class='brand'>Nepal Public Procurement Portal</p>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
                                 </div>
+
                             </div>
                         </body>
                         </html>";

@@ -295,252 +295,160 @@ namespace TenderSystem.Controllers
         // Helper methods to generate email bodies
         private string GeneratePublisherEmailBody(TenderDetail tender)
         {
-            return $@"
-        <!DOCTYPE html>
-        <html>
-        <head>
+                        return $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
-                body {{ 
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                    line-height: 1.6; 
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f5f7fa;
-                }}
-                .email-container {{
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    overflow: hidden;
-                }}
-                .email-header {{
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white;
-                    padding: 25px;
-                    text-align: center;
-                }}
-                .email-content {{
-                    padding: 30px;
-                }}
-                .status-badge {{
-                    display: inline-block;
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                }}
-                .verified {{
-                    background-color: #dcfce7;
-                    color: #166534;
-                }}
-                .rejected {{
-                    background-color: #fee2e2;
-                    color: #991b1b;
-                }}
-                .info-table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 20px 0;
-                }}
-                .info-table td {{
-                    padding: 10px;
-                    border-bottom: 1px solid #e5e7eb;
-                }}
-                .info-table td:first-child {{
-                    font-weight: bold;
-                    color: #4b5563;
-                    width: 35%;
-                }}
-                .action-button {{
-                    display: inline-block;
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white !important;
-                    text-decoration: none;
-                    padding: 12px 24px;
-                    border-radius: 6px;
-                    margin: 20px 0;
-                }}
-                .email-footer {{
-                    background-color: #f9fafb;
-                    padding: 15px;
-                    text-align: center;
-                    font-size: 14px;
-                    color: #6b7280;
-                    border-top: 1px solid #e5e7eb;
-                }}
+                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                .content {{ background: #ffffff; padding: 32px 28px; }}
+                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 150px; }}
+                .status-verified {{ display: inline-block; background: #dcfce7; color: #166534; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 999px; letter-spacing: .04em; }}
+                .notice {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin-top: 8px; }}
+                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
             </style>
-        </head>
-        <body>
-            <div class='email-container'>
-                <div class='email-header'>
-                    <h2>Tender Verification Update</h2>
+            </head>
+            <body>
+            <div class='wrapper'>
+                <div class='header'>
+                    <div class='header-badge'>Verification Update</div>
+                    <h1>Tender Verified ✓</h1>
+                    <p>Nepal Public Procurement Portal</p>
                 </div>
-                <div class='email-content'>
+                <div class='gold-line'></div>
+                <div class='content'>
+                    <h2>Your Tender Has Been Verified</h2>
                     <p>Dear Publisher,</p>
-                    <p>Your tender has been reviewed by the Tender System admin team:</p>
-            
+                    <p>Great news! Your tender has been reviewed and approved by our admin team. It is now live and visible to all registered bidders on the platform.</p>
+
                     <table class='info-table'>
                         <tr>
-                            <td>Tender ID:</td>
+                            <td>&#35; Tender ID</td>
                             <td>{tender.TenderId}</td>
                         </tr>
                         <tr>
-                            <td>Title:</td>
+                            <td>&#128196; Title</td>
                             <td>{tender.Title}</td>
                         </tr>
                         <tr>
-                            <td>Status:</td>
-                            <td>
-                                <span class='status-badge verified'>Verified</span>
-                            </td>
+                            <td>&#9989; Status</td>
+                            <td><span class='status-verified'>Verified</span></td>
                         </tr>
                         <tr>
-                            <td>Verification Date:</td>
+                            <td>&#128197; Verified On</td>
                             <td>{DateTime.Now.ToString("dd MMM yyyy")}</td>
                         </tr>
                     </table>
-            
-                    <p>Your tender is now visible to all registered bidders on our platform.</p>
-            
-                   
-            
-                    <p>If you have any questions, please contact our support team.</p>
+
+                    <div class='notice'>
+                        Your tender is now publicly available. Bidders can view and submit proposals until the closing date.
+                    </div>
+
+                    <p style='margin-top:20px;'>If you have any questions, please contact our support team.</p>
                 </div>
-                <div class='email-footer'>
-                    <p>This is an automated message from Tender System. Please do not reply to this email.</p>
-                    <p>&copy; {DateTime.Now.Year} Tender System. All rights reserved.</p>
+                <div class='footer'>
+                    <p class='brand'>Nepal Public Procurement Portal</p>
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
                 </div>
             </div>
-        </body>
-        </html>";
+            </body>
+            </html>";
         }
 
         private string GenerateBidderEmailBody(TenderDetail tender)
         {
-            return $@"
-        <!DOCTYPE html>
-        <html>
-        <head>
+                        return $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
-                body {{ 
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                    line-height: 1.6; 
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f5f7fa;
-                }}
-                .email-container {{
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    overflow: hidden;
-                }}
-                .email-header {{
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white;
-                    padding: 25px;
-                    text-align: center;
-                }}
-                .email-content {{
-                    padding: 30px;
-                }}
-                .status-badge {{
-                    display: inline-block;
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                }}
-                .verified {{
-                    background-color: #dcfce7;
-                    color: #166534;
-                }}
-                .rejected {{
-                    background-color: #fee2e2;
-                    color: #991b1b;
-                }}
-                .info-table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 20px 0;
-                }}
-                .info-table td {{
-                    padding: 10px;
-                    border-bottom: 1px solid #e5e7eb;
-                }}
-                .info-table td:first-child {{
-                    font-weight: bold;
-                    color: #4b5563;
-                    width: 35%;
-                }}
-                .action-button {{
-                    display: inline-block;
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white !important;
-                    text-decoration: none;
-                    padding: 12px 24px;
-                    border-radius: 6px;
-                    margin: 20px 0;
-                }}
-                .email-footer {{
-                    background-color: #f9fafb;
-                    padding: 15px;
-                    text-align: center;
-                    font-size: 14px;
-                    color: #6b7280;
-                    border-top: 1px solid #e5e7eb;
-                }}
+                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                .header-badge {{ display: inline-block; background: rgba(200,150,12,.15); border: 1px solid rgba(200,150,12,.3); color: #E8B84B; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                .gold-line {{ height: 3px; background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent); }}
+                .content {{ background: #ffffff; padding: 32px 28px; }}
+                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 150px; }}
+                .info-table .budget {{ font-weight: 700; color: #C8960C; font-size: 14px; }}
+                .notice {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin-top: 8px; }}
+                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
             </style>
-        </head>
+            </head>
             <body>
-                <div class='email-container'>
-                    <div class='email-header'>
-                        <h2>New Tender Available</h2>
-                    </div>
-                    <div class='email-content'>
-                        <p>Dear Bidder,</p>
-                        <p>A new tender matching your profile has been published:</p>
-            
-                        <table class='info-table'>
-                            <tr>
-                                <td>Tender Title:</td>
-                                <td>{tender.Title}</td>
-                            </tr>
-                            <tr>
-                                <td>Tender Type:</td>
-                                <td>{tender.TenderType}</td>
-                            </tr>
-                            <tr>
-                                <td>Budget Estimate:</td>
-                                <td>Rs.{tender.BudgetEstimation}</td>
-                            </tr>
-                            <tr>
-                                <td>Opening Date:</td>
-                                <td>{tender.OpeningDate:d}</td>
-                            </tr>
-                            <tr>
-                                <td>Closing Date:</td>
-                                <td>{tender.ClosingDate:d}</td>
-                            </tr>
-                        </table>
-            
-                        <p>This tender is now open for bidding. Don't miss this opportunity!</p>
-            
-            
-            
-                        <p>Submit your bid before the closing date to be considered.</p>
-                    </div>
-                    <div class='email-footer'>
-                        <p>This is an automated message from Tender System. Please do not reply to this email.</p>
-                        <p>&copy; {DateTime.Now.Year} Tender System All rights reserved.</p>
+            <div class='wrapper'>
+                <div class='header'>
+                    <div class='header-badge'>New Opportunity</div>
+                    <h1>New Tender Available</h1>
+                    <p>Nepal Public Procurement Portal</p>
+                </div>
+                <div class='gold-line'></div>
+                <div class='content'>
+                    <h2>A New Tender Matches Your Profile</h2>
+                    <p>Dear Bidder,</p>
+                    <p>A new tender has been published on the platform that may be of interest to you. Review the details below and submit your proposal before the closing date.</p>
+
+                    <table class='info-table'>
+                        <tr>
+                            <td>&#128196; Tender Title</td>
+                            <td>{tender.Title}</td>
+                        </tr>
+                        <tr>
+                            <td>&#127991; Type</td>
+                            <td>{tender.TenderType}</td>
+                        </tr>
+                        <tr>
+                            <td>&#8377; Budget Estimate</td>
+                            <td class='budget'>Rs. {tender.BudgetEstimation:N2}</td>
+                        </tr>
+                        <tr>
+                            <td>&#128197; Opening Date</td>
+                            <td>{tender.OpeningDate:d}</td>
+                        </tr>
+                        <tr>
+                            <td>&#9200; Closing Date</td>
+                            <td>{tender.ClosingDate:d}</td>
+                        </tr>
+                    </table>
+
+                    <div class='notice'>
+                        Don't miss this opportunity — submit your bid before the closing date to be considered.
                     </div>
                 </div>
+                <div class='footer'>
+                    <p class='brand'>Nepal Public Procurement Portal</p>
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                </div>
+            </div>
             </body>
             </html>";
         }
@@ -549,128 +457,87 @@ namespace TenderSystem.Controllers
         {
             return $@"
             <!DOCTYPE html>
-            <html>
+            <html lang='en'>
             <head>
-                <style>
-                body {{ 
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                    line-height: 1.6; 
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f5f7fa;
-                }}
-                .email-container {{
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    overflow: hidden;
-                }}
-                .email-header {{
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white;
-                    padding: 25px;
-                    text-align: center;
-                }}
-                .email-content {{
-                    padding: 30px;
-                }}
-                .status-badge {{
-                    display: inline-block;
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                }}
-                .verified {{
-                    background-color: #dcfce7;
-                    color: #166534;
-                }}
-                .rejected {{
-                    background-color: #fee2e2;
-                    color: #991b1b;
-                }}
-                .info-table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 20px 0;
-                }}
-                .info-table td {{
-                    padding: 10px;
-                    border-bottom: 1px solid #e5e7eb;
-                }}
-                .info-table td:first-child {{
-                    font-weight: bold;
-                    color: #4b5563;
-                    width: 35%;
-                }}
-                .action-button {{
-                    display: inline-block;
-                    background: linear-gradient(135deg, #1e40af, #1e3a8a);
-                    color: white !important;
-                    text-decoration: none;
-                    padding: 12px 24px;
-                    border-radius: 6px;
-                    margin: 20px 0;
-                }}
-                .email-footer {{
-                    background-color: #f9fafb;
-                    padding: 15px;
-                    text-align: center;
-                    font-size: 14px;
-                    color: #6b7280;
-                    border-top: 1px solid #e5e7eb;
-                }}
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body {{ font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }}
+                .wrapper {{ max-width: 620px; margin: 30px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.15); }}
+                .header {{ background: #0B1F3A; padding: 32px 28px; text-align: center; }}
+                .header-badge {{ display: inline-block; background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; }}
+                .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; }}
+                .header p {{ margin: 8px 0 0; font-size: 13px; color: #8A9BB5; }}
+                .red-line {{ height: 3px; background: linear-gradient(90deg, transparent, #ef4444 30%, #fca5a5 50%, #ef4444 70%, transparent); }}
+                .content {{ background: #ffffff; padding: 32px 28px; }}
+                .content h2 {{ font-size: 17px; font-weight: 700; color: #0B1F3A; margin: 0 0 10px; }}
+                .content p {{ font-size: 14px; line-height: 1.7; color: #5a6a80; margin: 0 0 16px; }}
+                .info-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(11,31,58,.07); }}
+                .info-table tr:nth-child(odd) td {{ background: #F7F3EC; }}
+                .info-table tr:nth-child(even) td {{ background: #ffffff; }}
+                .info-table td {{ padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid rgba(11,31,58,.05); color: #333; }}
+                .info-table td:first-child {{ font-weight: 700; color: #0B1F3A; width: 150px; }}
+                .status-rejected {{ display: inline-block; background: #fee2e2; color: #991b1b; font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 999px; letter-spacing: .04em; }}
+                .reasons-box {{ background: #fff5f5; border-left: 3px solid #ef4444; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin: 16px 0; }}
+                .reasons-box ul {{ margin: 8px 0 0; padding-left: 18px; }}
+                .reasons-box ul li {{ margin-bottom: 4px; }}
+                .notice {{ background: #F7F3EC; border-left: 3px solid #C8960C; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 13.5px; color: #5a6a80; line-height: 1.6; margin-top: 8px; }}
+                .footer {{ background: #0B1F3A; padding: 18px 28px; text-align: center; }}
+                .footer p {{ margin: 4px 0; font-size: 12px; color: #8A9BB5; }}
+                .footer .brand {{ font-size: 13px; font-weight: 600; color: #C8960C; letter-spacing: .05em; }}
             </style>
             </head>
             <body>
-                <div class='email-container'>
-                    <div class='email-header' style='background: linear-gradient(135deg, #dc2626, #b91c1c);'>
-                        <h2>Tender Verification Update</h2>
-                    </div>
-                    <div class='email-content'>
-                        <p>Dear Publisher,</p>
-                        <p>We regret to inform you that your tender could not be verified:</p>
-            
-                        <table class='info-table'>
-                            <tr>
-                                <td>Tender ID:</td>
-                                <td>{tender.TenderId}</td>
-                            </tr>
-                            <tr>
-                                <td>Title:</td>
-                                <td>{tender.Title}</td>
-                            </tr>
-                            <tr>
-                                <td>Status:</td>
-                                <td>
-                                    <span class='status-badge rejected'>Not Verified</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Review Date:</td>
-                                <td>{DateTime.Now.ToString("dd MMM yyyy")}</td>
-                            </tr>
-                        </table>
-            
-                        <p>Possible reasons for rejection:</p>
+            <div class='wrapper'>
+                <div class='header'>
+                    <div class='header-badge'>Verification Update</div>
+                    <h1>Tender Not Verified</h1>
+                    <p>Nepal Public Procurement Portal</p>
+                </div>
+                <div class='red-line'></div>
+                <div class='content'>
+                    <h2>Your Tender Could Not Be Verified</h2>
+                    <p>Dear Publisher,</p>
+                    <p>We regret to inform you that your tender submission did not pass our verification process. Please review the details below and resubmit after making the necessary corrections.</p>
+
+                    <table class='info-table'>
+                        <tr>
+                            <td>&#35; Tender ID</td>
+                            <td>{tender.TenderId}</td>
+                        </tr>
+                        <tr>
+                            <td>&#128196; Title</td>
+                            <td>{tender.Title}</td>
+                        </tr>
+                        <tr>
+                            <td>&#10060; Status</td>
+                            <td><span class='status-rejected'>Not Verified</span></td>
+                        </tr>
+                        <tr>
+                            <td>&#128197; Review Date</td>
+                            <td>{DateTime.Now.ToString("dd MMM yyyy")}</td>
+                        </tr>
+                    </table>
+
+                    <div class='reasons-box'>
+                        <strong style='color:#991b1b;'>Possible reasons for rejection:</strong>
                         <ul>
                             <li>Incomplete documentation</li>
-                            <li>Non-compliance with our terms</li>
+                            <li>Non-compliance with our terms and guidelines</li>
                             <li>Missing required information</li>
                         </ul>
-            
-                        <p>Please review your submission and contact our support team for assistance.</p>
-            
-                        
                     </div>
-                    <div class='email-footer'>
-                        <p>This is an automated message from Tender System. Please do not reply to this email.</p>
-                        <p>&copy; {DateTime.Now.Year} Tender System. All rights reserved.</p>
+
+                    <div class='notice'>
+                        Please review your submission carefully and contact our support team for assistance before resubmitting.
                     </div>
                 </div>
+                <div class='footer'>
+                    <p class='brand'>Nepal Public Procurement Portal</p>
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                    <p>&copy; {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                </div>
+            </div>
             </body>
             </html>";
         }
