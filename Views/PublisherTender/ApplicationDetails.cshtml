@@ -206,7 +206,7 @@
 
     .ad-hero h1 {
         font-family: 'Playfair Display', serif;
-        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-size: clamp(1.4rem,3vw,2rem);
         font-weight: 900;
         color: var(--white);
         margin: 0 0 1rem;
@@ -552,6 +552,7 @@
             text-decoration: none;
         }
 
+    /* ── DOC MODAL ── */
     .ad-modal-overlay {
         display: none;
         position: fixed;
@@ -633,6 +634,469 @@
             border: none;
             border-radius: 8px;
         }
+
+    /* ── AWARD OVERLAY ── */
+    .award-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(11,31,58,.92);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .35s ease;
+    }
+
+        .award-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    .award-card {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 2.8rem 2.5rem;
+        width: min(460px, 93vw);
+        text-align: center;
+        box-shadow: 0 48px 100px rgba(11,31,58,.45);
+        transform: translateY(30px) scale(.95);
+        transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .award-overlay.active .award-card {
+        transform: translateY(0) scale(1);
+    }
+
+    /* shimmer top bar — gold for won, red for lost */
+    .award-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-size: 200% 100%;
+        animation: aw-shimmer 1.8s linear infinite;
+    }
+
+    .award-card.won-card::before {
+        background: linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold));
+    }
+
+    .award-card.lost-card::before {
+        background: linear-gradient(90deg,#ef4444,#fca5a5,#ef4444);
+    }
+    @@keyframes aw-shimmer {
+        0%
+
+    {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+
+    }
+
+    /* particles */
+    .award-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 24px;
+    }
+
+    .award-particle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0;
+        animation: aw-float 3s ease-in-out infinite;
+    }
+
+    .won-card .award-particle {
+        background: var(--gold-lt);
+    }
+
+    .lost-card .award-particle {
+        background: #fca5a5;
+    }
+
+    .award-particle:nth-child(1) {
+        width: 5px;
+        height: 5px;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .award-particle:nth-child(2) {
+        width: 4px;
+        height: 4px;
+        left: 28%;
+        animation-delay: .5s;
+    }
+
+    .award-particle:nth-child(3) {
+        width: 6px;
+        height: 6px;
+        left: 52%;
+        animation-delay: 1.0s;
+    }
+
+    .award-particle:nth-child(4) {
+        width: 4px;
+        height: 4px;
+        left: 74%;
+        animation-delay: 1.6s;
+    }
+
+    .award-particle:nth-child(5) {
+        width: 5px;
+        height: 5px;
+        left: 90%;
+        animation-delay: 0.3s;
+    }
+    @@keyframes aw-float {
+        0%
+
+    {
+        transform: translateY(110px) scale(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .7;
+    }
+
+    80% {
+        opacity: .4;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+
+    }
+
+    /* icon ring */
+    .award-ring {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        animation: aw-pulse 2s ease-in-out infinite;
+    }
+
+    .won-card .award-ring {
+        background: linear-gradient(135deg,rgba(200,150,12,.16),rgba(200,150,12,.04));
+        border: 2px solid rgba(200,150,12,.3);
+    }
+
+    .lost-card .award-ring {
+        background: linear-gradient(135deg,rgba(239,68,68,.14),rgba(239,68,68,.04));
+        border: 2px solid rgba(239,68,68,.3);
+    }
+    @@keyframes aw-pulse {
+        0%,100%
+
+    {
+        box-shadow: 0 0 0 0 rgba(200,150,12,.25);
+    }
+
+    50% {
+        box-shadow: 0 0 0 16px rgba(200,150,12,.0);
+    }
+
+    }
+
+    .award-ring i {
+        font-size: 2rem;
+        animation: aw-bounce 1.6s ease-in-out infinite;
+    }
+
+    .won-card .award-ring i {
+        color: var(--gold);
+    }
+
+    .lost-card .award-ring i {
+        color: #ef4444;
+    }
+    @@keyframes aw-bounce {
+        0%,100%
+
+    {
+        transform: translateY(0) scale(1);
+    }
+
+    45% {
+        transform: translateY(-7px) scale(1.1);
+    }
+
+    65% {
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    }
+
+    /* dots */
+    .award-dots {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+        margin: 1.1rem 0 .4rem;
+    }
+
+        .award-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: aw-dot .9s ease-in-out infinite;
+        }
+
+    .won-card .award-dots span {
+        background: var(--gold);
+    }
+
+    .lost-card .award-dots span {
+        background: #ef4444;
+    }
+
+    .award-dots span:nth-child(2) {
+        animation-delay: .15s;
+        opacity: .7;
+    }
+
+    .award-dots span:nth-child(3) {
+        animation-delay: .30s;
+    }
+    @@keyframes aw-dot {
+        0%,80%,100%
+
+    {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    40% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+
+    }
+
+    /* progress */
+    .award-progress-track {
+        height: 5px;
+        background: rgba(11,31,58,.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: .9rem 0 1.4rem;
+    }
+
+    .award-progress-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 99px;
+        transition: width .5s ease;
+    }
+
+    .won-card .award-progress-fill {
+        background: linear-gradient(90deg,var(--gold),var(--gold-lt));
+    }
+
+    .lost-card .award-progress-fill {
+        background: linear-gradient(90deg,#ef4444,#fca5a5);
+    }
+
+    /* text */
+    .award-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .35rem;
+    }
+
+    .award-sub {
+        font-size: .86rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* steps */
+    .award-steps {
+        list-style: none;
+        padding: 0;
+        margin: 1.3rem 0 0;
+        text-align: left;
+    }
+
+        .award-steps li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            font-size: .82rem;
+            color: var(--muted);
+            padding: .38rem 0;
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: color .3s;
+        }
+
+            .award-steps li:last-child {
+                border-bottom: none;
+            }
+
+            .award-steps li .s-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                border: 1.5px solid rgba(11,31,58,.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: .65rem;
+                color: var(--slate);
+                flex-shrink: 0;
+                transition: all .3s;
+            }
+
+            .award-steps li.done .s-icon {
+                background: #22c55e;
+                border-color: #22c55e;
+                color: white;
+            }
+
+            .award-steps li.active {
+                color: var(--navy);
+                font-weight: 600;
+            }
+
+                .award-steps li.active .s-icon {
+                    border-color: var(--gold);
+                    color: var(--gold);
+                    animation: aw-spin 1.4s linear infinite;
+                }
+
+    .lost-card .award-steps li.active .s-icon {
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+    @@keyframes aw-spin {
+        to
+
+    {
+        transform: rotate(360deg);
+    }
+
+    }
+
+    /* success / error final states */
+    .award-final {
+        display: none;
+    }
+
+        .award-final.show {
+            display: block;
+        }
+
+    .award-final-ring {
+        width: 86px;
+        height: 86px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.3rem;
+        animation: aw-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+        .award-final-ring.won-ring {
+            background: rgba(34,197,94,.12);
+            border: 2px solid rgba(34,197,94,.35);
+        }
+
+        .award-final-ring.lost-ring {
+            background: rgba(239,68,68,.1);
+            border: 2px solid rgba(239,68,68,.3);
+        }
+
+        .award-final-ring.err-ring {
+            background: rgba(239,68,68,.08);
+            border: 2px solid rgba(239,68,68,.25);
+        }
+
+        .award-final-ring i.won-ic {
+            font-size: 2rem;
+            color: #22c55e;
+        }
+
+        .award-final-ring i.lost-ic {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+
+        .award-final-ring i.err-ic {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+    @@keyframes aw-pop {
+        from
+
+    {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    .award-final-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0 0 .3rem;
+    }
+
+    .award-final-sub {
+        font-size: .85rem;
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+    .award-dismiss {
+        margin-top: 1.2rem;
+        padding: .55rem 1.6rem;
+        border-radius: 8px;
+        background: var(--navy);
+        color: var(--white);
+        border: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .award-dismiss:hover {
+            background: var(--navy-mid);
+        }
+
     @@media (max-width: 900px) {
         .ad-two-col
 
@@ -660,6 +1124,7 @@
 
     }
 </style>
+
 <div class="ad-wrap">
     <div class="ad-hero">
         <div class="ad-hero-inner">
@@ -675,10 +1140,12 @@
                                 <i class="fas fa-trophy"></i> Award
                             </button>
                             <div class="ad-dropdown">
-                                <button class="ad-drop-btn won" data-id="@Model.Application.ApplicationId" data-status="Won">
+                                <button class="ad-drop-btn won" data-id="@Model.Application.ApplicationId" data-status="Won"
+                                        data-bidder="@Model.User.FirstName @Model.User.LastName">
                                     <i class="fas fa-trophy"></i> Won
                                 </button>
-                                <button class="ad-drop-btn lost" data-id="@Model.Application.ApplicationId" data-status="Lost">
+                                <button class="ad-drop-btn lost" data-id="@Model.Application.ApplicationId" data-status="Lost"
+                                        data-bidder="@Model.User.FirstName @Model.User.LastName">
                                     <i class="fas fa-times-circle"></i> Lost
                                 </button>
                             </div>
@@ -691,7 +1158,7 @@
                         </form>
                     }
                     <span class="ad-status @(Model.Application.ApplicationStatus.ToLower() == "won" ? "st-won" :
-                                                                      Model.Application.ApplicationStatus.ToLower() == "lost" ? "st-lost" : "st-pending")">
+                                                                       Model.Application.ApplicationStatus.ToLower() == "lost" ? "st-lost" : "st-pending")">
                         <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
                                                                    Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : "fa-hourglass-half")"></i>
                         @Model.Application.ApplicationStatus
@@ -771,22 +1238,10 @@
                         </span>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:.65rem;">
-                        <div class="ad-info-item">
-                            <div class="ad-info-icon"><i class="fas fa-building"></i></div>
-                            <div><div class="ad-info-label">Company Name</div><div class="ad-info-value">@Model.Company.CompanyName</div></div>
-                        </div>
-                        <div class="ad-info-item">
-                            <div class="ad-info-icon"><i class="fas fa-fingerprint"></i></div>
-                            <div><div class="ad-info-label">Registration No.</div><div class="ad-info-value">@Model.Company.RegistrationNumber</div></div>
-                        </div>
-                        <div class="ad-info-item">
-                            <div class="ad-info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div><div class="ad-info-label">Office Address</div><div class="ad-info-value">@Model.Company.FullAddress</div></div>
-                        </div>
-                        <div class="ad-info-item">
-                            <div class="ad-info-icon"><i class="fas fa-envelope"></i></div>
-                            <div><div class="ad-info-label">Email</div><div class="ad-info-value"><a href="mailto:@Model.Company.OfficeEmail">@Model.Company.OfficeEmail</a></div></div>
-                        </div>
+                        <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-building"></i></div><div><div class="ad-info-label">Company Name</div><div class="ad-info-value">@Model.Company.CompanyName</div></div></div>
+                        <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-fingerprint"></i></div><div><div class="ad-info-label">Registration No.</div><div class="ad-info-value">@Model.Company.RegistrationNumber</div></div></div>
+                        <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-map-marker-alt"></i></div><div><div class="ad-info-label">Office Address</div><div class="ad-info-value">@Model.Company.FullAddress</div></div></div>
+                        <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-envelope"></i></div><div><div class="ad-info-label">Email</div><div class="ad-info-value"><a href="mailto:@Model.Company.OfficeEmail">@Model.Company.OfficeEmail</a></div></div></div>
                         <div class="ad-info-item">
                             <div class="ad-info-icon"><i class="fas fa-globe"></i></div>
                             <div>
@@ -804,10 +1259,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ad-info-item">
-                            <div class="ad-info-icon"><i class="fas fa-user-tie"></i></div>
-                            <div><div class="ad-info-label">Position</div><div class="ad-info-value">@Model.Company.Position</div></div>
-                        </div>
+                        <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-user-tie"></i></div><div><div class="ad-info-label">Position</div><div class="ad-info-value">@Model.Company.Position</div></div></div>
                     </div>
                     <div style="margin-top:1.2rem;">
                         <a asp-action="ViewCompanyReview" asp-controller="Company"
@@ -821,7 +1273,6 @@
 
             <!-- Application + Bank -->
             <div style="display:flex;flex-direction:column;gap:1.4rem;">
-
                 <div class="ad-card">
                     <div class="ad-card-hd">
                         <div class="ad-card-hd-icon"><i class="fas fa-file-alt"></i></div>
@@ -829,14 +1280,8 @@
                     </div>
                     <div class="ad-card-body">
                         <div style="display:flex;flex-direction:column;gap:.65rem;">
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-rupee-sign"></i></div>
-                                <div><div class="ad-info-label">Proposed Budget</div><div class="ad-info-value gold">&#8377; @Model.Application.ProposedBudget.ToString("N2")</div></div>
-                            </div>
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-calendar-alt"></i></div>
-                                <div><div class="ad-info-label">Proposed Duration</div><div class="ad-info-value">@Model.Application.ProposedDuration</div></div>
-                            </div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-rupee-sign"></i></div><div><div class="ad-info-label">Proposed Budget</div><div class="ad-info-value gold">&#8377; @Model.Application.ProposedBudget.ToString("N2")</div></div></div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-calendar-alt"></i></div><div><div class="ad-info-label">Proposed Duration</div><div class="ad-info-value">@Model.Application.ProposedDuration</div></div></div>
                         </div>
                         <div style="margin-top:1.2rem;padding:1rem;background:var(--ivory);border-radius:10px;border:1px solid rgba(11,31,58,.05);">
                             <div class="ad-info-label" style="margin-bottom:.75rem;">Application Document</div>
@@ -855,26 +1300,13 @@
                     </div>
                     <div class="ad-card-body">
                         <div class="ad-info-grid">
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-university"></i></div>
-                                <div><div class="ad-info-label">Bank Name</div><div class="ad-info-value">@Model.Bank.BankName</div></div>
-                            </div>
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-user"></i></div>
-                                <div><div class="ad-info-label">Account Holder</div><div class="ad-info-value">@Model.Bank.AccountHolderName</div></div>
-                            </div>
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-credit-card"></i></div>
-                                <div><div class="ad-info-label">Account Number</div><div class="ad-info-value">@Model.Bank.AccountNumber</div></div>
-                            </div>
-                            <div class="ad-info-item">
-                                <div class="ad-info-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                                <div><div class="ad-info-label">Account Type</div><div class="ad-info-value">@Model.Bank.AccountType</div></div>
-                            </div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-university"></i></div><div><div class="ad-info-label">Bank Name</div><div class="ad-info-value">@Model.Bank.BankName</div></div></div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-user"></i></div><div><div class="ad-info-label">Account Holder</div><div class="ad-info-value">@Model.Bank.AccountHolderName</div></div></div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-credit-card"></i></div><div><div class="ad-info-label">Account Number</div><div class="ad-info-value">@Model.Bank.AccountNumber</div></div></div>
+                            <div class="ad-info-item"><div class="ad-info-icon"><i class="fas fa-file-invoice-dollar"></i></div><div><div class="ad-info-label">Account Type</div><div class="ad-info-value">@Model.Bank.AccountType</div></div></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -892,6 +1324,7 @@
                     }
                     else
                     {
+
                         <img src="~/UserImage/@Model.User.UserPhoto" alt="@Model.User.FirstName" class="ad-bidder-photo" />
                     }
                     <div class="ad-bidder-info">
@@ -916,6 +1349,7 @@
     </div>
 </div>
 
+<!-- ── DOC PREVIEW MODAL ── -->
 <div id="adModal" class="ad-modal-overlay">
     <div class="ad-modal">
         <div class="ad-modal-hd">
@@ -928,8 +1362,53 @@
     </div>
 </div>
 
+<!-- ── AWARD OVERLAY ── -->
+<div class="award-overlay" id="awardOverlay">
+    <div class="award-card" id="awardCard">
+
+        <div class="award-particles">
+            <div class="award-particle"></div>
+            <div class="award-particle"></div>
+            <div class="award-particle"></div>
+            <div class="award-particle"></div>
+            <div class="award-particle"></div>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div id="awardLoading">
+            <div class="award-ring" id="awardRing">
+                <i id="awardRingIcon" class="fas fa-trophy"></i>
+            </div>
+            <h3 class="award-title" id="awardTitle">Processing Award…</h3>
+            <p class="award-sub" id="awardSub">Please wait while we update the tender status</p>
+            <div class="award-dots"><span></span><span></span><span></span></div>
+            <div class="award-progress-track">
+                <div class="award-progress-fill" id="awardProgressFill"></div>
+            </div>
+            <ul class="award-steps" id="awardStepsList">
+                <li id="awStep1"><div class="s-icon"><i class="fas fa-check"></i></div> <span id="awStep1Text">Updating application status</span></li>
+                <li id="awStep2"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> <span id="awStep2Text">Sending congratulations email to winner</span></li>
+                <li id="awStep3"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> <span id="awStep3Text">Sending regret emails to other bidders</span></li>
+                <li id="awStep4"><div class="s-icon"><i class="fas fa-circle-notch"></i></div> Finalising tender result</li>
+            </ul>
+        </div>
+
+        <!-- FINAL STATE -->
+        <div class="award-final" id="awardFinal">
+            <div class="award-final-ring" id="awardFinalRing">
+                <i id="awardFinalIcon"></i>
+            </div>
+            <h3 class="award-final-title" id="awardFinalTitle"></h3>
+            <p class="award-final-sub" id="awardFinalSub"></p>
+            <button class="award-dismiss" id="awardDismissBtn" onclick="closeAwardOverlay()">Close</button>
+        </div>
+
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 <script>
+    /* ── Dropdown ── */
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.award-dropdown-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
@@ -939,60 +1418,157 @@
                 dd.classList.toggle('open');
             });
         });
+        document.addEventListener('click', () => document.querySelectorAll('.ad-dropdown').forEach(d => d.classList.remove('open')));
 
-        document.addEventListener('click', function () {
-            document.querySelectorAll('.ad-dropdown').forEach(d => d.classList.remove('open'));
-        });
-
+        /* ── Award button click ── */
         document.querySelectorAll('.ad-drop-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const applicationId = this.getAttribute('data-id');
-                const applicationStatus = this.getAttribute('data-status');
-                const form = document.getElementById(`awardForm_${applicationId}`);
-                const formData = new FormData(form);
-                formData.set('ApplicationStatus', applicationStatus);
+                const status        = this.getAttribute('data-status');
+                const bidder        = this.getAttribute('data-bidder') || 'the bidder';
+                const isWon         = status === 'Won';
 
-                if (confirm(`Mark this application as '${applicationStatus}'?`)) {
-                    fetch(form.action, {
-                        method: form.method,
-                        body: formData,
-                        headers: {
-                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                        }
-                    })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            window.location.href = data.redirectUrl;
-                        } else {
-                            alert('Failed to update: ' + data.message);
-                        }
-                    })
-                    .catch(err => console.error('Error:', err));
-                }
+                if (!confirm(`Mark this application as '${status}'?`)) return;
+
+                // Close dropdown
+                document.querySelectorAll('.ad-dropdown').forEach(d => d.classList.remove('open'));
+
+                // Configure overlay for won vs lost
+                showAwardOverlay(isWon, bidder);
+
+                // Submit fetch
+                const form     = document.getElementById(`awardForm_${applicationId}`);
+                const formData = new FormData(form);
+                formData.set('ApplicationStatus', status);
+
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showAwardSuccess(isWon, bidder, data.redirectUrl);
+                    } else {
+                        showAwardError(data.message || 'Failed to update status.');
+                    }
+                })
+                .catch(err => showAwardError('Network error: ' + err));
             });
         });
     });
 
+    /* ── Overlay helpers ── */
+    const awardOverlay  = document.getElementById('awardOverlay');
+    const awardCard     = document.getElementById('awardCard');
+    const awardProgress = document.getElementById('awardProgressFill');
+    const awSteps       = [
+        document.getElementById('awStep1'),
+        document.getElementById('awStep2'),
+        document.getElementById('awStep3'),
+        document.getElementById('awStep4'),
+    ];
+    let awTimers = [];
+
+    function setAwStep(index) {
+        awSteps.forEach((el, i) => {
+            el.classList.remove('done', 'active');
+            if (i < index)  el.classList.add('done');
+            if (i === index) el.classList.add('active');
+        });
+    }
+
+    function showAwardOverlay(isWon, bidder) {
+        // Reset
+        document.getElementById('awardLoading').style.display = 'block';
+        document.getElementById('awardFinal').classList.remove('show');
+        awardProgress.style.width = '0%';
+        awSteps.forEach(el => el.classList.remove('done','active'));
+
+        // Theme
+        awardCard.className = 'award-card ' + (isWon ? 'won-card' : 'lost-card');
+        document.getElementById('awardRingIcon').className = isWon ? 'fas fa-trophy' : 'fas fa-times-circle';
+        document.getElementById('awardTitle').textContent  = isWon ? 'Awarding Tender…' : 'Marking as Lost…';
+        document.getElementById('awardSub').textContent    = isWon
+            ? `Sending congratulations email to ${bidder}`
+            : `Sending regret email to ${bidder}`;
+
+        // Step text per scenario
+        document.getElementById('awStep2Text').textContent = isWon
+            ? 'Sending congratulations email to winner'
+            : 'Sending regret email to this bidder';
+        document.getElementById('awStep3Text').textContent = isWon
+            ? 'Sending regret emails to other bidders'
+            : 'Notifying other bidders of result';
+
+        awardOverlay.classList.add('active');
+
+        // Animate steps
+        const timeline = [
+            { delay: 300,  pct: 22 },
+            { delay: 1100, pct: 52 },
+            { delay: 2000, pct: 78 },
+        ];
+        awTimers = timeline.map(({ delay, pct }, i) =>
+            setTimeout(() => { setAwStep(i); awardProgress.style.width = pct + '%'; }, delay)
+        );
+    }
+
+    function showAwardSuccess(isWon, bidder, redirectUrl) {
+        awTimers.forEach(clearTimeout);
+        setAwStep(3); awardProgress.style.width = '100%';
+
+        setTimeout(() => {
+            document.getElementById('awardLoading').style.display = 'none';
+            const final = document.getElementById('awardFinal');
+            const ring  = document.getElementById('awardFinalRing');
+            const icon  = document.getElementById('awardFinalIcon');
+
+            ring.className  = 'award-final-ring ' + (isWon ? 'won-ring' : 'lost-ring');
+            icon.className  = isWon ? 'fas fa-trophy won-ic' : 'fas fa-times-circle lost-ic';
+            document.getElementById('awardFinalTitle').textContent = isWon ? '🏆 Tender Awarded!' : 'Result Recorded';
+            document.getElementById('awardFinalSub').textContent   = isWon
+                ? `${bidder} has been marked as the winner. Congratulations email sent, and regret emails dispatched to all other bidders.`
+                : `${bidder} has been marked as Lost. A regret email has been sent to them.`;
+
+            final.classList.add('show');
+
+            // Auto redirect after 2.5s
+            setTimeout(() => { if (redirectUrl) window.location.href = redirectUrl; else closeAwardOverlay(); }, 2500);
+        }, 700);
+    }
+
+    function showAwardError(msg) {
+        awTimers.forEach(clearTimeout);
+        document.getElementById('awardLoading').style.display = 'none';
+        const final = document.getElementById('awardFinal');
+        const ring  = document.getElementById('awardFinalRing');
+        const icon  = document.getElementById('awardFinalIcon');
+
+        ring.className  = 'award-final-ring err-ring';
+        icon.className  = 'fas fa-exclamation-triangle err-ic';
+        document.getElementById('awardFinalTitle').textContent = 'Something Went Wrong';
+        document.getElementById('awardFinalSub').textContent   = msg || 'Please try again.';
+        final.classList.add('show');
+    }
+
+    function closeAwardOverlay() { awardOverlay.classList.remove('active'); }
+
+    /* ── Doc preview / download ── */
     function downloadDocument() {
         const filePath = '@Url.Content("~/ProposalTender/")' + '@Model.Application.ApplicationDocument';
         const link = document.createElement('a');
-        link.href = filePath;
-        link.download = '@Model.Application.ApplicationDocument';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        link.href = filePath; link.download = '@Model.Application.ApplicationDocument';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
     function previewDocument() {
         const filePath = '@Url.Content("~/ProposalTender/")' + '@Model.Application.ApplicationDocument';
         const iframe = document.getElementById('docViewer');
-        if (filePath.endsWith('.pdf') || filePath.endsWith('.jpg') || filePath.endsWith('.png')) {
-            iframe.src = filePath;
-        } else {
-            iframe.src = `https://docs.google.com/gview?url=${encodeURIComponent(window.location.origin + filePath)}&embedded=true`;
-        }
+        iframe.src = (filePath.endsWith('.pdf') || filePath.match(/\.(jpg|png)$/i))
+            ? filePath
+            : `https://docs.google.com/gview?url=${encodeURIComponent(window.location.origin + filePath)}&embedded=true`;
         document.getElementById('adModal').classList.add('open');
     }
 

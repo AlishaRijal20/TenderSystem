@@ -906,8 +906,7 @@ namespace TenderSystem.Controllers
 
 
 
-        [HttpPost]
-
+        /*[HttpPost]
         public async Task<IActionResult> AwardTender(long ApplicationId, string ApplicationStatus)
         {
             try
@@ -973,8 +972,208 @@ namespace TenderSystem.Controllers
             {
                 return Json(new { success = false, message = $"An error occurred: {ex.Message}" });
             }
-        }
+        }*/
 
+
+        [HttpPost]
+        public async Task<IActionResult> AwardTender(long ApplicationId, string ApplicationStatus)
+        {
+            try
+            {
+                var application = await _context.TenderApplications
+                    .Include(a => a.CompanyApply)
+                        .ThenInclude(c => c.Userbid)
+                    .FirstOrDefaultAsync(a => a.ApplicationId == ApplicationId);
+
+                if (application == null)
+                    return Json(new { success = false, message = "Application not found." });
+
+                if (application.ApplicationStatus != "Pending")
+                    return Json(new { success = false, message = "Application is not in a pending state." });
+
+                application.ApplicationStatus = ApplicationStatus;
+
+                if (ApplicationStatus == "Won")
+                {
+                    var tender = await _context.TenderDetails
+                        .Include(t => t.PublishedByUser)
+                        .FirstOrDefaultAsync(t => t.TenderId == application.TenderAppllyId);
+
+                    if (tender == null)
+                        return Json(new { success = false, message = "Tender details not found." });
+
+                    var currentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddMinutes(345));
+                    tender.AwardStatus = "Awarded";
+                    tender.AwardCompanyId = application.CompanyApplyId;
+                    tender.AwardDate = currentDate;
+                    _context.Update(tender);
+
+                    // Get winner details
+                    var winnerCompany = await _context.Companies
+                        .Include(c => c.Userbid)
+                        .FirstOrDefaultAsync(c => c.CompanyId == application.CompanyApplyId);
+
+                    string winnerName = winnerCompany?.Userbid != null
+                        ? $"{winnerCompany.Userbid.FirstName} {winnerCompany.Userbid.LastName}"
+                        : "N/A";
+                    string winnerCompanyName = winnerCompany?.CompanyName ?? "N/A";
+                    string winnerEmail = winnerCompany?.Userbid?.EmailAddress ?? "";
+
+                    // Mark other applications as Lost and send sorry emails
+                    var otherApplications = await _context.TenderApplications
+                        .Where(a => a.TenderAppllyId == application.TenderAppllyId && a.ApplicationId != ApplicationId)
+                        .Include(a => a.CompanyApply)
+                            .ThenInclude(c => c.Userbid)
+                        .ToListAsync();
+
+                    foreach (var app in otherApplications)
+                    {
+                        app.ApplicationStatus = "Lost";
+
+                        // Send "better luck" email to each loser
+                        if (!string.IsNullOrEmpty(app.CompanyApply?.Userbid?.EmailAddress))
+                        {
+                            string loserEmail = app.CompanyApply.Userbid.EmailAddress;
+                            string loserName = $"{app.CompanyApply.Userbid.FirstName} {app.CompanyApply.Userbid.LastName}";
+                            string loserCompany = app.CompanyApply.CompanyName ?? "Your Company";
+
+                            string lostSubject = $"Tender Result — {tender.Title}";
+                            string lostBody = $@"
+                    <!DOCTYPE html>
+                    <html lang='en'>
+                    <head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <style>
+                        body {{ font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 0; color: #333; }}
+                        .container {{ max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.1); }}
+                        .header {{ background: #0B1F3A; padding: 28px 24px; text-align: center; }}
+                        .header h1 {{ color: #fff; margin: 0; font-size: 22px; font-family: Georgia, serif; }}
+                        .header p {{ color: #8A9BB5; font-size: 13px; margin: 6px 0 0; }}
+                        .body {{ padding: 30px 28px; }}
+                        .body h2 {{ font-family: Georgia, serif; color: #0B1F3A; font-size: 18px; margin-top: 0; }}
+                        .body p {{ font-size: 14px; line-height: 1.7; color: #555; }}
+                        .winner-box {{ background: #F7F3EC; border-left: 4px solid #C8960C; border-radius: 6px; padding: 14px 18px; margin: 20px 0; }}
+                        .winner-box p {{ margin: 0; font-size: 13px; color: #555; }}
+                        .winner-box strong {{ color: #0B1F3A; }}
+                        .tender-box {{ background: #f8f9fa; border-radius: 6px; padding: 14px 18px; margin: 20px 0; }}
+                        .tender-box p {{ margin: 4px 0; font-size: 13px; color: #555; }}
+                        .tender-box strong {{ color: #0B1F3A; }}
+                        .footer {{ background: #f8f8f8; padding: 16px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; }}
+                    </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <div class='header'>
+                                <h1>Tender Result Notification</h1>
+                                <p>Nepal Public Procurement Portal</p>
+                            </div>
+                            <div class='body'>
+                                <h2>Dear {loserName},</h2>
+                                <p>Thank you for submitting your proposal for the following tender on behalf of <strong>{loserCompany}</strong>. After careful evaluation, we regret to inform you that your application was not selected this time.</p>
+
+                                <div class='tender-box'>
+                                    <p><strong>Tender:</strong> {tender.Title}</p>
+                                    <p><strong>Tender ID:</strong> #{tender.TenderId}</p>
+                                    <p><strong>Issued By:</strong> {tender.IssuedBy}</p>
+                                    <p><strong>Award Date:</strong> {currentDate:MMMM dd, yyyy}</p>
+                                </div>
+
+                                <div class='winner-box'>
+                                    <p><strong>Awarded To:</strong> {winnerCompanyName}</p>
+                                    <p><strong>Representative:</strong> {winnerName}</p>
+                                </div>
+
+                                <p>We truly appreciate the effort and time you invested in preparing your proposal. We encourage you to continue participating in future tenders — your experience and dedication are valuable.</p>
+                                <p>Better luck next time!</p>
+                                <p style='margin-top:24px;'>Warm regards,<br><strong>Nepal Public Procurement Portal</strong></p>
+                            </div>
+                            <div class='footer'>
+                                <p>This is an automated message. Please do not reply to this email.</p>
+                                <p>© {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+
+                            try { await _emailService.SendEmailAsync(loserEmail, lostSubject, lostBody); }
+                            catch (Exception emailEx) { Console.WriteLine($"Lost email failed for {loserEmail}: {emailEx.Message}"); }
+                        }
+                    }
+
+                    // Send congratulations email to winner
+                    if (!string.IsNullOrEmpty(winnerEmail))
+                    {
+                        string wonSubject = $"Congratulations! You've Won — {tender.Title}";
+                        string wonBody = $@"
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <style>
+                    body {{ font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 0; color: #333; }}
+                    .container {{ max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.1); }}
+                    .header {{ background: linear-gradient(135deg, #0B1F3A, #122848); padding: 28px 24px; text-align: center; }}
+                    .header h1 {{ color: #fff; margin: 0; font-size: 22px; font-family: Georgia, serif; }}
+                    .header p {{ color: #C8960C; font-size: 13px; margin: 6px 0 0; letter-spacing: .05em; text-transform: uppercase; }}
+                    .trophy {{ font-size: 48px; text-align: center; padding: 20px 0 0; }}
+                    .body {{ padding: 10px 28px 30px; }}
+                    .body h2 {{ font-family: Georgia, serif; color: #0B1F3A; font-size: 18px; }}
+                    .body p {{ font-size: 14px; line-height: 1.7; color: #555; }}
+                    .award-box {{ background: linear-gradient(135deg, rgba(200,150,12,.08), rgba(200,150,12,.03)); border: 1px solid rgba(200,150,12,.25); border-radius: 8px; padding: 18px 20px; margin: 20px 0; }}
+                    .award-box p {{ margin: 5px 0; font-size: 13px; color: #555; }}
+                    .award-box strong {{ color: #0B1F3A; }}
+                    .award-box .amount {{ font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: #C8960C; }}
+                    .footer {{ background: #f8f8f8; padding: 16px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; }}
+                </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <h1>Congratulations!</h1>
+                            <p>Tender Award Notification</p>
+                        </div>
+                        <div class='trophy'>🏆</div>
+                        <div class='body'>
+                            <h2>Dear {winnerName},</h2>
+                            <p>We are delighted to inform you that your proposal submitted on behalf of <strong>{winnerCompanyName}</strong> has been selected as the winning bid for the following tender.</p>
+
+                            <div class='award-box'>
+                                <p><strong>Tender:</strong> {tender.Title}</p>
+                                <p><strong>Tender ID:</strong> #{tender.TenderId}</p>
+                                <p><strong>Issued By:</strong> {tender.IssuedBy}</p>
+                                <p><strong>Award Date:</strong> {currentDate:MMMM dd, yyyy}</p>
+                                <p><strong>Budget:</strong> <span class='amount'>₹ {tender.BudgetEstimation:N2}</span></p>
+                            </div>
+
+                            <p>Our team will be in touch with you shortly regarding the next steps. Please ensure all required documents and agreements are prepared for the contract process.</p>
+                            <p>We look forward to a successful collaboration!</p>
+                            <p style='margin-top:24px;'>Warm regards,<br><strong>Nepal Public Procurement Portal</strong></p>
+                        </div>
+                        <div class='footer'>
+                            <p>This is an automated message. Please do not reply to this email.</p>
+                            <p>© {DateTime.Now.Year} Nepal Public Procurement Portal. All rights reserved.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
+                        try { await _emailService.SendEmailAsync(winnerEmail, wonSubject, wonBody); }
+                        catch (Exception emailEx) { Console.WriteLine($"Won email failed for {winnerEmail}: {emailEx.Message}"); }
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new
+                {
+                    success = true,
+                    message = "Tender status updated successfully.",
+                    redirectUrl = Url.Action("MonitorTender", "PublisherTender",
+                        new { id = _protector.Protect(application.TenderAppllyId.ToString()) })
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"An error occurred: {ex.Message}" });
+            }
+        }
 
 
         [HttpGet]
