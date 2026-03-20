@@ -67,6 +67,16 @@
             max-height: 500px;
         }
 
+        /* Desktop nav always visible on md+ */
+        @@media (min-width: 768px) {
+            [data-navbar-desktop]
+
+        {
+            display: block !important;
+        }
+
+        }
+
         /* ── SITE FOOTER (navy/gold theme) ──────────────────── */
         .site-footer {
             background: #0B1F3A;
@@ -267,7 +277,7 @@
                 <div class="flex flex-wrap items-center justify-between py-3">
                     <!-- Logo -->
                     <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt="Tender System Logo" />
+                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt="BidNetra Logo" />
                     </a>
 
                     <!-- Mobile menu button and profile -->
@@ -333,7 +343,7 @@
                     </div>
 
                     <!-- Desktop Navigation Menu -->
-                    <div class="hidden w-full md:block md:w-auto md:order-1" id="navbar-user">
+                    <div class="w-full md:w-auto md:order-1" id="navbar-user" style="display:none;" data-navbar-desktop>
                         <ul class="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:font-medium">
                             @if (User.IsInRole("Admin"))
                             {
@@ -568,6 +578,21 @@
         $(document).ready(function () {
             // Load profile image via Ajax
             $('.btn-profile-img')[0].click();
+
+            // Show desktop nav (was hidden to prevent flash)
+            if ($(window).width() >= 768) {
+                $('#navbar-user').show();
+            }
+
+            $(window).on('resize', function() {
+                if ($(window).width() >= 768) {
+                    $('#navbar-user').show();
+                } else {
+                    if (!$('#mobile-menu').is(':visible')) {
+                        $('#navbar-user').hide();
+                    }
+                }
+            });
 
             // ── PROFILE DROPDOWN ──────────────────────────────────────
             // Manual toggle - does not rely on Flowbite so it works

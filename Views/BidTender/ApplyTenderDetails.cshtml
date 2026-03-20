@@ -1,8 +1,4 @@
 ﻿@model TenderApplicationViewModel
-@{
-    ViewData["Title"] = "Tender Application - " + Model.Tender.Title;
-    Layout = "_Layout";
-}
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -26,17 +22,9 @@
     }
 
     /* ── PAGE ── */
-    /* Escape the layout's container div using negative margins */
     .page-container {
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
         padding-bottom: 4rem;
         animation: fadeIn .5s ease-out;
-        overflow-x: hidden;
     }
 
     @@keyframes fadeIn {
@@ -52,13 +40,6 @@
         transform: translateY(0);
     }
 
-    }
-
-    /* ── INNER CONTENT MAX-WIDTH WRAPPER ── */
-    .page-inner {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 2rem 1.5rem 0;
     }
 
     /* ── HERO ── */
@@ -824,10 +805,96 @@
         border-radius: 5px;
     }
 
+    /* ── APPLICATION DETAIL CARD ── */
+    .app-detail-card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid rgba(11,31,58,.07);
+        box-shadow: 0 4px 20px rgba(11,31,58,.08);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+    }
+
+    .app-card-hd {
+        background: var(--navy);
+        padding: 1.1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+    }
+
+    .app-card-hd-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .app-card-hd-title {
+        font-family: 'Playfair Display', serif;
+        font-size: .98rem;
+        font-weight: 700;
+        color: var(--white);
+    }
+
+    .app-card-hd-sub {
+        font-size: .72rem;
+        color: var(--slate);
+        margin-top: .1rem;
+    }
+
+    .app-card-body {
+        padding: .5rem 1.5rem 1rem;
+    }
+
+    .app-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: .9rem 0;
+        border-bottom: 1px solid rgba(11,31,58,.05);
+    }
+
+    .app-row-icon-wrap {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.08);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        flex-shrink: 0;
+        margin-top: .1rem;
+    }
+
+    .app-row-info {
+        flex: 1;
+    }
+
+    .app-row-label {
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .2rem;
+    }
+
+    .app-row-value {
+        font-size: .92rem;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
     @@media (max-width: 768px) {
-        .page-inner {
-            padding: 1rem .75rem 0;
-        }
 
         .tender-header {
             padding: 1.8rem 1.2rem 1.5rem;
@@ -846,260 +913,282 @@
 </style>
 
 <div class="page-container">
-    <div class="page-inner">
 
-        <!-- HERO -->
-        <div class="tender-header">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;">
-                <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="back-button">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Back</span>
-                </a>
-                <span class="status-badge status-@Model.Application.ApplicationStatus.ToLower()">
-                    <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
-                                                     Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : "fa-hourglass-half")"></i>
-                    @Model.Application.ApplicationStatus
-                </span>
-            </div>
-
-            <h1>@Model.Tender.Title</h1>
-
-            <div class="th-meta">
-                <span><i class="fas fa-hashtag"></i> Tender ID: @Model.Tender.TenderId</span>
-                <span><i class="fas fa-file-alt"></i> Application ID: @Model.Application.ApplicationId</span>
-            </div>
+    <!-- HERO -->
+    <div class="tender-header">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;">
+            <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </a>
+            <span class="status-badge status-@Model.Application.ApplicationStatus.ToLower()">
+                <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                                 Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : "fa-hourglass-half")"></i>
+                @Model.Application.ApplicationStatus
+            </span>
         </div>
 
-        <!-- CONTRACT BTN (won only) -->
-        @if (Model.Application.ApplicationStatus.ToLower() == "won")
-        {
-            <div style="display:flex;justify-content:center;background:var(--white);padding:.9rem 1.5rem;border-bottom:1px solid rgba(11,31,58,.06);">
-                <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId" class="contract-button">
-                    <i class="fas fa-file-contract"></i>
-                    Generate Contract
-                </a>
-            </div>
-        }
+        <h1>@Model.Tender.Title</h1>
 
-        <!-- TABS -->
-        <div class="tabs-container">
-            <div class="tabs-wrapper">
-                <button onclick="showTab('details')" class="tab-button active" id="details-tab-btn">
-                    <span class="tab-icon tab-icon-blue"><i class="fas fa-info-circle"></i></span>
-                    Details
-                </button>
-                <button onclick="showTab('application')" class="tab-button" id="application-tab-btn">
-                    <span class="tab-icon tab-icon-green"><i class="fas fa-file-alt"></i></span>
-                    Application
-                </button>
-                <button onclick="showTab('documents')" class="tab-button" id="documents-tab-btn">
-                    <span class="tab-icon tab-icon-red"><i class="fas fa-file-pdf"></i></span>
-                    Documents
-                </button>
-            </div>
+        <div class="th-meta">
+            <span><i class="fas fa-hashtag"></i> Tender ID: @Model.Tender.TenderId</span>
+            <span><i class="fas fa-file-alt"></i> Application ID: @Model.Application.ApplicationId</span>
         </div>
+    </div>
 
-        <!-- CONTENT -->
-        <div class="content-area">
+    <!-- CONTRACT BTN (won only) -->
+    @if (Model.Application.ApplicationStatus.ToLower() == "won")
+    {
+        <div style="display:flex;justify-content:center;background:var(--white);padding:.9rem 1.5rem;border-bottom:1px solid rgba(11,31,58,.06);">
+            <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId" class="contract-button">
+                <i class="fas fa-file-contract"></i>
+                Generate Contract
+            </a>
+        </div>
+    }
 
-            <!-- ── DETAILS TAB ── -->
-            <div id="details-tab" class="tab-content">
-                <div class="content-grid">
+    <!-- TABS -->
+    <div class="tabs-container">
+        <div class="tabs-wrapper">
+            <button onclick="showTab('details')" class="tab-button active" id="details-tab-btn">
+                <span class="tab-icon tab-icon-blue"><i class="fas fa-info-circle"></i></span>
+                Details
+            </button>
+            <button onclick="showTab('application')" class="tab-button" id="application-tab-btn">
+                <span class="tab-icon tab-icon-green"><i class="fas fa-file-alt"></i></span>
+                Application
+            </button>
+            <button onclick="showTab('documents')" class="tab-button" id="documents-tab-btn">
+                <span class="tab-icon tab-icon-red"><i class="fas fa-file-pdf"></i></span>
+                Documents
+            </button>
+        </div>
+    </div>
 
-                    <!-- Publisher Card -->
-                    <div class="info-card publisher-card">
-                        @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
-                        {
-                            <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)" alt="Publisher" class="publisher-photo" />
-                        }
-                        else
-                        {
-                            <div class="publisher-photo-placeholder">
-                                <i class="fas fa-user"></i>
-                            </div>
-                        }
-                        <div class="pub-name">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</div>
-                        <span class="pub-role">@Model.User.UserRole</span>
+    <!-- CONTENT -->
+    <div class="content-area">
 
-                        <div>
-                            <div class="contact-item">
-                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                                <span>@Model.User.EmailAddress</span>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                                <span>@Model.User.Phone</span>
-                            </div>
-                            <div class="contact-item">
-                                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                                <span>@Model.User.City, @Model.User.District</span>
-                            </div>
-                        </div>
+        <!-- ── DETAILS TAB ── -->
+        <div id="details-tab" class="tab-content">
+            <div class="content-grid">
 
-                        <a asp-action="UserMessage" asp-controller="Chat" asp-route-receiverId="@Model.User.UserId" class="message-button">
-                            <i class="fas fa-paper-plane"></i>
-                            Send Message
-                        </a>
-                    </div>
-
-                    <!-- Tender Info -->
-                    <div class="info-card">
-                        <div class="card-title"><i class="fas fa-info-circle"></i> Tender Information</div>
-
-                        <div class="info-item">
-                            <span class="info-label">Type</span>
-                            <span class="info-value">@Model.Tender.TenderType</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Duration</span>
-                            <span class="info-value">@Model.Tender.ProjectDuration</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Budget</span>
-                            <span class="info-value green">₹ @Model.Tender.BudgetEstimation.ToString("N2")</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Status</span>
-                            <span class="ts-pill @(Model.Tender.TenderStatus.ToLower() == "open" ? "ts-open" :
-                                                                                Model.Tender.TenderStatus.ToLower() == "closed" ? "ts-closed" : "ts-other")">
-                                @Model.Tender.TenderStatus
-                            </span>
-                        </div>
-
-                        <div class="description-box">
-                            <h4><i class="fas fa-align-left"></i> Project Description</h4>
-                            <p>@Model.Tender.TenderDescription</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline -->
-                <div class="timeline-wrap">
-                    <div class="info-card">
-                        <div class="card-title"><i class="fas fa-clock"></i> Timeline</div>
-                        <div class="timeline-container">
-                            <div class="timeline-item">
-                                <div class="timeline-point"><i class="fas fa-flag"></i></div>
-                                <div class="tl-label">Issue Date</div>
-                                <div class="tl-date">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-point"><i class="fas fa-door-open"></i></div>
-                                <div class="tl-label">Opening Date</div>
-                                <div class="tl-date">@Model.Tender.OpeningDate.ToString("MMM dd, yyyy")</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-point"><i class="fas fa-lock"></i></div>
-                                <div class="tl-label">Closing Date</div>
-                                <div class="tl-date">@Model.Tender.ClosingDate.ToString("MMM dd, yyyy")</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ── APPLICATION TAB ── -->
-            <div id="application-tab" class="tab-content hidden">
-                <div style="padding:1.6rem;">
-                    <div class="info-card">
-                        <div class="card-title"><i class="fas fa-file-alt"></i> Application Details</div>
-
-                        <div class="info-item">
-                            <span class="info-label">Application ID</span>
-                            <span class="info-value">@Model.Application.ApplicationId</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Proposed Duration</span>
-                            <span class="info-value">@Model.Application.ProposedDuration</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Proposed Budget</span>
-                            <span class="info-value green">₹ @Model.Application.ProposedBudget.ToString("N2")</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Status</span>
-                            <span class="app-status-pill app-status-@Model.Application.ApplicationStatus.ToLower()">
-                                <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
-                                                                             Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" :
-                                                                             "fa-hourglass-half")"></i>
-                                @Model.Application.ApplicationStatus
-                            </span>
-                        </div>
-                    </div>
-
-                    @if (Model.Application.ApplicationStatus.ToLower() == "won")
+                <!-- Publisher Card -->
+                <div class="info-card publisher-card">
+                    @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
                     {
-                        <div class="congrats-box">
-                            <h3><i class="fas fa-trophy" style="color:var(--gold);"></i> Congratulations!</h3>
-                            <p>Your application has been accepted. You can now generate a contract for this tender.</p>
-                            <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId" class="contract-button">
-                                <i class="fas fa-file-contract"></i>
-                                Generate Contract
-                            </a>
+                        <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)" alt="Publisher" class="publisher-photo" />
+                    }
+                    else
+                    {
+                        <div class="publisher-photo-placeholder">
+                            <i class="fas fa-user"></i>
                         </div>
                     }
+                    <div class="pub-name">@Model.User.FirstName @Model.User.MiddleName @Model.User.LastName</div>
+                    <span class="pub-role">@Model.User.UserRole</span>
+
+                    <div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <span>@Model.User.EmailAddress</span>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                            <span>@Model.User.Phone</span>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <span>@Model.User.City, @Model.User.District</span>
+                        </div>
+                    </div>
+
+                    <a asp-action="UserMessage" asp-controller="Chat" asp-route-receiverId="@Model.User.UserId" class="message-button">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </a>
+                </div>
+
+                <!-- Tender Info -->
+                <div class="info-card">
+                    <div class="card-title"><i class="fas fa-info-circle"></i> Tender Information</div>
+
+                    <div class="info-item">
+                        <span class="info-label">Type</span>
+                        <span class="info-value">@Model.Tender.TenderType</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Duration</span>
+                        <span class="info-value">@Model.Tender.ProjectDuration</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Budget</span>
+                        <span class="info-value green">Rs. @Model.Tender.BudgetEstimation.ToString("N2")</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="ts-pill @(Model.Tender.TenderStatus.ToLower() == "open" ? "ts-open" :
+                                                                            Model.Tender.TenderStatus.ToLower() == "closed" ? "ts-closed" : "ts-other")">
+                            @Model.Tender.TenderStatus
+                        </span>
+                    </div>
+
+                    <div class="description-box">
+                        <h4><i class="fas fa-align-left"></i> Project Description</h4>
+                        <p>@Model.Tender.TenderDescription</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- ── DOCUMENTS TAB ── -->
-            <div id="documents-tab" class="tab-content hidden">
-                <div style="padding:1.6rem;">
-
-                    <!-- Tender Document -->
-                    <div class="document-card">
-                        <div class="document-header">
-                            <div class="document-title">
-                                <div class="document-icon"><i class="fas fa-file-pdf"></i></div>
-                                <div>
-                                    <h3>Tender Document</h3>
-                                    <p>Original tender document published by the issuer</p>
-                                </div>
-                            </div>
-                            <a href="@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)"
-                               class="action-button primary-button" download>
-                                <i class="fas fa-download"></i> Download
-                            </a>
+            <!-- Timeline -->
+            <div class="timeline-wrap">
+                <div class="info-card">
+                    <div class="card-title"><i class="fas fa-clock"></i> Timeline</div>
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-point"><i class="fas fa-flag"></i></div>
+                            <div class="tl-label">Issue Date</div>
+                            <div class="tl-date">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</div>
                         </div>
-                        <div class="pdf-viewer">
-                            <div id="tenderPdfContainer" class="pdf-container">
-                                <div style="text-align:center;padding:2rem;">
-                                    <div class="pdf-spinner"></div>
-                                    <p style="font-size:.82rem;color:var(--slate);">Loading document...</p>
+                        <div class="timeline-item">
+                            <div class="timeline-point"><i class="fas fa-door-open"></i></div>
+                            <div class="tl-label">Opening Date</div>
+                            <div class="tl-date">@Model.Tender.OpeningDate.ToString("MMM dd, yyyy")</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-point"><i class="fas fa-lock"></i></div>
+                            <div class="tl-label">Closing Date</div>
+                            <div class="tl-date">@Model.Tender.ClosingDate.ToString("MMM dd, yyyy")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── APPLICATION TAB ── -->
+        <div id="application-tab" class="tab-content hidden">
+            <div style="padding:1.6rem;">
+
+                <div class="app-detail-card">
+                    <!-- Navy header -->
+                    <div class="app-card-hd">
+                        <div class="app-card-hd-icon"><i class="fas fa-file-alt"></i></div>
+                        <div>
+                            <div class="app-card-hd-title">Application Details</div>
+                            <div class="app-card-hd-sub">Your submitted proposal summary</div>
+                        </div>
+                    </div>
+                    <!-- Rows -->
+                    <div class="app-card-body">
+                        <div class="app-row">
+                            <div class="app-row-icon-wrap"><i class="fas fa-hashtag"></i></div>
+                            <div class="app-row-info">
+                                <div class="app-row-label">Application ID</div>
+                                <div class="app-row-value">#@Model.Application.ApplicationId</div>
+                            </div>
+                        </div>
+                        <div class="app-row">
+                            <div class="app-row-icon-wrap"><i class="fas fa-hourglass-half"></i></div>
+                            <div class="app-row-info">
+                                <div class="app-row-label">Proposed Duration</div>
+                                <div class="app-row-value">@Model.Application.ProposedDuration</div>
+                            </div>
+                        </div>
+                        <div class="app-row">
+                            <div class="app-row-icon-wrap"><i class="fas fa-rupee-sign"></i></div>
+                            <div class="app-row-info">
+                                <div class="app-row-label">Proposed Budget</div>
+                                <div class="app-row-value" style="color:var(--gold);font-family:'Playfair Display',serif;">Rs.@Model.Application.ProposedBudget.ToString("N2")</div>
+                            </div>
+                        </div>
+                        <div class="app-row" style="border-bottom:none;">
+                            <div class="app-row-icon-wrap"><i class="fas fa-info-circle"></i></div>
+                            <div class="app-row-info">
+                                <div class="app-row-label">Status</div>
+                                <div style="margin-top:.4rem;">
+                                    <span class="app-status-pill app-status-@Model.Application.ApplicationStatus.ToLower()">
+                                        <i class="fas @(Model.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                                                                                  Model.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" :
+                                                                                                  "fa-hourglass-half")"></i>
+                                        @Model.Application.ApplicationStatus
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Application Document -->
-                    <div class="document-card">
-                        <div class="document-header">
-                            <div class="document-title">
-                                <div class="document-icon"><i class="fas fa-file-alt"></i></div>
-                                <div>
-                                    <h3>Application Document</h3>
-                                    <p>Your submitted proposal document</p>
-                                </div>
+                @if (Model.Application.ApplicationStatus.ToLower() == "won")
+                {
+                    <div class="congrats-box">
+                        <h3><i class="fas fa-trophy" style="color:var(--gold);"></i> Congratulations!</h3>
+                        <p>Your application has been accepted. You can now generate a contract for this tender.</p>
+                        <a asp-action="Index" asp-controller="TenderContract" asp-route-id="@Model.Application.EncId" class="contract-button">
+                            <i class="fas fa-file-contract"></i>
+                            Generate Contract
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- ── DOCUMENTS TAB ── -->
+        <div id="documents-tab" class="tab-content hidden">
+            <div style="padding:1.6rem;">
+
+                <!-- Tender Document -->
+                <div class="document-card">
+                    <div class="document-header">
+                        <div class="document-title">
+                            <div class="document-icon"><i class="fas fa-file-pdf"></i></div>
+                            <div>
+                                <h3>Tender Document</h3>
+                                <p>Original tender document published by the issuer</p>
                             </div>
-                            <a href="@Url.Content("~/ProposalTender/" + Model.Application.ApplicationDocument)"
-                               class="action-button primary-button" download>
-                                <i class="fas fa-download"></i> Download
-                            </a>
                         </div>
-                        <div class="pdf-viewer">
-                            <div id="applicationPdfContainer" class="pdf-container">
-                                <div style="text-align:center;padding:2rem;">
-                                    <div class="pdf-spinner"></div>
-                                    <p style="font-size:.82rem;color:var(--slate);">Loading document...</p>
-                                </div>
+                        <a href="@Url.Content("~/TenderDocument/" + Model.Tender.TenderDocument)"
+                           class="action-button primary-button" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                    <div class="pdf-viewer">
+                        <div id="tenderPdfContainer" class="pdf-container">
+                            <div style="text-align:center;padding:2rem;">
+                                <div class="pdf-spinner"></div>
+                                <p style="font-size:.82rem;color:var(--slate);">Loading document...</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
-            </div>
 
-        </div><!-- /content-area -->
-    </div><!-- /page-inner -->
+                <!-- Application Document -->
+                <div class="document-card">
+                    <div class="document-header">
+                        <div class="document-title">
+                            <div class="document-icon"><i class="fas fa-file-alt"></i></div>
+                            <div>
+                                <h3>Application Document</h3>
+                                <p>Your submitted proposal document</p>
+                            </div>
+                        </div>
+                        <a href="@Url.Content("~/ProposalTender/" + Model.Application.ApplicationDocument)"
+                           class="action-button primary-button" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                    <div class="pdf-viewer">
+                        <div id="applicationPdfContainer" class="pdf-container">
+                            <div style="text-align:center;padding:2rem;">
+                                <div class="pdf-spinner"></div>
+                                <p style="font-size:.82rem;color:var(--slate);">Loading document...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /content-area -->
 </div><!-- /page-container -->
 
 <script>
