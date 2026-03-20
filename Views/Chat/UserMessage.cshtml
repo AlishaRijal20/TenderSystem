@@ -1,0 +1,484 @@
+﻿@model IEnumerable<Chat>
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .chat-container {
+        height: calc(100vh - 160px);
+        max-width: 820px;
+        margin: 1.5rem auto 2rem;
+        display: flex;
+        flex-direction: column;
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(11,31,58,.12);
+        overflow: hidden;
+        border: 1px solid rgba(11,31,58,.07);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── HEADER ── */
+    .chat-header {
+        background: var(--navy);
+        padding: .9rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -5%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(200,150,12,.12) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .chat-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+    .chat-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255,255,255,.08);
+        color: var(--slate);
+        text-decoration: none;
+        transition: background .2s, color .2s;
+        flex-shrink: 0;
+    }
+
+        .chat-back:hover {
+            background: rgba(200,150,12,.15);
+            color: var(--gold-lt);
+            text-decoration: none;
+        }
+
+    .chat-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .chat-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(200,150,12,.3);
+        box-shadow: 0 2px 8px rgba(11,31,58,.2);
+    }
+
+    .chat-online-dot {
+        width: 11px;
+        height: 11px;
+        background: #10b981;
+        border-radius: 50%;
+        border: 2px solid var(--navy);
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+    }
+
+    .chat-header-info {
+        flex: 1;
+    }
+
+    .chat-header-name {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .chat-header-status {
+        font-size: .7rem;
+        color: var(--slate);
+        margin-top: .15rem;
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+    }
+
+        .chat-header-status span {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+    /* ── MESSAGE AREA ── */
+    .message-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.4rem;
+        background: var(--ivory);
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+    }
+
+        .message-area::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .message-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .message-area::-webkit-scrollbar-thumb {
+            background: rgba(200,150,12,.25);
+            border-radius: 99px;
+        }
+
+            .message-area::-webkit-scrollbar-thumb:hover {
+                background: var(--gold);
+            }
+
+    /* date divider */
+    .date-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: .8rem 0;
+    }
+
+        .date-divider span {
+            background: rgba(11,31,58,.08);
+            color: var(--muted);
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            padding: .25rem .85rem;
+            border-radius: 999px;
+        }
+
+    /* message rows */
+    .msg-row {
+        display: flex;
+        margin-bottom: .5rem;
+        align-items: flex-end;
+        gap: .55rem;
+    }
+
+        .msg-row.sent {
+            justify-content: flex-end;
+        }
+
+        .msg-row.received {
+            justify-content: flex-start;
+        }
+
+    .msg-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid rgba(200,150,12,.2);
+    }
+
+    .msg-avatar-placeholder {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .72rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .msg-content {
+        display: flex;
+        flex-direction: column;
+        max-width: 68%;
+    }
+
+    .msg-row.sent .msg-content {
+        align-items: flex-end;
+    }
+
+    .msg-row.received .msg-content {
+        align-items: flex-start;
+    }
+
+    /* bubbles */
+    .message-bubble {
+        padding: .65rem 1rem;
+        border-radius: 16px;
+        font-size: .88rem;
+        line-height: 1.55;
+        word-break: break-word;
+        box-shadow: 0 2px 6px rgba(11,31,58,.07);
+    }
+
+    .sender-bubble {
+        background: var(--navy);
+        color: var(--white);
+        border-bottom-right-radius: 4px;
+    }
+
+    .receiver-bubble {
+        background: var(--white);
+        color: var(--navy);
+        border-bottom-left-radius: 4px;
+        border: 1px solid rgba(11,31,58,.07);
+    }
+
+    .msg-time {
+        font-size: .65rem;
+        color: var(--slate);
+        margin-top: .2rem;
+        padding: 0 .2rem;
+    }
+
+    /* ── INPUT AREA ── */
+    .message-input {
+        background: var(--white);
+        border-top: 1px solid rgba(11,31,58,.07);
+        padding: .9rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        flex-shrink: 0;
+    }
+
+    #messageInput {
+        flex: 1;
+        background: var(--ivory);
+        border: 1px solid rgba(11,31,58,.1);
+        border-radius: 999px;
+        padding: .6rem 1.1rem;
+        font-size: .88rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        #messageInput:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+        #messageInput::placeholder {
+            color: var(--slate);
+        }
+
+    #sendButton {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: var(--gold);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 3px 10px rgba(11,31,58,.2);
+        flex-shrink: 0;
+    }
+
+        #sendButton:hover {
+            background: var(--navy-mid);
+            transform: scale(1.08);
+            box-shadow: 0 4px 14px rgba(11,31,58,.3);
+        }
+
+        #sendButton:active {
+            transform: scale(.96);
+        }
+
+    /* enter key hint */
+    .input-hint {
+        font-size: .65rem;
+        color: var(--slate);
+        text-align: center;
+        padding: .3rem 0 .1rem;
+    }
+</style>
+
+<div class="chat-container">
+
+    <!-- ── HEADER ── -->
+    <div class="chat-header">
+        <a href="javascript:history.back()" class="chat-back">
+            <i class="fas fa-arrow-left" style="font-size:.8rem;"></i>
+        </a>
+
+        <div class="chat-avatar-wrap">
+            <img src="~/UserImage/@ViewBag.ProfilePic" alt="User Profile" class="chat-avatar" />
+            <div class="chat-online-dot"></div>
+        </div>
+
+        <div class="chat-header-info">
+            <div class="chat-header-name">@ViewBag.ReceiverName</div>
+            <div class="chat-header-status"><span></span> Online</div>
+        </div>
+    </div>
+
+    <!-- ── MESSAGES ── -->
+    <div id="messagesList" class="message-area">
+        @{
+            DateTime? lastDate = null;
+            foreach (var message in Model)
+            {
+                if (lastDate == null || lastDate.Value.Date != message.CreatedDate.Date)
+                {
+                    <div class="date-divider">
+                        <span>
+                            @(message.CreatedDate.Date == DateTime.Today.Date ? "Today" :
+                                            message.CreatedDate.Date == DateTime.Today.AddDays(-1).Date ? "Yesterday" :
+                                            message.CreatedDate.ToString("MMMM d, yyyy"))
+            </span>
+        </div>
+                lastDate = message.CreatedDate;
+                }
+
+                bool isSender = message.SenderId == ViewBag.CurrentUserId;
+
+                <div class="msg-row @(isSender ? "sent" : "received")">
+                    @if (!isSender)
+                    {
+                        <img src="~/UserImage/@ViewBag.ProfilePic" alt="User" class="msg-avatar" />
+                    }
+                    <div class="msg-content">
+                        <div class="message-bubble @(isSender ? "sender-bubble" : "receiver-bubble")">
+                            @message.MessageText
+                        </div>
+                        <div class="msg-time">@message.CreatedDate.ToString("h:mm tt")</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- ── INPUT ── -->
+    <div class="message-input">
+        <input type="text" id="messageInput"
+               placeholder="Type a message..."
+               onkeypress="if(event.key==='Enter') sendMessage()" />
+        <button id="sendButton" onclick="sendMessage()">
+            <i class="fas fa-paper-plane" style="font-size:.82rem;margin-left:2px;"></i>
+        </button>
+    </div>
+
+</div>
+
+<input type="hidden" id="receiverId" value="@ViewBag.ReceiverId" />
+<input type="hidden" id="currentUserId" value="@ViewBag.CurrentUserId" />
+
+@section Scripts {
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+
+        connection.on("ReceiveMessage", function (senderId, message) {
+            console.log(`Message received from ${senderId}: ${message}`);
+
+            var messageDiv = document.createElement("div");
+            var isSender = senderId == document.getElementById("currentUserId").value;
+
+            messageDiv.className = `msg-row ${isSender ? "sent" : "received"}`;
+            messageDiv.innerHTML = `
+                ${!isSender ? `<img src="/UserImage/${document.querySelector('.chat-avatar').src.split('/').pop()}" alt="User" class="msg-avatar" />` : ''}
+                <div class="msg-content">
+                    <div class="message-bubble ${isSender ? "sender-bubble" : "receiver-bubble"}">
+                        ${message}
+                    </div>
+                    <div class="msg-time">${new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                </div>`;
+
+            document.getElementById("messagesList").appendChild(messageDiv);
+            document.getElementById("messagesList").scrollTop = document.getElementById("messagesList").scrollHeight;
+        });
+
+        connection.start().then(() => {
+            console.log("Connected to SignalR hub.");
+        }).catch(err => console.error("Connection error: ", err));
+
+        function checkConnectionState() {
+            const state = connection.state;
+            console.log("Current connection state:", state);
+            return state;
+        }
+
+        function sendMessage() {
+            var message = document.getElementById("messageInput").value;
+            var receiverId = document.getElementById("receiverId").value;
+            var currentUserId = document.getElementById("currentUserId").value;
+
+            if (message.trim() === "") return;
+
+            var messageDiv = document.createElement("div");
+            messageDiv.className = "msg-row sent";
+            messageDiv.innerHTML = `
+                <div class="msg-content">
+                    <div class="message-bubble sender-bubble">${message}</div>
+                    <div class="msg-time">${new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}</div>
+                </div>`;
+
+            document.getElementById("messagesList").appendChild(messageDiv);
+
+            connection.invoke("SendMessage", parseInt(currentUserId), parseInt(receiverId), message)
+                .then(() => {
+                    console.log("Message sent successfully.");
+                    checkConnectionState();
+                })
+                .catch(err => {
+                    console.error("Error sending message: ", err);
+                    alert("Error sending message: " + err.message + "\nCheck server logs for details.");
+                });
+
+            document.getElementById("messageInput").value = '';
+            document.getElementById("messagesList").scrollTop = document.getElementById("messagesList").scrollHeight;
+        }
+
+        // Auto scroll to bottom on load
+        document.addEventListener("DOMContentLoaded", function () {
+            var msgs = document.getElementById("messagesList");
+            msgs.scrollTop = msgs.scrollHeight;
+        });
+    </script>
+}
