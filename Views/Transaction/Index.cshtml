@@ -1,0 +1,718 @@
+﻿@model IEnumerable<TenderSystem.Models.Payment>
+@{
+    ViewData["Title"] = "Transaction History";
+    var currentUserId = Convert.ToInt16(User.Identity!.Name);
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .tx-wrap {
+        font-family: 'DM Sans', sans-serif;
+        padding-bottom: 4rem;
+    }
+
+    /* ── HERO ── */
+    .tx-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2rem 4.5rem;
+    }
+
+        .tx-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .tx-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .tx-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .tx-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
+
+        .tx-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .tx-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    /* ── BODY ── */
+    .tx-body {
+        max-width: 1200px;
+        margin: -2rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .tx-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .tx-stat {
+        background: var(--white);
+        border-radius: 14px;
+        padding: 1.3rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 20px rgba(11,31,58,.08);
+        border: 1px solid rgba(11,31,58,.06);
+    }
+
+    .tx-stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+        .tx-stat-icon.green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .tx-stat-icon.red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+    .tx-stat-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .25rem;
+    }
+
+    .tx-stat-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: var(--navy);
+    }
+
+        .tx-stat-value.green {
+            color: #16a34a;
+        }
+
+        .tx-stat-value.red {
+            color: #dc2626;
+        }
+
+    /* ── FILTER CARD ── */
+    .tx-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+    }
+
+    .tx-card-hd {
+        background: var(--navy);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .tx-card-hd-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .tx-card-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .tx-card-body {
+        padding: 1.4rem;
+    }
+
+    /* filter form */
+    .tx-filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: .85rem;
+        margin-bottom: 1rem;
+    }
+
+    .tx-filter-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .4rem;
+        display: block;
+    }
+
+    .tx-input {
+        width: 100%;
+        padding: .6rem 1rem;
+        border: 1px solid rgba(11,31,58,.12);
+        border-radius: 8px;
+        font-size: .85rem;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--navy);
+        background: var(--ivory);
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .tx-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200,150,12,.1);
+        }
+
+        .tx-input::placeholder {
+            color: var(--slate);
+        }
+
+    .tx-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1.2rem;
+        border-radius: 8px;
+        font-size: .82rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: background .2s, transform .2s;
+        font-family: 'DM Sans', sans-serif;
+        text-decoration: none;
+    }
+
+    .tx-btn-navy {
+        background: var(--navy);
+        color: var(--white);
+    }
+
+        .tx-btn-navy i {
+            color: var(--gold-lt);
+        }
+
+        .tx-btn-navy:hover {
+            background: var(--navy-mid);
+            transform: translateY(-1px);
+            color: var(--white);
+            text-decoration: none;
+        }
+
+    .tx-btn-outline {
+        background: var(--ivory);
+        color: var(--navy);
+        border: 1px solid rgba(11,31,58,.12);
+    }
+
+        .tx-btn-outline:hover {
+            background: rgba(200,150,12,.08);
+            border-color: rgba(200,150,12,.3);
+            transform: translateY(-1px);
+            color: var(--navy);
+            text-decoration: none;
+        }
+
+    /* ── TABLE ── */
+    .tx-table-wrap {
+        overflow-x: auto;
+    }
+
+    .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .tx-table thead tr {
+            background: var(--ivory);
+            border-bottom: 2px solid rgba(11,31,58,.07);
+        }
+
+        .tx-table th {
+            padding: .9rem 1.2rem;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--slate);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .tx-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .15s;
+        }
+
+            .tx-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .tx-table tbody tr:hover {
+                background: rgba(200,150,12,.03);
+            }
+
+        .tx-table td {
+            padding: 1rem 1.2rem;
+            font-size: .85rem;
+            color: var(--navy);
+            vertical-align: middle;
+        }
+
+    /* date cell */
+    .tx-date-main {
+        font-weight: 600;
+        color: var(--navy);
+        font-size: .87rem;
+    }
+
+    .tx-date-sub {
+        font-size: .72rem;
+        color: var(--slate);
+        margin-top: .1rem;
+    }
+
+    /* method badge */
+    .tx-method {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .25rem .8rem;
+        border-radius: 999px;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        border: 1px solid rgba(200,150,12,.2);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+    }
+
+    /* description */
+    .tx-desc {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        font-size: .85rem;
+        color: var(--navy);
+    }
+
+    .tx-desc-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .75rem;
+        flex-shrink: 0;
+    }
+
+    /* amount */
+    .tx-amount {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: .92rem;
+    }
+
+    .tx-amount-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .65rem;
+        flex-shrink: 0;
+    }
+
+    .tx-amount.income {
+        color: #16a34a;
+    }
+
+        .tx-amount.income .tx-amount-icon {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+    .tx-amount.expense {
+        color: #dc2626;
+    }
+
+        .tx-amount.expense .tx-amount-icon {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+    /* status pills */
+    .tx-status {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .25rem .8rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .st-verified {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .st-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .st-failed {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .st-default {
+        background: rgba(11,31,58,.06);
+        color: var(--slate);
+    }
+
+    /* view btn */
+    .tx-view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .8rem;
+        font-weight: 700;
+        color: var(--navy);
+        text-decoration: none;
+        padding: .35rem .85rem;
+        border-radius: 7px;
+        background: rgba(11,31,58,.05);
+        transition: background .2s, transform .2s;
+    }
+
+        .tx-view-btn i {
+            color: var(--gold);
+        }
+
+        .tx-view-btn:hover {
+            background: var(--navy);
+            color: var(--white);
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+            .tx-view-btn:hover i {
+                color: var(--gold-lt);
+            }
+
+    /* empty state */
+    .tx-empty {
+        text-align: center;
+        padding: 3.5rem 2rem;
+    }
+
+    .tx-empty-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto 1rem;
+    }
+
+    .tx-empty h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .4rem;
+    }
+
+    .tx-empty p {
+        font-size: .85rem;
+        color: var(--muted);
+    }
+
+    @@media (max-width: 768px) {
+        .tx-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .tx-body {
+            padding: 0 .75rem;
+        }
+
+        .tx-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .tx-filter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="tx-wrap">
+
+    <!-- ── HERO ── -->
+    <div class="tx-hero">
+        <div class="tx-hero-inner">
+            <p class="tx-eyebrow"><span></span> eSewa Payments</p>
+            <h1>Transaction <em style="font-style:italic;color:var(--gold-lt);">History</em></h1>
+        </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="tx-body">
+
+        <!-- Summary -->
+        <div class="tx-summary">
+            <div class="tx-stat">
+                <div class="tx-stat-icon green"><i class="fas fa-arrow-down"></i></div>
+                <div>
+                    <div class="tx-stat-label">Total Earnings</div>
+                    <div class="tx-stat-value green">Rs. @ViewBag.TotalEarnings.ToString("N2")</div>
+                </div>
+            </div>
+            <div class="tx-stat">
+                <div class="tx-stat-icon red"><i class="fas fa-arrow-up"></i></div>
+                <div>
+                    <div class="tx-stat-label">Total Spent</div>
+                    <div class="tx-stat-value red">Rs. @ViewBag.TotalSpent.ToString("N2")</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="tx-card">
+            <div class="tx-card-hd">
+                <div class="tx-card-hd-icon"><i class="fas fa-filter"></i></div>
+                <h2>Filter Transactions</h2>
+            </div>
+            <div class="tx-card-body">
+                <form method="get">
+                    <div class="tx-filter-grid">
+                        <div>
+                            <label class="tx-filter-label">Search</label>
+                            <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                                   class="tx-input" placeholder="Tender title or name..." />
+                        </div>
+                        <div>
+                            <label class="tx-filter-label">Status</label>
+                            <select name="paymentStatus" class="tx-input">
+                                <option value="">All Statuses</option>
+                                @{
+                                    var sf = ViewBag.PaymentStatusFilter as string;
+                                }
+                                <option value="Pending" selected="@(sf == "Pending" ? "selected" : null)">Pending</option>
+                                <option value="Verified" selected="@(sf == "Verified" ? "selected" : null)">Verified</option>
+                                <option value="Failed" selected="@(sf == "Failed" ? "selected" : null)">Failed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="tx-filter-label">Start Date</label>
+                            <input type="date" name="startDate"
+                                   value="@ViewBag.StartDateFilter?.ToString("yyyy-MM-dd")"
+                                   class="tx-input" />
+                        </div>
+                        <div>
+                            <label class="tx-filter-label">End Date</label>
+                            <input type="date" name="endDate"
+                                   value="@ViewBag.EndDateFilter?.ToString("yyyy-MM-dd")"
+                                   class="tx-input" />
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+                        <button type="submit" class="tx-btn tx-btn-navy">
+                            <i class="fas fa-search"></i> Apply Filters
+                        </button>
+                        <a href="@Url.Action("Index")" class="tx-btn tx-btn-outline">
+                            <i class="fas fa-undo"></i> Reset
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="tx-card">
+            <div class="tx-card-hd">
+                <div class="tx-card-hd-icon"><i class="fas fa-list"></i></div>
+                <h2>Transactions</h2>
+            </div>
+            <div class="tx-table-wrap">
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Method</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model)
+                        {
+                            var isIncoming = payment.PayToUser == currentUserId;
+
+                            <tr>
+                                <td>
+                                    <div class="tx-date-main">@payment.PaymentDate.ToString("MMM dd, yyyy")</div>
+                                    <div class="tx-date-sub">@payment.PaymentDate.ToString("hh:mm tt")</div>
+                                </td>
+                                <td>
+                                    <span class="tx-method">
+                                        <i class="fas fa-wallet"></i> @payment.PaymentMethod
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (payment.PayTenderId != null)
+                                    {
+                                        <div class="tx-desc">
+                                            <div class="tx-desc-icon"><i class="fas fa-file-contract"></i></div>
+                                            <span>Tender — @payment.PayTender?.Title</span>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="tx-amount @(isIncoming ? "income" : "expense")">
+                                        <div class="tx-amount-icon">
+                                            <i class="fas @(isIncoming ? "fa-arrow-down" : "fa-arrow-up")"></i>
+                                        </div>
+                                        @(isIncoming ? "+" : "-") Rs. @payment.PaymentAmount.ToString("N2")
+                                    </div>
+                                </td>
+                                <td>
+                                    @{
+                                        var stClass = payment.PaymentStatus switch
+                                        {
+                                            "Verified" => "st-verified",
+                                            "Pending" => "st-pending",
+                                            "Failed" => "st-failed",
+                                            _ => "st-default"
+                                        };
+                                        var stIcon = payment.PaymentStatus switch
+                                        {
+                                            "Verified" => "fa-check-circle",
+                                            "Pending" => "fa-clock",
+                                            "Failed" => "fa-times-circle",
+                                            _ => "fa-question-circle"
+                                        };
+                                    }
+                                    <span class="tx-status @stClass">
+                                        <i class="fas @stIcon"></i> @payment.PaymentStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details", new { id = payment.PaymentId })"
+                                       class="tx-view-btn">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="tx-empty">
+                                        <div class="tx-empty-icon"><i class="fas fa-receipt"></i></div>
+                                        <h3>No transactions found</h3>
+                                        <p>Try adjusting your search or filter criteria.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /tx-body -->
+</div><!-- /tx-wrap -->

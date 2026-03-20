@@ -1,0 +1,791 @@
+﻿@model TenderSystem.Models.Payment
+@{
+    ViewData["Title"] = "Payment Details";
+    var currentUserId = Convert.ToInt16(User.Identity!.Name);
+    var isIncoming = Model.PayToUser == currentUserId;
+    var amountPrefix = isIncoming ? "+" : "-";
+    var amountLabel = isIncoming ? "Payment Received" : "Payment Sent";
+
+    var statusClass = Model.PaymentStatus switch
+    {
+        "Verified" => "st-verified",
+        "Pending" => "st-pending",
+        "Failed" => "st-failed",
+        _ => "st-default"
+    };
+    var statusIcon = Model.PaymentStatus switch
+    {
+        "Verified" => "fa-check-circle",
+        "Pending" => "fa-clock",
+        "Failed" => "fa-times-circle",
+        _ => "fa-question-circle"
+    };
+    var statusMsg = Model.PaymentStatus switch
+    {
+        "Verified" => "This payment has been verified and processed successfully.",
+        "Pending" => "This payment is pending verification and will be processed soon.",
+        "Failed" => "This payment has failed. Please contact support for assistance.",
+        _ => "Payment status unknown."
+    };
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .td-wrap {
+        font-family: 'DM Sans', sans-serif;
+        padding-bottom: 4rem;
+    }
+
+    /* ── HERO ── */
+    .td-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2rem 4.5rem;
+    }
+
+        .td-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .td-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .td-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .td-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--slate);
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color .2s, transform .2s;
+    }
+
+        .td-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-3px);
+            text-decoration: none;
+        }
+
+    .td-hero-title {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .td-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .4rem;
+    }
+
+        .td-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+    .td-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0;
+    }
+
+    /* ── BODY ── */
+    .td-body {
+        max-width: 900px;
+        margin: -2rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── STATUS BANNER ── */
+    .td-status-banner {
+        border-radius: 12px;
+        padding: 1rem 1.3rem;
+        display: flex;
+        align-items: flex-start;
+        gap: .85rem;
+        margin-bottom: 1.4rem;
+        border: 1px solid;
+    }
+
+        .td-status-banner.st-verified {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .td-status-banner.st-pending {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+        .td-status-banner.st-failed {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .td-status-banner.st-default {
+            background: var(--ivory);
+            border-color: rgba(11,31,58,.1);
+        }
+
+    .td-banner-icon {
+        font-size: 1.2rem;
+        margin-top: .1rem;
+        flex-shrink: 0;
+    }
+
+    .td-status-banner.st-verified .td-banner-icon {
+        color: #16a34a;
+    }
+
+    .td-status-banner.st-pending .td-banner-icon {
+        color: #d97706;
+    }
+
+    .td-status-banner.st-failed .td-banner-icon {
+        color: #dc2626;
+    }
+
+    .td-status-banner.st-default .td-banner-icon {
+        color: var(--slate);
+    }
+
+    .td-banner-title {
+        font-weight: 700;
+        font-size: .9rem;
+        color: var(--navy);
+        margin-bottom: .2rem;
+    }
+
+    .td-banner-msg {
+        font-size: .83rem;
+        color: var(--muted);
+    }
+
+    /* ── AMOUNT CARD ── */
+    .td-amount-card {
+        background: var(--white);
+        border-radius: 14px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 4px 20px rgba(11,31,58,.08);
+        border: 1px solid rgba(11,31,58,.06);
+        margin-bottom: 1.4rem;
+    }
+
+    .td-amount-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .td-amount-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+        .td-amount-icon.income {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .td-amount-icon.expense {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+    .td-amount-label {
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .25rem;
+    }
+
+    .td-amount-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+    }
+
+        .td-amount-value.income {
+            color: #16a34a;
+        }
+
+        .td-amount-value.expense {
+            color: #dc2626;
+        }
+
+    .td-amount-right {
+        text-align: right;
+    }
+
+    .td-txid-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .2rem;
+    }
+
+    .td-txid-val {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .td-txdate {
+        font-size: .78rem;
+        color: var(--muted);
+        margin-top: .25rem;
+    }
+
+    /* ── CARDS ── */
+    .td-two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .td-card {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(11,31,58,.08);
+        overflow: hidden;
+        border: 1px solid rgba(11,31,58,.06);
+    }
+
+    .td-card-hd {
+        background: var(--navy);
+        padding: .9rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .td-card-hd-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        flex-shrink: 0;
+    }
+
+    .td-card-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .9rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .td-card-body {
+        padding: 1.3rem;
+    }
+
+    /* info rows */
+    .td-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .65rem 0;
+        border-bottom: 1px solid rgba(11,31,58,.05);
+        font-size: .85rem;
+    }
+
+        .td-row:last-child {
+            border-bottom: none;
+        }
+
+    .td-row-label {
+        color: var(--slate);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .td-row-label i {
+            color: var(--gold);
+            font-size: .78rem;
+            width: 14px;
+            text-align: center;
+        }
+
+    .td-row-value {
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    /* method badge */
+    .td-method {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .2rem .75rem;
+        border-radius: 999px;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        border: 1px solid rgba(200,150,12,.2);
+        font-size: .72rem;
+        font-weight: 700;
+    }
+
+    /* status pill */
+    .td-status {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .22rem .75rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .st-verified {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .st-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .st-failed {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .st-default {
+        background: rgba(11,31,58,.06);
+        color: var(--slate);
+    }
+
+    /* parties */
+    .td-party {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        padding: .9rem 0;
+    }
+
+        .td-party:first-child {
+            padding-top: 0;
+        }
+
+        .td-party:last-child {
+            padding-bottom: 0;
+        }
+
+    .td-party-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .9rem;
+        flex-shrink: 0;
+        border: 2px solid rgba(200,150,12,.2);
+    }
+
+        .td-party-avatar.company {
+            background: rgba(200,150,12,.1);
+            color: var(--gold);
+            border-color: rgba(200,150,12,.2);
+        }
+
+    .td-party-name {
+        font-weight: 700;
+        font-size: .9rem;
+        color: var(--navy);
+    }
+
+    .td-party-email {
+        font-size: .75rem;
+        color: var(--muted);
+        margin-top: .1rem;
+    }
+
+    .td-party-divider {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .5rem 0;
+    }
+
+    .td-party-divider-line {
+        flex: 1;
+        height: 1px;
+        background: rgba(11,31,58,.07);
+    }
+
+    .td-party-divider-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .72rem;
+    }
+
+    /* tender box */
+    .td-tender-box {
+        background: var(--ivory);
+        border-left: 3px solid var(--gold);
+        border-radius: 0 10px 10px 0;
+        padding: 1.1rem 1.3rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .td-tender-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .95rem;
+        flex-shrink: 0;
+    }
+
+    .td-tender-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .3rem;
+    }
+
+    .td-tender-type {
+        font-size: .78rem;
+        color: var(--muted);
+        margin-bottom: .4rem;
+    }
+
+    .td-tender-desc {
+        font-size: .82rem;
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+    /* print btn */
+    .td-print-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1.3rem;
+        border-radius: 8px;
+        background: var(--ivory);
+        color: var(--navy);
+        font-size: .83rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid rgba(11,31,58,.12);
+        transition: background .2s, transform .2s;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .td-print-btn i {
+            color: var(--gold);
+        }
+
+        .td-print-btn:hover {
+            background: rgba(200,150,12,.08);
+            border-color: rgba(200,150,12,.3);
+            transform: translateY(-1px);
+            text-decoration: none;
+            color: var(--navy);
+        }
+
+    @@media (max-width: 768px) {
+        .td-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .td-body {
+            padding: 0 .75rem;
+        }
+
+        .td-two-col {
+            grid-template-columns: 1fr;
+        }
+
+        .td-amount-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .td-amount-right {
+            text-align: left;
+        }
+    }
+</style>
+
+<div class="td-wrap">
+
+    <!-- ── HERO ── -->
+    <div class="td-hero">
+        <div class="td-hero-inner">
+            <div class="td-hero-title">
+                <p class="td-eyebrow"><span></span> eSewa Payment</p>
+                <h1>Payment Details</h1>
+            </div>
+            <a href="@Url.Action("Index")" class="td-back">
+                <i class="fas fa-arrow-left"></i> Back to Transactions
+            </a>
+        </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="td-body">
+
+        <!-- Status Banner -->
+        <div class="td-status-banner @statusClass">
+            <div class="td-banner-icon"><i class="fas @statusIcon"></i></div>
+            <div>
+                <div class="td-banner-title">Payment Status: @Model.PaymentStatus</div>
+                <div class="td-banner-msg">@statusMsg</div>
+            </div>
+        </div>
+
+        <!-- Amount Card -->
+        <div class="td-amount-card">
+            <div class="td-amount-left">
+                <div class="td-amount-icon @(isIncoming ? "income" : "expense")">
+                    <i class="fas @(isIncoming ? "fa-arrow-down" : "fa-arrow-up")"></i>
+                </div>
+                <div>
+                    <div class="td-amount-label">@amountLabel</div>
+                    <div class="td-amount-value @(isIncoming ? "income" : "expense")">
+                        @amountPrefix Rs. @Model.PaymentAmount.ToString("N2")
+                    </div>
+                </div>
+            </div>
+            <div class="td-amount-right">
+                <div class="td-txid-label">Transaction ID</div>
+                <div class="td-txid-val">#@Model.PaymentId</div>
+                <div class="td-txdate">
+                    <i class="far fa-calendar-alt" style="color:var(--gold);margin-right:.3rem;"></i>
+                    @Model.PaymentDate.ToString("MMM dd, yyyy") at @Model.PaymentDate.ToString("hh:mm tt")
+                </div>
+            </div>
+        </div>
+
+        <!-- Two columns -->
+        <div class="td-two-col">
+
+            <!-- Payment Info -->
+            <div class="td-card">
+                <div class="td-card-hd">
+                    <div class="td-card-hd-icon"><i class="fas fa-info-circle"></i></div>
+                    <h2>Payment Information</h2>
+                </div>
+                <div class="td-card-body">
+                    <div class="td-row">
+                        <span class="td-row-label"><i class="fas fa-rupee-sign"></i> Amount</span>
+                        <span class="td-row-value">Rs. @Model.PaymentAmount.ToString("N2")</span>
+                    </div>
+                    <div class="td-row">
+                        <span class="td-row-label"><i class="fas fa-calendar-alt"></i> Date</span>
+                        <span class="td-row-value">@Model.PaymentDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="td-row">
+                        <span class="td-row-label"><i class="fas fa-clock"></i> Time</span>
+                        <span class="td-row-value">@Model.PaymentDate.ToString("hh:mm tt")</span>
+                    </div>
+                    <div class="td-row">
+                        <span class="td-row-label"><i class="fas fa-wallet"></i> Method</span>
+                        <span class="td-method"><i class="fas fa-wallet"></i> @Model.PaymentMethod</span>
+                    </div>
+                    <div class="td-row">
+                        <span class="td-row-label"><i class="fas fa-tag"></i> Status</span>
+                        <span class="td-status @statusClass">
+                            <i class="fas @statusIcon"></i> @Model.PaymentStatus
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Parties -->
+            <div class="td-card">
+                <div class="td-card-hd">
+                    <div class="td-card-hd-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <h2>Transaction Parties</h2>
+                </div>
+                <div class="td-card-body">
+                    <!-- From -->
+                    <div style="font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:.5rem;">From</div>
+                    <div class="td-party">
+                        <div class="td-party-avatar"><i class="fas fa-user"></i></div>
+                        <div>
+                            <div class="td-party-name">@Model.PayByUserNavigation?.FirstName @Model.PayByUserNavigation?.LastName</div>
+                            @if (Model.PayByUserNavigation?.EmailAddress != null)
+                            {
+                                <div class="td-party-email">@Model.PayByUserNavigation.EmailAddress</div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="td-party-divider">
+                        <div class="td-party-divider-line"></div>
+                        <div class="td-party-divider-icon"><i class="fas fa-arrow-down"></i></div>
+                        <div class="td-party-divider-line"></div>
+                    </div>
+
+                    <!-- To -->
+                    <div style="font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:.5rem;">To</div>
+                    <div class="td-party">
+                        <div class="td-party-avatar"><i class="fas fa-user"></i></div>
+                        <div>
+                            <div class="td-party-name">@Model.PayToUserNavigation?.FirstName @Model.PayToUserNavigation?.LastName</div>
+                            @if (Model.PayToUserNavigation?.EmailAddress != null)
+                            {
+                                <div class="td-party-email">@Model.PayToUserNavigation.EmailAddress</div>
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.PayCompanyId != null)
+                    {
+                        <div style="border-top:1px solid rgba(11,31,58,.06);margin-top:.75rem;padding-top:.75rem;">
+                            <div style="font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:.5rem;">Company</div>
+                            <div class="td-party">
+                                <div class="td-party-avatar company"><i class="fas fa-building"></i></div>
+                                <div>
+                                    <div class="td-party-name">@Model.PayCompany?.CompanyName</div>
+                                    @if (Model.PayCompany?.FullAddress != null)
+                                    {
+                                        <div class="td-party-email">@Model.PayCompany.FullAddress</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Tender Details -->
+        @if (Model.PayTenderId != null)
+        {
+            <div class="td-card" style="margin-bottom:1.4rem;">
+                <div class="td-card-hd">
+                    <div class="td-card-hd-icon"><i class="fas fa-file-contract"></i></div>
+                    <h2>Tender Details</h2>
+                </div>
+                <div class="td-card-body">
+                    <div class="td-tender-box">
+                        <div class="td-tender-icon"><i class="fas fa-file-contract"></i></div>
+                        <div>
+                            <div class="td-tender-title">@Model.PayTender?.Title</div>
+                            <div class="td-tender-type">
+                                <i class="fas fa-tag" style="color:var(--gold);margin-right:.3rem;"></i>
+                                @Model.PayTender?.TenderType
+                            </div>
+                            @if (Model.PayTender?.TenderDescription != null)
+                            {
+                                <div class="td-tender-desc">
+                                    @(Model.PayTender.TenderDescription.Length > 150
+                                                                ? Model.PayTender.TenderDescription.Substring(0, 150) + "..."
+                                                                : Model.PayTender.TenderDescription)
+                        </div>
+                                                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Print -->
+        <div style="text-align:center;margin-top:.5rem;">
+            <button onclick="window.print(); return false;" class="td-print-btn">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
+        </div>
+
+    </div><!-- /td-body -->
+</div><!-- /td-wrap -->
