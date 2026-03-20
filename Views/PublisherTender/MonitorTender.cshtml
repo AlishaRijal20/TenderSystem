@@ -1,638 +1,785 @@
 ﻿@model MonitorTenderViewModel
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor Tender</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
 
-        /* Base styles */
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    .mt-wrap {
+        font-family: 'DM Sans', sans-serif;
+        padding-bottom: 4rem;
+    }
+
+    /* ── HERO ── */
+    .mt-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2rem 4.5rem;
+    }
+
+        .mt-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
 
-        .page-container {
-            animation: fadeIn 0.5s ease-out;
+        .mt-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 65%);
+            pointer-events: none;
         }
 
-        .tender-card {
-            animation: slideInUp 0.6s ease-out;
-            transition: all 0.3s ease;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(229, 231, 235, 0.5);
-            background: white;
+    .mt-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .mt-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--slate);
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 1.6rem;
+        transition: color .2s, transform .2s;
+    }
+
+        .mt-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-3px);
+            text-decoration: none;
         }
 
-            .tender-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            }
+    .mt-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .65rem;
+        font-weight: 500;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: .5rem;
+    }
 
-        .tender-header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            padding: 2rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
+        .mt-eyebrow span {
+            display: inline-block;
+            width: 18px;
+            height: 1px;
+            background: var(--gold);
         }
 
-            .tender-header::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 300px;
-                height: 300px;
-                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-                transform: translate(30%, -30%);
-            }
+    .mt-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 1rem;
+        line-height: 1.2;
+    }
 
-        .tender-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem;
+    .mt-hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.4rem;
+    }
+
+    .mt-meta-item {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .82rem;
+        color: var(--slate);
+    }
+
+        .mt-meta-item i {
+            color: var(--gold);
+            font-size: .78rem;
         }
 
-        .info-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            background-color: #f9fafb;
-            transition: all 0.3s ease;
-        }
-
-            .info-item:hover {
-                background-color: #f3f4f6;
-                transform: translateX(5px);
-            }
-
-        .info-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.75rem;
-            margin-right: 1rem;
-            transition: all 0.3s ease;
-        }
-
-            .info-icon:hover {
-                transform: scale(1.1);
-            }
-
-            .info-icon.blue {
-                background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-                color: #1e40af;
-            }
-
-            .info-icon.green {
-                background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-                color: #047857;
-            }
-
-            .info-icon.purple {
-                background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-                color: #5b21b6;
-            }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 0.25rem;
-        }
-
-        .info-value {
+        .mt-meta-item strong {
+            color: var(--white);
             font-weight: 600;
-            color: #1f2937;
         }
 
-        /* Applications table */
-        .applications-card {
-            animation: slideInUp 0.8s ease-out;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(229, 231, 235, 0.5);
-            background: white;
+    /* ── BODY ── */
+    .mt-body {
+        max-width: 1200px;
+        margin: -2rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── TENDER INFO CARD ── */
+    .mt-info-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
+        overflow: hidden;
+        margin-bottom: 1.6rem;
+    }
+
+    .mt-card-hd {
+        background: var(--navy);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .mt-card-hd-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .mt-card-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .mt-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: .75rem;
+        padding: 1.4rem;
+    }
+
+    .mt-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .85rem 1rem;
+        background: var(--ivory);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.05);
+        transition: background .2s, transform .2s;
+    }
+
+        .mt-info-item:hover {
+            background: rgba(200,150,12,.06);
+            transform: translateX(3px);
         }
 
-        .applications-header {
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+    .mt-info-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        flex-shrink: 0;
+        margin-top: .05rem;
+    }
+
+    .mt-info-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .2rem;
+    }
+
+    .mt-info-value {
+        font-size: .88rem;
+        font-weight: 600;
+        color: var(--navy);
+    }
+
+        .mt-info-value.gold {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
         }
 
-        .applications-count {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1e40af;
-            font-weight: 600;
-            font-size: 0.875rem;
-            padding: 0.375rem 1rem;
-            border-radius: 9999px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+    /* ── APPLICATIONS CARD ── */
+    .mt-apps-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 12px 48px rgba(11,31,58,.12);
+        overflow: hidden;
+    }
+
+    .mt-apps-hd {
+        background: var(--navy);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    .mt-apps-hd-left {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .mt-apps-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .mt-count-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .3rem .85rem;
+        border-radius: 999px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold-lt);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .04em;
+        border: 1px solid rgba(200,150,12,.2);
+    }
+
+    /* ── TABLE ── */
+    .mt-table-wrap {
+        overflow-x: auto;
+    }
+
+    .mt-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .mt-table thead tr {
+            background: var(--ivory);
+            border-bottom: 2px solid rgba(11,31,58,.07);
         }
 
-        .table-container {
-            overflow-x: auto;
+        .mt-table th {
+            padding: .9rem 1.2rem;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--slate);
+            text-align: left;
+            white-space: nowrap;
         }
 
-        .applications-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-            .applications-table th {
-                background-color: #f9fafb;
-                font-weight: 600;
-                color: #4b5563;
-                text-align: left;
-                padding: 1rem 1.5rem;
-                font-size: 0.875rem;
-                border-bottom: 1px solid #e5e7eb;
+            .mt-table th:last-child {
+                text-align: right;
             }
 
-            .applications-table td {
-                padding: 1rem 1.5rem;
-                border-bottom: 1px solid #f3f4f6;
-                color: #1f2937;
-            }
-
-            .applications-table tr:hover td {
-                background-color: #f9fafb;
-            }
-
-        /* Status badges */
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
+        .mt-table tbody tr {
+            border-bottom: 1px solid rgba(11,31,58,.05);
+            transition: background .15s;
         }
 
-            .status-badge:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            .mt-table tbody tr:last-child {
+                border-bottom: none;
             }
 
-        .status-won {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #047857;
-            border: none;
-        }
-
-        .status-lost {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            color: #b91c1c;
-            border: none;
-        }
-
-        .status-pending {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #92400e;
-            border: none;
-        }
-
-        /* Action buttons */
-        .action-button {
-            width: 2rem;
-            height: 2rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease;
-            background-color: #f3f4f6;
-        }
-
-            .action-button:hover {
-                transform: scale(1.1);
-                background-color: #e5e7eb;
+            .mt-table tbody tr:hover {
+                background: rgba(200,150,12,.03);
             }
 
-            .action-button.view {
-                color: #2563eb;
-            }
-
-            .action-button.award {
-                color: #b45309;
-            }
-
-        /* Award dropdown */
-        .award-dropdown {
-            z-index: 10;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-            width: 150px;
-            right: 0;
+        .mt-table td {
+            padding: 1rem 1.2rem;
+            font-size: .85rem;
+            color: var(--navy);
+            vertical-align: middle;
         }
 
-        .award-btn {
-            padding: 0.75rem 1rem;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-            .award-btn:hover {
-                background-color: #f3f4f6;
+            .mt-table td:last-child {
+                text-align: right;
             }
 
-            .award-btn.won:hover {
-                background-color: #d1fae5;
-            }
+    /* app id chip */
+    .mt-app-id {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        background: rgba(11,31,58,.06);
+        color: var(--navy);
+        font-weight: 700;
+        font-size: .78rem;
+        padding: .22rem .65rem;
+        border-radius: 6px;
+    }
 
-            .award-btn.lost:hover {
-                background-color: #fee2e2;
-            }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
-            border-radius: 0.75rem;
-            border: 2px dashed #e5e7eb;
-            margin: 2rem;
+        .mt-app-id i {
+            color: var(--gold);
+            font-size: .65rem;
         }
 
-        .empty-icon {
-            font-size: 3rem;
-            color: #9ca3af;
-            margin-bottom: 1.5rem;
-            animation: pulse 2s infinite;
+    /* company name */
+    .mt-company-name {
+        font-weight: 700;
+        color: var(--navy);
+        font-size: .88rem;
+    }
+
+    /* budget */
+    .mt-budget {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--gold);
+        font-size: .88rem;
+    }
+
+    /* duration */
+    .mt-duration {
+        color: var(--muted);
+        font-size: .84rem;
+    }
+
+    /* status pills */
+    .mt-status {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .28rem .85rem;
+        border-radius: 999px;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    .st-won {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .st-lost {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .st-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    /* action buttons */
+    .mt-action-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: .5rem;
+    }
+
+    .mt-btn-view {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(11,31,58,.06);
+        color: var(--navy);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        text-decoration: none;
+        transition: background .2s, transform .2s;
+    }
+
+        .mt-btn-view:hover {
+            background: var(--navy);
+            color: var(--gold);
+            transform: translateY(-1px);
+            text-decoration: none;
         }
 
-        /* Back button */
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            color: #3b82f6;
-            background-color: #eff6ff;
-            transition: all 0.3s ease;
+    /* award dropdown */
+    .mt-award-wrap {
+        position: relative;
+        display: inline-block;
+    }
+
+    .mt-btn-award {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .8rem;
+        cursor: pointer;
+        border: none;
+        transition: background .2s, transform .2s;
+    }
+
+        .mt-btn-award:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-1px);
         }
 
-            .back-button:hover {
-                background-color: #dbeafe;
-                transform: translateX(-5px);
+    .mt-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(11,31,58,.15);
+        border: 1px solid rgba(11,31,58,.08);
+        overflow: hidden;
+        min-width: 130px;
+        z-index: 20;
+    }
+
+        .mt-dropdown.open {
+            display: block;
+        }
+
+    .mt-drop-btn {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        width: 100%;
+        padding: .7rem 1rem;
+        font-size: .82rem;
+        font-weight: 600;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        transition: background .15s;
+    }
+
+        .mt-drop-btn.won {
+            color: #166534;
+        }
+
+            .mt-drop-btn.won:hover {
+                background: #dcfce7;
             }
 
-    </style>
-</head>
+        .mt-drop-btn.lost {
+            color: #991b1b;
+        }
 
-<body>
-    <div class="page-container min-h-screen py-8">
-        <div class="container mx-auto px-4 mb-6">
-            <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@Model.Tender.EncId" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Tenders</span>
+            .mt-drop-btn.lost:hover {
+                background: #fee2e2;
+            }
+
+    /* ── EMPTY STATE ── */
+    .mt-empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        margin: 1.5rem;
+        background: var(--ivory);
+        border-radius: 12px;
+        border: 2px dashed rgba(200,150,12,.2);
+    }
+
+    .mt-empty-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin: 0 auto 1.2rem;
+    }
+
+    .mt-empty h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .5rem;
+    }
+
+    .mt-empty p {
+        font-size: .85rem;
+        color: var(--muted);
+        max-width: 380px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 768px) {
+        .mt-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .mt-body {
+            padding: 0 .75rem;
+        }
+
+        .mt-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="mt-wrap">
+
+    <!-- ── HERO ── -->
+    <div class="mt-hero">
+        <div class="mt-hero-inner">
+            <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@Model.Tender.EncId" class="mt-back">
+                <i class="fas fa-arrow-left"></i> Back to Tender
             </a>
-        </div>
-
-        <div class="container mx-auto px-4">
-            <!-- Tender Details Card -->
-            <div class="tender-card mb-8">
-                <div class="tender-header">
-                    <h1 class="text-3xl font-bold mb-2">@Model.Tender.Title</h1>
-                    <div class="flex flex-wrap items-center gap-4 text-blue-100">
-                        <span class="flex items-center">
-                            <i class="fas fa-hashtag mr-2"></i>
-                            <span class="opacity-80">Reference ID:</span>
-                            <span class="font-semibold ml-2">@Model.Tender.TenderId</span>
-                        </span>
-                        <span class="flex items-center">
-                            <i class="fas fa-calendar-alt mr-2"></i>
-                            <span class="opacity-80">Posted:</span>
-                            <span class="font-semibold ml-2">@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</span>
-                        </span>
-                    </div>
+            <p class="mt-eyebrow"><span></span> Tender Monitor</p>
+            <h1>@Model.Tender.Title</h1>
+            <div class="mt-hero-meta">
+                <div class="mt-meta-item">
+                    <i class="fas fa-hashtag"></i>
+                    <span>ID: <strong>#@Model.Tender.TenderId</strong></span>
                 </div>
-
-                <div class="tender-info-grid">
-                    <div class="info-item">
-                        <div class="info-icon blue">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="info-content">
-                            <div class="info-label">Issued By</div>
-                            <div class="info-value">@Model.Tender.IssuedBy</div>
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="info-icon blue">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <div class="info-content">
-                            <div class="info-label">Type</div>
-                            <div class="info-value">@Model.Tender.TenderType</div>
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="info-icon blue">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="info-content">
-                            <div class="info-label">Duration</div>
-                            <div class="info-value">@Model.Tender.ProjectDuration</div>
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <div class="info-icon green">
-                            <i class="fas fa-rupee-sign"></i>
-                        </div>
-                        <div class="info-content">
-                            <div class="info-label">Budget Estimation</div>
-                            <div class="info-value">₹ @Model.Tender.BudgetEstimation.ToString("N2")</div>
-                        </div>
-                    </div>
+                <div class="mt-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Posted: <strong>@Model.Tender.IssuedDate.ToString("MMM dd, yyyy")</strong></span>
                 </div>
-            </div>
-
-            <!-- Applications Section -->
-            <div class="applications-card">
-                <div class="applications-header">
-                    <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                        <i class="fas fa-file-signature text-blue-600"></i>
-                        Tender Applications
-                    </h2>
-                    <span class="applications-count">
-                        <i class="fas fa-users"></i>
-                        @(Model.Applications?.Count() ?? 0) Applications
-                    </span>
+                <div class="mt-meta-item">
+                    <i class="fas fa-building"></i>
+                    <span>Issued by: <strong>@Model.Tender.IssuedBy</strong></span>
                 </div>
-
-                @if (Model.Applications == null || !Model.Applications.Any())
-                {
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-folder-open"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">No Applications Yet</h3>
-                        <p class="text-gray-500 max-w-md mx-auto">There are currently no applications submitted for this tender. Applications will appear here once companies start applying.</p>
-                    </div>
-                }
-                else
-                {
-                    <div class="table-container">
-                        <table class="applications-table">
-                            <thead>
-                                <tr>
-                                    <th>Application ID</th>
-                                    <th>Company Name</th>
-                                    <th>Proposed Budget</th>
-                                    <th>Duration</th>
-                                    <th>Status</th>
-                                    <th class="text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var app in Model.Applications)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span class="font-medium">#@app.Application.ApplicationId</span>
-                                        </td>
-                                        <td>
-                                            <div class="font-semibold">@app.Company.CompanyName</div>
-                                        </td>
-                                        <td>
-                                            <div class="font-semibold text-green-700">₹ @app.Application.ProposedBudget.ToString("N2")</div>
-                                        </td>
-                                        <td>@app.Application.ProposedDuration</td>
-                                        <td>
-                                            <span class="status-badge @(app.Application.ApplicationStatus.ToLower() == "won" ? "status-won" :
-                                                                                                                    app.Application.ApplicationStatus.ToLower() == "lost" ? "status-lost" :
-                                                                                                                    "status-pending")">
-                                        <i class="fas @(app.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
-                                                                                                   app.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" :
-                                                                                                   "fa-hourglass-half")"></i>
-                                        @app.Application.ApplicationStatus
-                                    </span>
-                                </td>
-                                <td class="text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <a asp-action="ApplicationDetails" asp-controller="PublisherTender" asp-route-id="@app.Application.EncId"
-                                           class="action-button view" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        @if (@app.Application.ApplicationStatus == "Pending")
-                                                {
-                                                    <!-- Award Tender Dropdown -->
-                                                    <div class="relative inline-block">
-                                                        <button class="btn text-blue-600 hover:text-blue-900 award-dropdown-btn" title="Award Tender">
-                                                            <i class="fas fa-trophy"></i>
-                                                        </button>
-                                                        <div class="hidden absolute bg-white shadow-md border rounded-md p-2 mt-2 w-32 award-dropdown">
-                                                            <button class="block w-full text-left px-3 py-1 text-green-600 hover:bg-gray-200 award-btn" data-id="@app.Application.ApplicationId" data-status="Won">🏆 Won</button>
-                                                            <button class="block w-full text-left px-3 py-1 text-red-600 hover:bg-gray-200 award-btn" data-id="@app.Application.ApplicationId" data-status="Lost">❌ Lost</button>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Hidden Form for AJAX Submission -->
-                                                    <form id="awardForm_@app.Application.ApplicationId" class="hidden" method="POST" asp-action="AwardTender" asp-controller="PublisherTender">
-                                                        @Html.AntiForgeryToken()
-                                                        <input type="hidden" name="ApplicationId" value="@app.Application.ApplicationId" />
-                                                        <input type="hidden" name="ApplicationStatus" />
-                                                    </form>
-
-                                                }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
             </div>
         </div>
-        @if (Model.Applications?.Any(a => a.Application.ApplicationStatus == "Pending") == true)
-        {
-            <!-- Recommendations Section -->
-            <div class="recommendations-card">
-                <div class="recommendations-header">
-                    <h2 class="text-xl font-semibold">Recommended Companies</h2>
-                    <div id="recommendationsCount" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                        Loading...
-                    </div>
-                </div>
-
-                <div id="recommendationsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                    <div class="col-span-full text-center py-12">
-                        <div class="animate-spin text-blue-600 mb-4">
-                            <i class="fas fa-circle-notch text-4xl"></i>
-                        </div>
-                        <p class="text-gray-600">Loading recommendations...</p>
-                    </div>
-                </div>
-            </div>
-        }
-
     </div>
 
+    <!-- ── BODY ── -->
+    <div class="mt-body">
 
+        <!-- Tender Info Card -->
+        <div class="mt-info-card">
+            <div class="mt-card-hd">
+                <div class="mt-card-hd-icon"><i class="fas fa-clipboard-list"></i></div>
+                <h2>Tender Overview</h2>
+            </div>
+            <div class="mt-info-grid">
+                <div class="mt-info-item">
+                    <div class="mt-info-icon"><i class="fas fa-building"></i></div>
+                    <div>
+                        <div class="mt-info-label">Issued By</div>
+                        <div class="mt-info-value">@Model.Tender.IssuedBy</div>
+                    </div>
+                </div>
+                <div class="mt-info-item">
+                    <div class="mt-info-icon"><i class="fas fa-tag"></i></div>
+                    <div>
+                        <div class="mt-info-label">Type</div>
+                        <div class="mt-info-value">@Model.Tender.TenderType</div>
+                    </div>
+                </div>
+                <div class="mt-info-item">
+                    <div class="mt-info-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div>
+                        <div class="mt-info-label">Duration</div>
+                        <div class="mt-info-value">@Model.Tender.ProjectDuration</div>
+                    </div>
+                </div>
+                <div class="mt-info-item">
+                    <div class="mt-info-icon"><i class="fas fa-rupee-sign"></i></div>
+                    <div>
+                        <div class="mt-info-label">Budget Estimation</div>
+                        <div class="mt-info-value gold">&#8377; @Model.Tender.BudgetEstimation.ToString("N2")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Toggle dropdown visibility
-            document.querySelectorAll('.award-dropdown-btn').forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    let dropdown = this.nextElementSibling;
-                    dropdown.classList.toggle('hidden');
-                });
-            });
+        <!-- Applications Card -->
+        <div class="mt-apps-card">
+            <div class="mt-apps-hd">
+                <div class="mt-apps-hd-left">
+                    <div class="mt-card-hd-icon"><i class="fas fa-file-signature"></i></div>
+                    <h2>Tender Applications</h2>
+                </div>
+                <span class="mt-count-pill">
+                    <i class="fas fa-users"></i>
+                    @(Model.Applications?.Count() ?? 0) Applications
+                </span>
+            </div>
 
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function (event) {
-                document.querySelectorAll('.award-dropdown').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            });
+            @if (Model.Applications == null || !Model.Applications.Any())
+            {
+                <div class="mt-empty">
+                    <div class="mt-empty-icon"><i class="fas fa-folder-open"></i></div>
+                    <h3>No Applications Yet</h3>
+                    <p>There are currently no applications submitted for this tender. They will appear here once companies start applying.</p>
+                </div>
+            }
+            else
+            {
+                <div class="mt-table-wrap">
+                    <table class="mt-table">
+                        <thead>
+                            <tr>
+                                <th>App ID</th>
+                                <th>Company</th>
+                                <th>Proposed Budget</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.Applications)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="mt-app-id">
+                                            <i class="fas fa-hashtag"></i>@app.Application.ApplicationId
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="mt-company-name">@app.Company.CompanyName</div>
+                                    </td>
+                                    <td>
+                                        <div class="mt-budget">&#8377; @app.Application.ProposedBudget.ToString("N2")</div>
+                                    </td>
+                                    <td>
+                                        <div class="mt-duration">@app.Application.ProposedDuration</div>
+                                    </td>
+                                    <td>
+                                        <span class="mt-status @(app.Application.ApplicationStatus.ToLower() == "won" ? "st-won" :
+                                                                                                                app.Application.ApplicationStatus.ToLower() == "lost" ? "st-lost" : "st-pending")">
+                                    <i class="fas @(app.Application.ApplicationStatus.ToLower() == "won" ? "fa-trophy" :
+                                                                                                  app.Application.ApplicationStatus.ToLower() == "lost" ? "fa-times-circle" : "fa-hourglass-half")"></i>
+                                    @app.Application.ApplicationStatus
+                                </span>
+                            </td>
+                            <td>
+                                <div class="mt-action-wrap">
+                                    <a asp-action="ApplicationDetails" asp-controller="PublisherTender"
+                                       asp-route-id="@app.Application.EncId"
+                                       class="mt-btn-view" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
 
-            // Award Tender Status Update
-            document.querySelectorAll('.award-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    let applicationId = this.getAttribute('data-id');
-                    let applicationStatus = this.getAttribute('data-status');
-                    let form = document.getElementById(`awardForm_${applicationId}`);
-                    let formData = new FormData(form);
-                    formData.set('ApplicationStatus', applicationStatus);
+                                    @if (app.Application.ApplicationStatus == "Pending")
+                                            {
+                                                <div class="mt-award-wrap">
+                                                    <button class="mt-btn-award award-dropdown-btn" title="Award">
+                                                        <i class="fas fa-trophy"></i>
+                                                    </button>
+                                                    <div class="mt-dropdown">
+                                                        <button class="mt-drop-btn won" data-id="@app.Application.ApplicationId" data-status="Won">
+                                                            <i class="fas fa-trophy"></i> Won
+                                                        </button>
+                                                        <button class="mt-drop-btn lost" data-id="@app.Application.ApplicationId" data-status="Lost">
+                                                            <i class="fas fa-times-circle"></i> Lost
+                                                        </button>
+                                                    </div>
+                                                </div>
 
-                    if (confirm(`Are you sure you want to mark this tender as '${applicationStatus}'?`)) {
-                        fetch(form.action, {
-                            method: form.method,
-                            body: formData,
-                            headers: {
-                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                                                <form id="awardForm_@app.Application.ApplicationId" class="hidden" method="POST"
+                                                      asp-action="AwardTender" asp-controller="PublisherTender">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="ApplicationId" value="@app.Application.ApplicationId" />
+                                                    <input type="hidden" name="ApplicationStatus" />
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    alert(`Tender marked as '${applicationStatus}' successfully!`);
-                                    location.reload(); // Update the status dynamically
-                                } else {
-                                    alert("Failed to update award status.");
-                                }
-                            })
-                            .catch(error => console.error("Error:", error));
-                    }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+    </div><!-- /mt-body -->
+</div><!-- /mt-wrap -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Toggle award dropdown
+        document.querySelectorAll('.award-dropdown-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const dd = this.nextElementSibling;
+                // Close all others
+                document.querySelectorAll('.mt-dropdown').forEach(d => {
+                    if (d !== dd) d.classList.remove('open');
                 });
+                dd.classList.toggle('open');
             });
         });
 
-
-        // Add this new code for API monitoring
-        document.addEventListener('DOMContentLoaded', function () {
-            const tenderId = '@Model.Tender.TenderId';
-            console.log('Tender ID:', tenderId);
-
-            // Test Flask API connection
-            fetch('http://127.0.0.1:5000/api/recommend', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ tender_id: tenderId })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.recommended_companies && Array.isArray(data.recommended_companies)) {
-                        // Filter companies based on matching tender_type
-                        const matchingCompanies = data.recommended_companies.filter(
-                            company => company.company_type === data.tender_type
-                        );
-
-                        recommendationsCount.textContent = `${matchingCompanies.length} Companies`;
-
-                        if (matchingCompanies.length === 0) {
-                            recommendationsContainer.innerHTML = `
-                            <div class="col-span-full text-center py-12">
-                                <div class="text-gray-400 mb-4">
-                                    <i class="fas fa-filter text-4xl"></i>
-                                </div>
-                                <h3 class="text-lg font-semibold text-gray-700">No Matching Companies</h3>
-                                <p class="text-gray-500 mt-2">No companies found matching the tender type: ${data.tender_type}</p>
-                            </div>
-                        `;
-                            return;
-                        }
-
-                        recommendationsContainer.innerHTML = matchingCompanies.map(company => `
-                        <div class="company-card">
-                            <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-building text-blue-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold text-gray-900">${company.company_name}</h3>
-                                    <p class="text-sm text-gray-500">${company.company_type}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400 mr-2"></i>
-                                    <span class="font-medium">${company.rating.toFixed(1)} Rating</span>
-                                </div>
-                                <a href="/Company/Profile/${company.company_id}"
-                                   class="text-blue-600 hover:text-blue-800 font-medium">
-                                    View Profile
-                                </a>
-                            </div>
-                        </div>
-                    `).join('');
-                    } else {
-                        throw new Error('Invalid data format');
-                    }
-                })
-                .catch(error => {
-                    console.error('API Error:', error);
-                    recommendationsCount.textContent = '0 Companies';
-                    recommendationsContainer.innerHTML = `
-                        <div class="col-span-full text-center py-12">
-                            <div class="text-red-500 mb-4">
-                                <i class="fas fa-exclamation-circle text-4xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-700">Unable to Load Recommendations</h3>
-                            <p class="text-gray-500 mt-2">Please try refreshing the page.</p>
-                        </div>
-                    `;
-                });
+        // Close on outside click
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.mt-dropdown').forEach(d => d.classList.remove('open'));
         });
-    </script>
-</body>
+
+        // Award action
+        document.querySelectorAll('.mt-drop-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const applicationId = this.getAttribute('data-id');
+                const applicationStatus = this.getAttribute('data-status');
+                const form = document.getElementById(`awardForm_${applicationId}`);
+                const formData = new FormData(form);
+                formData.set('ApplicationStatus', applicationStatus);
+
+                if (confirm(`Mark this application as '${applicationStatus}'?`)) {
+                    fetch(form.action, {
+                        method: form.method,
+                        body: formData,
+                        headers: {
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            alert('Failed to update award status.');
+                        }
+                    })
+                    .catch(err => console.error('Error:', err));
+                }
+            });
+        });
+    });
+</script>

@@ -965,7 +965,8 @@ namespace TenderSystem.Controllers
                 {
                     success = true,
                     message = "Tender status updated successfully.",
-                    redirectUrl = Url.Action("Index", "TenderContract") // need to change url.
+                    redirectUrl = Url.Action("MonitorTender", "PublisherTender",
+                        new { id = _protector.Protect(application.TenderAppllyId.ToString()) })
                 });
             }
             catch (Exception ex)
