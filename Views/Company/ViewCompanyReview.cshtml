@@ -1,0 +1,401 @@
+﻿@model CompanyReviewViewModel
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .rv-wrap {
+        font-family: 'DM Sans', sans-serif;
+        padding-bottom: 4rem;
+    }
+
+    .rv-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2rem 4.5rem;
+    }
+
+        .rv-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .rv-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .rv-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .rv-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--slate);
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 1.6rem;
+        transition: color .2s, transform .2s;
+    }
+
+        .rv-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-3px);
+            text-decoration: none;
+        }
+
+    .rv-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .8rem;
+        line-height: 1.2;
+    }
+
+    .rv-hero-rating {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .6rem;
+    }
+
+    .rv-stars i {
+        color: #fbbf24;
+        font-size: 1.05rem;
+    }
+
+    .rv-rating-val {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gold-lt);
+    }
+
+    .rv-review-count {
+        font-size: .78rem;
+        color: var(--slate);
+    }
+
+    .rv-body {
+        max-width: 860px;
+        margin: -2rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .rv-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+    }
+
+    .rv-card-hd {
+        background: var(--navy);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .rv-card-hd-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .rv-card-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .rv-card-body {
+        padding: 1.5rem;
+    }
+
+    .rv-review-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1.2rem;
+        background: var(--ivory);
+        border-radius: 12px;
+        border: 1px solid rgba(11,31,58,.05);
+        margin-bottom: .85rem;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+        .rv-review-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rv-review-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11,31,58,.09);
+        }
+
+    .rv-reviewer-photo {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(200,150,12,.25);
+        flex-shrink: 0;
+    }
+
+    .rv-reviewer-placeholder {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 2px solid rgba(200,150,12,.2);
+    }
+
+        .rv-reviewer-placeholder i {
+            color: var(--gold);
+            font-size: .9rem;
+        }
+
+    .rv-review-content {
+        flex: 1;
+    }
+
+    .rv-reviewer-name {
+        font-family: 'Playfair Display', serif;
+        font-size: .92rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .2rem;
+    }
+
+    .rv-review-stars {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+        margin-bottom: .5rem;
+    }
+
+        .rv-review-stars i {
+            color: #fbbf24;
+            font-size: .8rem;
+        }
+
+        .rv-review-stars span {
+            font-size: .72rem;
+            color: var(--muted);
+            margin-left: .25rem;
+        }
+
+    .rv-review-text {
+        font-size: .85rem;
+        color: var(--muted);
+        line-height: 1.65;
+    }
+
+    .rv-empty {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--ivory);
+        border-radius: 12px;
+        border: 2px dashed rgba(200,150,12,.2);
+    }
+
+    .rv-empty-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(200,150,12,.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin: 0 auto 1rem;
+    }
+
+    .rv-empty h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .4rem;
+    }
+
+    .rv-empty p {
+        font-size: .85rem;
+        color: var(--muted);
+    }
+
+    @@media (max-width: 768px) {
+        .rv-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .rv-body {
+            padding: 0 .75rem;
+        }
+    }
+</style>
+
+<div class="rv-wrap">
+
+    <div class="rv-hero">
+        <div class="rv-hero-inner">
+            <a asp-action="ApplicationDetails" asp-controller="PublisherTender"
+               asp-route-id="@Model.ApplicationId"
+               class="rv-back">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <h1>@Model.CompanyName</h1>
+
+            <div class="rv-hero-rating">
+                <div class="rv-stars">
+                    @{
+                        var companyRating = Model.CompanyRating;
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            if (companyRating.HasValue)
+                            {
+                                if (i <= Math.Floor(Convert.ToDouble(companyRating.Value)))
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                else if (i - 0.5 <= Convert.ToDouble(companyRating.Value))
+                                {
+
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                else
+                                {
+
+                                    <i class="far fa-star"></i>
+                                }
+                            }
+                            else
+                            {
+
+                                <i class="far fa-star"></i>
+                            }
+                        }
+                    }
+                </div>
+                <span class="rv-rating-val">@(companyRating?.ToString("0.0") ?? "N/A") / 5.0</span>
+                <span class="rv-review-count">(@Model.Reviews.Count reviews)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="rv-body">
+
+        @if (Model.Reviews.Any())
+        {
+            <div class="rv-card">
+                <div class="rv-card-hd">
+                    <div class="rv-card-hd-icon"><i class="fas fa-comments"></i></div>
+                    <h2>Reviews (@Model.Reviews.Count)</h2>
+                </div>
+                <div class="rv-card-body">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="rv-review-item">
+                            @if (!string.IsNullOrEmpty(review.ReviewerPhoto))
+                            {
+                                <img src="@Url.Content("~/UserImage/" + review.ReviewerPhoto)" alt="Reviewer" class="rv-reviewer-photo" />
+                            }
+                            else
+                            {
+                                <div class="rv-reviewer-placeholder"><i class="fas fa-user"></i></div>
+                            }
+                            <div class="rv-review-content">
+                                <div class="rv-reviewer-name">@review.ReviewerName</div>
+                                <div class="rv-review-stars">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (review.Rate.HasValue)
+                                        {
+                                            if (i <= Math.Floor(Convert.ToDouble(review.Rate.Value)))
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                            else if (i - 0.5 <= Convert.ToDouble(review.Rate.Value))
+                                            {
+
+                                                <i class="fas fa-star-half-alt"></i>
+                                            }
+                                            else
+                                            {
+
+                                                <i class="far fa-star"></i>
+                                            }
+                                        }
+                                    }
+                                    <span>@(review.Rate?.ToString("0.0") ?? "N/A") / 5.0</span>
+                                </div>
+                                <p class="rv-review-text">@review.RatingDescription</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="rv-card">
+                <div class="rv-card-body">
+                    <div class="rv-empty">
+                        <div class="rv-empty-icon"><i class="fas fa-star"></i></div>
+                        <h3>No Reviews Yet</h3>
+                        <p>No reviews have been submitted for this company yet.</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

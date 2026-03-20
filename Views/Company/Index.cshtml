@@ -1,0 +1,667 @@
+﻿@model CompanyEdit
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    :root {
+        --navy: #0B1F3A;
+        --navy-mid: #122848;
+        --gold: #C8960C;
+        --gold-lt: #E8B84B;
+        --ivory: #F7F3EC;
+        --slate: #8A9BB5;
+        --white: #ffffff;
+        --muted: #5a6a80;
+    }
+
+    .cv-wrap {
+        font-family: 'DM Sans', sans-serif;
+        padding-bottom: 4rem;
+    }
+
+    /* ── HERO ── */
+    .cv-hero {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+        padding: 2.8rem 2rem 4.5rem;
+    }
+
+        .cv-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,150,12,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .cv-hero::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle, rgba(200,150,12,.14) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+    .cv-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .cv-back {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        color: var(--slate);
+        font-size: .82rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 1.6rem;
+        transition: color .2s, transform .2s;
+    }
+
+        .cv-back:hover {
+            color: var(--gold-lt);
+            transform: translateX(-3px);
+            text-decoration: none;
+        }
+
+    .cv-hero-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+    }
+
+    .cv-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2.1rem);
+        font-weight: 900;
+        color: var(--white);
+        margin: 0 0 .4rem;
+        line-height: 1.2;
+    }
+
+    .cv-company-type {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .78rem;
+        color: var(--slate);
+    }
+
+        .cv-company-type i {
+            color: var(--gold);
+        }
+
+    /* rating area */
+    .cv-rating-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: .5rem;
+    }
+
+    .cv-stars {
+        display: flex;
+        gap: .15rem;
+    }
+
+        .cv-stars i {
+            color: #fbbf24;
+            font-size: 1.1rem;
+        }
+
+    .cv-rating-text {
+        font-size: .78rem;
+        color: var(--slate);
+    }
+
+    .cv-rating-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .5rem 1.1rem;
+        border-radius: 7px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: .8rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 3px 12px rgba(200,150,12,.3);
+    }
+
+        .cv-rating-btn:hover {
+            background: var(--gold-lt);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 16px rgba(200,150,12,.4);
+            text-decoration: none;
+            color: var(--navy);
+        }
+
+    /* ── BODY ── */
+    .cv-body {
+        max-width: 1100px;
+        margin: -2rem auto 0;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── CARDS ── */
+    .cv-card {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(11,31,58,.1);
+        overflow: hidden;
+        margin-bottom: 1.4rem;
+        transition: transform .3s, box-shadow .3s;
+    }
+
+        .cv-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(11,31,58,.13);
+        }
+
+    .cv-card-hd {
+        background: var(--navy);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+    }
+
+    .cv-card-hd-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(200,150,12,.15);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .cv-card-hd h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--white);
+        margin: 0;
+    }
+
+    .cv-card-body {
+        padding: 1.4rem;
+    }
+
+    /* info grid */
+    .cv-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: .75rem;
+    }
+
+    .cv-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .85rem 1rem;
+        background: var(--ivory);
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.05);
+        transition: background .2s, transform .2s;
+    }
+
+        .cv-info-item:hover {
+            background: rgba(200,150,12,.06);
+            transform: translateX(3px);
+        }
+
+    .cv-info-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: rgba(200,150,12,.12);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .78rem;
+        flex-shrink: 0;
+    }
+
+    .cv-info-label {
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: .2rem;
+    }
+
+    .cv-info-value {
+        font-size: .88rem;
+        font-weight: 600;
+        color: var(--navy);
+        word-break: break-word;
+    }
+
+        .cv-info-value a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+            .cv-info-value a:hover {
+                text-decoration: underline;
+            }
+
+    /* documents */
+    .cv-doc-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+    }
+
+    .cv-doc-item h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: .88rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: .75rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .cv-doc-item h3 i {
+            color: var(--gold);
+            font-size: .8rem;
+        }
+
+    .cv-doc-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 1px solid rgba(11,31,58,.08);
+        box-shadow: 0 2px 10px rgba(11,31,58,.08);
+    }
+
+        .cv-doc-container img {
+            width: 100%;
+            max-height: 260px;
+            object-fit: contain;
+            display: block;
+            transition: transform .3s;
+        }
+
+        .cv-doc-container:hover img {
+            transform: scale(1.02);
+        }
+
+    .cv-doc-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11,31,58,.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity .3s;
+    }
+
+    .cv-doc-container:hover .cv-doc-overlay {
+        opacity: 1;
+    }
+
+    .cv-doc-view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        background: var(--white);
+        color: var(--navy);
+        font-size: .8rem;
+        font-weight: 700;
+        padding: .5rem 1.1rem;
+        border-radius: 7px;
+        text-decoration: none;
+        transition: background .2s;
+    }
+
+        .cv-doc-view-btn:hover {
+            background: var(--ivory);
+            text-decoration: none;
+            color: var(--navy);
+        }
+
+        .cv-doc-view-btn i {
+            color: var(--gold);
+        }
+
+    /* contact person */
+    .cv-contact-layout {
+        display: flex;
+        gap: 1.6rem;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .cv-contact-photo {
+        width: 90px;
+        height: 90px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 3px solid rgba(200,150,12,.25);
+        box-shadow: 0 4px 14px rgba(11,31,58,.12);
+        flex-shrink: 0;
+    }
+
+    .cv-contact-placeholder {
+        width: 90px;
+        height: 90px;
+        border-radius: 12px;
+        background: rgba(200,150,12,.1);
+        border: 3px solid rgba(200,150,12,.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .cv-contact-placeholder i {
+            color: var(--gold);
+            font-size: 2rem;
+            opacity: .5;
+        }
+
+    .cv-contact-info {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .cv-contact-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 900;
+        color: var(--navy);
+        margin-bottom: .85rem;
+    }
+
+    .cv-contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .65rem;
+    }
+
+    @@media (max-width: 768px) {
+        .cv-hero {
+            padding: 2rem 1.2rem 4rem;
+        }
+
+        .cv-body {
+            padding: 0 .75rem;
+        }
+
+        .cv-doc-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cv-contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cv-hero-top {
+            flex-direction: column;
+        }
+
+        .cv-rating-wrap {
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="cv-wrap">
+
+    <!-- ── HERO ── -->
+    <div class="cv-hero">
+        <div class="cv-hero-inner">
+            @if (Model.Tenders?.EncId != null)
+            {
+                <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@Model.Tenders.EncId" class="cv-back">
+                    <i class="fas fa-arrow-left"></i> Back to Tender Details
+                </a>
+            }
+
+            <div class="cv-hero-top">
+                <div>
+                    <h1>@Model.CompanyName</h1>
+                    <div class="cv-company-type">
+                        <i class="fas fa-building"></i> @Model.CompanyType
+                    </div>
+                </div>
+
+                <div class="cv-rating-wrap">
+                    <div class="cv-stars">
+                        @if (Model?.Rating == null)
+                        {
+                            <span style="color:var(--slate);font-size:.78rem;">No reviews yet</span>
+                        }
+                        else
+                        {
+                            decimal rating = Model.Rating.Value;
+                            decimal floor = Math.Floor(rating);
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= floor)
+                                {
+
+                                    <i class="fas fa-star"></i>
+                                }
+                                else if (i - 0.5m <= rating)
+                                {
+
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                else
+                                {
+
+                                    <i class="far fa-star"></i>
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="cv-rating-text">Rating: @(Model.Rating?.ToString("N1") ?? "N/A") / 5.0</div>
+                    <a asp-action="ViewReview" asp-controller="Company"
+                       asp-route-id="@Model.EncId" asp-route-tenderId="@Model.Tenders.EncId"
+                       class="cv-rating-btn">
+                        <i class="fas fa-star"></i> View Rating
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <div class="cv-body">
+
+        <!-- Basic Information -->
+        <div class="cv-card">
+            <div class="cv-card-hd">
+                <div class="cv-card-hd-icon"><i class="fas fa-info-circle"></i></div>
+                <h2>Basic Information</h2>
+            </div>
+            <div class="cv-card-body">
+                <div class="cv-info-grid">
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <div class="cv-info-label">Address</div>
+                            <div class="cv-info-value">@Model.FullAddress</div>
+                        </div>
+                    </div>
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <div class="cv-info-label">Email</div>
+                            <div class="cv-info-value">@Model.OfficeEmail</div>
+                        </div>
+                    </div>
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-globe"></i></div>
+                        <div>
+                            <div class="cv-info-label">Website</div>
+                            <div class="cv-info-value">
+                                @if (!string.IsNullOrEmpty(Model.CompanyWebsiteUrl))
+                                {
+                                    <a href="@Model.CompanyWebsiteUrl" target="_blank">
+                                        @Model.CompanyWebsiteUrl
+                                        <i class="fas fa-external-link-alt" style="font-size:.65rem;"></i>
+                                    </a>
+                                }
+                                else
+                                {
+
+                                    <span style="color:var(--slate);">Not provided</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-id-card"></i></div>
+                        <div>
+                            <div class="cv-info-label">Registration No.</div>
+                            <div class="cv-info-value">@Model.RegistrationNumber</div>
+                        </div>
+                    </div>
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-file-alt"></i></div>
+                        <div>
+                            <div class="cv-info-label">PAN Number</div>
+                            <div class="cv-info-value">@Model.PanNumber</div>
+                        </div>
+                    </div>
+                    <div class="cv-info-item">
+                        <div class="cv-info-icon"><i class="fas fa-user-tie"></i></div>
+                        <div>
+                            <div class="cv-info-label">Position</div>
+                            <div class="cv-info-value">@Model.Position</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Documents -->
+        <div class="cv-card">
+            <div class="cv-card-hd">
+                <div class="cv-card-hd-icon"><i class="fas fa-file-alt"></i></div>
+                <h2>Company Documents</h2>
+            </div>
+            <div class="cv-card-body">
+                <div class="cv-doc-grid">
+                    <div class="cv-doc-item">
+                        <h3><i class="fas fa-file-certificate"></i> Registration Document</h3>
+                        <div class="cv-doc-container">
+                            <img src="@Url.Content("~/RegisterImage/" + Model.RegistrationDocument)"
+                                 alt="Registration Document" />
+                            <div class="cv-doc-overlay">
+                                <a href="@Url.Content("~/RegisterImage/" + Model.RegistrationDocument)"
+                                   target="_blank" class="cv-doc-view-btn">
+                                    <i class="fas fa-search-plus"></i> View Full Size
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cv-doc-item">
+                        <h3><i class="fas fa-file-invoice"></i> PAN Document</h3>
+                        <div class="cv-doc-container">
+                            <img src="@Url.Content("~/PanImage/" + Model.PanDocument)"
+                                 alt="PAN Document" />
+                            <div class="cv-doc-overlay">
+                                <a href="@Url.Content("~/PanImage/" + Model.PanDocument)"
+                                   target="_blank" class="cv-doc-view-btn">
+                                    <i class="fas fa-search-plus"></i> View Full Size
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Person -->
+        @if (Model.User != null)
+        {
+            <div class="cv-card">
+                <div class="cv-card-hd">
+                    <div class="cv-card-hd-icon"><i class="fas fa-user"></i></div>
+                    <h2>Contact Person Details</h2>
+                </div>
+                <div class="cv-card-body">
+                    <div class="cv-contact-layout">
+
+                        @if (!string.IsNullOrEmpty(Model.User.UserPhoto))
+                        {
+                            <img src="@Url.Content("~/UserImage/" + Model.User.UserPhoto)"
+                                 alt="Profile Photo" class="cv-contact-photo" />
+                        }
+                        else
+                        {
+                            <div class="cv-contact-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        }
+
+                        <div class="cv-contact-info">
+                            <div class="cv-contact-name">
+                                @Model.User.FirstName @Model.User.MiddleName @Model.User.LastName
+                            </div>
+                            <div class="cv-contact-grid">
+                                <div class="cv-info-item">
+                                    <div class="cv-info-icon"><i class="fas fa-envelope"></i></div>
+                                    <div>
+                                        <div class="cv-info-label">Email</div>
+                                        <div class="cv-info-value">@Model.User.EmailAddress</div>
+                                    </div>
+                                </div>
+                                <div class="cv-info-item">
+                                    <div class="cv-info-icon"><i class="fas fa-phone"></i></div>
+                                    <div>
+                                        <div class="cv-info-label">Phone</div>
+                                        <div class="cv-info-value">@Model.User.Phone</div>
+                                    </div>
+                                </div>
+                                <div class="cv-info-item">
+                                    <div class="cv-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div>
+                                        <div class="cv-info-label">Province / District</div>
+                                        <div class="cv-info-value">@Model.User.Province, @Model.User.District</div>
+                                    </div>
+                                </div>
+                                <div class="cv-info-item">
+                                    <div class="cv-info-icon"><i class="fas fa-city"></i></div>
+                                    <div>
+                                        <div class="cv-info-label">City</div>
+                                        <div class="cv-info-value">@Model.User.City</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div><!-- /cv-body -->
+</div><!-- /cv-wrap -->
