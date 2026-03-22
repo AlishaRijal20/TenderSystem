@@ -175,37 +175,6 @@
             color: var(--gold);
         }
 
-    /* Payment status badges */
-    .at-pay {
-        display: inline-flex;
-        align-items: center;
-        gap: .3rem;
-        padding: .22rem .75rem;
-        border-radius: 999px;
-        font-size: .68rem;
-        font-weight: 700;
-        letter-spacing: .05em;
-        text-transform: uppercase;
-    }
-
-    .at-pay-verified {
-        background: rgba(16,185,129,.1);
-        color: #059669;
-    }
-
-    .at-pay-pending {
-        background: rgba(245,158,11,.1);
-        color: #b45309;
-    }
-
-    .at-pay-failed {
-        background: rgba(239,68,68,.1);
-        color: #dc2626;
-    }
-
-    .at-pay-notpaid {
-        background: rgba(138,155,181,.1);
-        color: var(--slate);
     }
 
     /* Action icon buttons */
@@ -312,7 +281,6 @@
                         <th>Type</th>
                         <th>Award Date</th>
                         <th>Company</th>
-                        <th>Payment</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -339,14 +307,7 @@
                                         @tender.AwardedCompany.CompanyName
                                     </div>
                                 </td>
-                                <td>
-                                    @{
-                                        var payClass = tender.PaymentStatus == "Verified" ? "at-pay-verified" :
-                                        tender.PaymentStatus == "Pending" ? "at-pay-pending" :
-                                        tender.PaymentStatus == "Failed" ? "at-pay-failed" : "at-pay-notpaid";
-                                    }
-                                    <span class="at-pay @payClass">@tender.PaymentStatus</span>
-                                </td>
+                                
                                 <td>
                                     <div class="at-action-wrap">
                                         <a asp-action="TenderDetails" asp-controller="PublisherTender" asp-route-id="@tender.EncId"

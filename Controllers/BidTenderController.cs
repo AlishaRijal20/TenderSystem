@@ -238,14 +238,91 @@ namespace FYPBidNetra.Controllers
             return PartialView("_ApplyTenderList", tenders);
         }
 
+        /* public IActionResult ApplyTenderDetails(string id)
+         {
+             UpdateTenderStatuses();
+
+             int currentUserID = Convert.ToInt16(User.Identity!.Name);
+
+
+             // Get the current user's company ID
+             var userCompanyId = _context.Companies
+                 .Where(c => c.UserbidId == currentUserID)
+                 .Select(c => c.CompanyId)
+                 .FirstOrDefault();
+
+             int tenderid = Convert.ToInt32(_protector.Unprotect(id));
+
+             var tenders = _context.TenderDetails
+                 .Where(t => _context.TenderApplications
+                     .Any(ta => ta.TenderAppllyId == tenderid && ta.CompanyApplyId == userCompanyId))
+                     .OrderByDescending(t => t.IssuedDate)
+                  .Select(t => new TenderEdit
+                  {
+                      TenderId = t.TenderId,
+                      Title = t.Title,
+                      IssuedBy = t.IssuedBy,
+                      IssuedDate = t.IssuedDate,
+                      TenderType = t.TenderType,
+                      TenderStatus = t.TenderStatus,
+                      OpeningDate = t.OpeningDate,
+                      ClosingDate = t.ClosingDate,
+                      ProjectDuration = t.ProjectDuration,
+                      BudgetEstimation = t.BudgetEstimation,
+                      TenderDescription = t.TenderDescription,
+                      TenderDocument = t.TenderDocument,
+                      IsVerified = t.IsVerified,
+                      PublishedByUserId = t.PublishedByUserId,
+                      EncId = _protector.Protect(t.TenderId.ToString())
+                  })
+                  .FirstOrDefault();
+
+             var application = _context.TenderApplications
+                   .Where(ta => ta.TenderAppllyId == tenderid && ta.CompanyApplyId == userCompanyId)
+                       .Select(ta => new TenderApplicationEdit
+                       {
+                           ApplicationId = ta.ApplicationId,
+                           ApplicationDocument = ta.ApplicationDocument,
+                           ProposedBudget = ta.ProposedBudget,
+                           ApplicationStatus = ta.ApplicationStatus,
+                           ProposedDuration = ta.ProposedDuration,
+                           EncId = _protector.Protect(ta.ApplicationId.ToString())
+                       })
+                       .FirstOrDefault();
+
+             var user = _context.UserLists
+                 .Where(u => u.UserId == tenders.PublishedByUserId)
+                 .Select(u => new UserListEdit
+                 {
+                     UserId = u.UserId,
+                     FirstName = u.FirstName,
+                     MiddleName = u.MiddleName,
+                     LastName = u.LastName,
+                     Province = u.Province,
+                     District = u.District,
+                     City = u.City,
+                     EmailAddress = u.EmailAddress,
+                     Phone = u.Phone,
+                     UserRole = u.UserRole,
+                     UserPhoto = u.UserPhoto,
+                 })
+                 .FirstOrDefault();
+
+             var viewModel = new TenderApplicationViewModel
+             {
+                 Tender = tenders,
+                 User = user,
+                 Application = application
+             };
+
+             return View(viewModel);
+         }*/
+
         public IActionResult ApplyTenderDetails(string id)
         {
             UpdateTenderStatuses();
-
             int currentUserID = Convert.ToInt16(User.Identity!.Name);
 
-
-            // Get the current user's company ID
             var userCompanyId = _context.Companies
                 .Where(c => c.UserbidId == currentUserID)
                 .Select(c => c.CompanyId)
@@ -254,41 +331,58 @@ namespace FYPBidNetra.Controllers
             int tenderid = Convert.ToInt32(_protector.Unprotect(id));
 
             var tenders = _context.TenderDetails
+                .Include(t => t.AwardCompany)
                 .Where(t => _context.TenderApplications
                     .Any(ta => ta.TenderAppllyId == tenderid && ta.CompanyApplyId == userCompanyId))
-                    .OrderByDescending(t => t.IssuedDate)
-                 .Select(t => new TenderEdit
-                 {
-                     TenderId = t.TenderId,
-                     Title = t.Title,
-                     IssuedBy = t.IssuedBy,
-                     IssuedDate = t.IssuedDate,
-                     TenderType = t.TenderType,
-                     TenderStatus = t.TenderStatus,
-                     OpeningDate = t.OpeningDate,
-                     ClosingDate = t.ClosingDate,
-                     ProjectDuration = t.ProjectDuration,
-                     BudgetEstimation = t.BudgetEstimation,
-                     TenderDescription = t.TenderDescription,
-                     TenderDocument = t.TenderDocument,
-                     IsVerified = t.IsVerified,
-                     PublishedByUserId = t.PublishedByUserId,
-                     EncId = _protector.Protect(t.TenderId.ToString())
-                 })
-                 .FirstOrDefault();
+                .OrderByDescending(t => t.IssuedDate)
+                .Select(t => new TenderEdit
+                {
+                    TenderId = t.TenderId,
+                    Title = t.Title,
+                    IssuedBy = t.IssuedBy,
+                    IssuedDate = t.IssuedDate,
+                    TenderType = t.TenderType,
+                    TenderStatus = t.TenderStatus,
+                    OpeningDate = t.OpeningDate,
+                    ClosingDate = t.ClosingDate,
+                    ProjectDuration = t.ProjectDuration,
+                    BudgetEstimation = t.BudgetEstimation,
+                    TenderDescription = t.TenderDescription,
+                    TenderDocument = t.TenderDocument,
+                    IsVerified = t.IsVerified,
+                    PublishedByUserId = t.PublishedByUserId,
+                    AwardCompanyId = t.AwardCompanyId,
+                    EncId = _protector.Protect(t.TenderId.ToString()),
+
+                    // ── NEW: include awarded company details ──
+                    AwardedCompany = t.AwardCompanyId != null ? new CompanyEdit
+                    {
+                        CompanyId = t.AwardCompany.CompanyId,
+                        CompanyName = t.AwardCompany.CompanyName,
+                        FullAddress = t.AwardCompany.FullAddress,
+                        OfficeEmail = t.AwardCompany.OfficeEmail,
+                        CompanyWebsiteUrl = t.AwardCompany.CompanyWebsiteUrl,
+                        CompanyType = t.AwardCompany.CompanyType,
+                        Position = t.AwardCompany.Position,
+                        Rating = t.AwardCompany.Rating,
+                        UserbidId = t.AwardCompany.UserbidId,
+                        EncId = _protector.Protect(t.AwardCompany.CompanyId.ToString())
+                    } : null
+                })
+                .FirstOrDefault();
 
             var application = _context.TenderApplications
-                  .Where(ta => ta.TenderAppllyId == tenderid && ta.CompanyApplyId == userCompanyId)
-                      .Select(ta => new TenderApplicationEdit
-                      {
-                          ApplicationId = ta.ApplicationId,
-                          ApplicationDocument = ta.ApplicationDocument,
-                          ProposedBudget = ta.ProposedBudget,
-                          ApplicationStatus = ta.ApplicationStatus,
-                          ProposedDuration = ta.ProposedDuration,
-                          EncId = _protector.Protect(ta.ApplicationId.ToString())
-                      })
-                      .FirstOrDefault();
+                .Where(ta => ta.TenderAppllyId == tenderid && ta.CompanyApplyId == userCompanyId)
+                .Select(ta => new TenderApplicationEdit
+                {
+                    ApplicationId = ta.ApplicationId,
+                    ApplicationDocument = ta.ApplicationDocument,
+                    ProposedBudget = ta.ProposedBudget,
+                    ApplicationStatus = ta.ApplicationStatus,
+                    ProposedDuration = ta.ProposedDuration,
+                    EncId = _protector.Protect(ta.ApplicationId.ToString())
+                })
+                .FirstOrDefault();
 
             var user = _context.UserLists
                 .Where(u => u.UserId == tenders.PublishedByUserId)
@@ -317,7 +411,6 @@ namespace FYPBidNetra.Controllers
 
             return View(viewModel);
         }
-
 
 
 

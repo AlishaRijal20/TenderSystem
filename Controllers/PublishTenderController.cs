@@ -742,33 +742,7 @@ namespace TenderSystem.Controllers
                 return NotFound("Tender not found.");
             }
 
-            /*// Call the recommendation API asynchronously
-            using (var client = new HttpClient())
-            {
-                try
-                {
-                    var apiUrl = "http://127.0.0.1:5000/api/recommend";
-                    var requestData = new { tender_id = tenderid.ToString() };
-
-                    var response = await client.PostAsJsonAsync(apiUrl, requestData);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var result = await response.Content.ReadFromJsonAsync<RecommendationResponse>();
-                        if (result?.recommended_companies != null)
-                        {
-                            tender.RecommendedCompanies = result.recommended_companies;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"API Error: {response.StatusCode}, {await response.Content.ReadAsStringAsync()}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error calling recommendation API: {ex.Message}");
-                }
-            }*/
+            
 
             // Fetch Applications for the Tender
             var applications = _context.TenderApplications

@@ -51,7 +51,6 @@
             pointer-events: none;
         }
 
-    /* top bar */
     .tdp-topbar {
         position: relative;
         z-index: 2;
@@ -144,7 +143,6 @@
         color: #fff;
     }
 
-    /* title block */
     .tdp-title-block {
         position: relative;
         z-index: 2;
@@ -172,7 +170,7 @@
 
     .tdp-title-block h1 {
         font-family: 'Playfair Display', serif;
-        font-size: clamp(1.3rem, 3vw, 1.9rem);
+        font-size: clamp(1.3rem,3vw,1.9rem);
         font-weight: 900;
         color: var(--white);
         margin: 0 0 1rem;
@@ -213,7 +211,6 @@
         z-index: 2;
     }
 
-    /* white card wrapper for tabs */
     .tdp-card {
         background: var(--white);
         border-radius: 16px;
@@ -332,8 +329,7 @@
             font-size: .9rem;
         }
 
-        .tdp-section-hd h2,
-        .tdp-section-hd h3 {
+        .tdp-section-hd h2, .tdp-section-hd h3 {
             font-family: 'Playfair Display', serif;
             font-size: .95rem;
             font-weight: 700;
@@ -352,7 +348,7 @@
         line-height: 1.6;
     }
 
-    /* detail grid */
+    /* ── DETAIL GRID ── */
     .tdp-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -368,6 +364,9 @@
         border-radius: 8px;
         border: 1px solid rgba(11,31,58,.05);
         transition: background .2s, transform .2s;
+        /* ── FIX: prevent overflow in grid cells ── */
+        min-width: 0;
+        overflow: hidden;
     }
 
         .tdp-item:hover {
@@ -389,6 +388,12 @@
         margin-top: .05rem;
     }
 
+    /* ── FIX: text content container must also shrink ── */
+    .tdp-item > div:last-child {
+        min-width: 0;
+        flex: 1;
+    }
+
     .tdp-item-label {
         font-size: .68rem;
         font-weight: 700;
@@ -403,7 +408,25 @@
         font-weight: 600;
         color: var(--navy);
         line-height: 1.4;
+        /* ── FIX: break long words and URLs ── */
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        min-width: 0;
     }
+
+        /* ── FIX: links (URLs) break at any character ── */
+        .tdp-item-value a {
+            color: var(--gold);
+            text-decoration: none;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+            .tdp-item-value a:hover {
+                text-decoration: underline;
+            }
 
     /* awarded company sub-section */
     .tdp-company-block {
@@ -643,25 +666,28 @@
             }
 
     @@media (max-width: 768px) {
-        .tdp-hero {
-            padding: 0 1rem;
-        }
+        .tdp-hero
 
-        .tdp-body {
-            padding: 0 .75rem;
-        }
+    {
+        padding: 0 1rem;
+    }
 
-        .tdp-content {
-            padding: 1.2rem;
-        }
+    .tdp-body {
+        padding: 0 .75rem;
+    }
 
-        .tdp-grid {
-            grid-template-columns: 1fr;
-        }
+    .tdp-content {
+        padding: 1.2rem;
+    }
 
-        .tdp-tab-bar {
-            padding: 0 .75rem;
-        }
+    .tdp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tdp-tab-bar {
+        padding: 0 .75rem;
+    }
+
     }
 </style>
 
@@ -674,10 +700,9 @@
                 <i class="fas fa-arrow-left"></i> Back to Tenders
             </a>
             <div class="tdp-badges">
-                <span class="tdp-badge
-                    @(Model.TenderStatus.ToLower() == "open" ? "b-open" :
-                                            Model.TenderStatus.ToLower() == "closed" ? "b-closed" :
-                                            Model.TenderStatus.ToLower() == "awarded" ? "b-awarded" : "b-pending")">
+                <span class="tdp-badge @(Model.TenderStatus.ToLower() == "open" ? "b-open" :
+                                                                Model.TenderStatus.ToLower() == "closed" ? "b-closed" :
+                                                                Model.TenderStatus.ToLower() == "awarded" ? "b-awarded" : "b-pending")">
                     <span class="tdp-badge-dot">
                         <i class="fas @(Model.TenderStatus.ToLower() == "open"    ? "fa-door-open" :
                                                                    Model.TenderStatus.ToLower() == "closed" ? "fa-lock" :
@@ -685,11 +710,10 @@
                     </span>
                     @Model.TenderStatus
                 </span>
-                <span class="tdp-badge
-                    @(Model.IsVerified == "Verified" ? "b-verified" :
-                                            Model.IsVerified == "Not Verified" ? "b-notver" : "b-verpend")">
+                <span class="tdp-badge @(Model.IsVerified == "Verified" ? "b-verified" :
+                                                                Model.IsVerified == "Not Verified" ? "b-notver" : "b-verpend")">
                     <span class="tdp-badge-dot">
-                        <i class="fas @(Model.IsVerified == "Verified"     ? "fa-shield-alt"   :
+                        <i class="fas @(Model.IsVerified == "Verified"     ? "fa-shield-alt" :
                                                                    Model.IsVerified == "Not Verified" ? "fa-times-circle" : "fa-spinner fa-spin")"></i>
                     </span>
                     @Model.IsVerified
@@ -701,18 +725,9 @@
             <p class="tdp-eyebrow"><span></span> Tender Details</p>
             <h1>@Model.Title</h1>
             <div class="tdp-meta">
-                <div class="tdp-meta-item">
-                    <i class="fas fa-hashtag"></i>
-                    <span>ID: <strong>#@Model.TenderId</strong></span>
-                </div>
-                <div class="tdp-meta-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Posted: <strong>@Model.IssuedDate.ToString("MMM dd, yyyy")</strong></span>
-                </div>
-                <div class="tdp-meta-item">
-                    <i class="fas fa-building"></i>
-                    <span>Issued by: <strong>@Model.IssuedBy</strong></span>
-                </div>
+                <div class="tdp-meta-item"><i class="fas fa-hashtag"></i><span>ID: <strong>#@Model.TenderId</strong></span></div>
+                <div class="tdp-meta-item"><i class="fas fa-calendar-alt"></i><span>Posted: <strong>@Model.IssuedDate.ToString("MMM dd, yyyy")</strong></span></div>
+                <div class="tdp-meta-item"><i class="fas fa-building"></i><span>Issued by: <strong>@Model.IssuedBy</strong></span></div>
             </div>
         </div>
     </div>
@@ -816,11 +831,10 @@
                                                 <div class="tdp-item-value">
                                                     @if (!string.IsNullOrEmpty(Model.AwardedCompany.CompanyWebsiteUrl))
                                                     {
-                                                        <a href="@Model.AwardedCompany.CompanyWebsiteUrl" target="_blank" style="color:var(--gold);text-decoration:none;">@Model.AwardedCompany.CompanyWebsiteUrl</a>
+                                                        <a href="@Model.AwardedCompany.CompanyWebsiteUrl" target="_blank">@Model.AwardedCompany.CompanyWebsiteUrl</a>
                                                     }
                                                     else
                                                     {
-
                                                         <span style="color:var(--slate);">Not provided</span>
                                                     }
                                                 </div>
@@ -871,14 +885,12 @@
                 </div><!-- /details-tab -->
                 <!-- ── DOCUMENTS TAB ── -->
                 <div id="documents-tab" class="tab-content">
-
                     <div class="tdp-doc-header">
                         <h2 class="tdp-doc-title"><i class="fas fa-file-alt"></i> Tender Documents</h2>
                         <a href="@Url.Content("~/TenderDocument/" + Model.TenderDocument)" download class="tdp-dl-btn">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
-
                     <div class="tdp-doc-meta">
                         <i class="fas fa-file-pdf"></i>
                         <div>
@@ -886,11 +898,9 @@
                             <div class="tdp-doc-hint">Click on the document to view or use the download button above</div>
                         </div>
                     </div>
-
                     <div class="pdf-viewer">
                         <div id="pdf-container" class="p-4"></div>
                     </div>
-
                 </div><!-- /documents-tab -->
 
             </div><!-- /tdp-content -->
@@ -901,72 +911,40 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 <script>
-    // Show tab function
     function showTab(tabName) {
-        const tabs = document.querySelectorAll('.tab-content');
-        const buttons = document.querySelectorAll('.tab-btn');
-
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-
-        buttons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.classList.add('text-gray-500');
-            btn.classList.remove('text-blue-600');
-        });
-
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`${tabName}-tab`).classList.add('active');
-        const activeButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
-        activeButton.classList.add('active');
-        activeButton.classList.add('text-blue-600');
-        activeButton.classList.remove('text-gray-500');
+        document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
     }
 
-    // Initialize PDF.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    // Load the PDF into the viewer
     const url = "@Url.Content("~/TenderDocument/" + Model.TenderDocument)";
 
-    // Function to load PDF
     function loadPDF() {
         const pdfContainer = document.getElementById('pdf-container');
-
-        // Clear container first
         pdfContainer.innerHTML = '<div class="flex justify-center items-center p-4"><i class="fas fa-spinner fa-spin text-blue-600 mr-2"></i> Loading document...</div>';
 
         pdfjsLib.getDocument(url).promise.then(pdf => {
-            pdfContainer.innerHTML = ''; // Clear loading message
+            pdfContainer.innerHTML = '';
             const scale = 1.5;
             const numPages = pdf.numPages;
-
-            // Render all pages
             for (let pageNum = 1; pageNum <= numPages; pageNum++) {
                 const pageContainer = document.createElement('div');
                 pageContainer.className = 'mb-4 relative';
-
                 const pageLabel = document.createElement('div');
                 pageLabel.className = 'absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md opacity-75';
                 pageLabel.textContent = `Page ${pageNum} of ${numPages}`;
-
                 const canvas = document.createElement('canvas');
                 canvas.className = 'mx-auto shadow-md rounded';
-
                 pageContainer.appendChild(canvas);
                 pageContainer.appendChild(pageLabel);
                 pdfContainer.appendChild(pageContainer);
-
                 pdf.getPage(pageNum).then(page => {
                     const viewport = page.getViewport({ scale });
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
-                    const ctx = canvas.getContext('2d');
-
-                    page.render({
-                        canvasContext: ctx,
-                        viewport: viewport
-                    });
+                    page.render({ canvasContext: canvas.getContext('2d'), viewport });
                 });
             }
         }).catch(error => {
@@ -974,11 +952,9 @@
         });
     }
 
-    // Load PDF when documents tab is clicked
     document.querySelector('[onclick="showTab(\'documents\')"]').addEventListener('click', loadPDF);
 
-    // Initialize the page with the details tab active
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         showTab('details');
     });
 </script>
