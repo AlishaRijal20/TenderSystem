@@ -5,28 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TenderSystem</title>
 
-    <!-- Consolidated CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TenderSystem.styles.css" asp-append-version="true" />
     <link href="~/lib/flowbite/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom styles to fix navbar issues -->
     <style>
-        /* Fix for navbar shifting */
         body {
             overflow-x: hidden;
             width: 100%;
             max-width: 100%;
         }
 
-        /* Allow full-bleed pages to escape container without scrollbar.
-                   Pages using the 100vw bleed trick need this on a parent. */
         html {
             overflow-x: hidden;
         }
@@ -38,25 +31,91 @@
             padding: 0 1rem;
         }
 
-        /* Navbar styles */
+        /* ── NAVBAR — always sticky, always white, never dark ── */
         .navbar-fixed {
-            position: sticky;
-            top: 0;
+            position: sticky !important;
+            top: 0 !important;
             z-index: 50;
             width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            background: #ffffff !important;
+            color-scheme: light !important;
         }
 
+            .navbar-fixed *,
+            #user-dropdown, #user-dropdown *,
+            #mobile-menu, #mobile-menu * {
+                color-scheme: light !important;
+            }
+
+        #user-dropdown {
+            background: #ffffff !important;
+            border-color: #e5e7eb !important;
+        }
+
+            #user-dropdown p.text-sm {
+                color: #111827 !important;
+            }
+
+            #user-dropdown p.text-xs {
+                color: #6b7280 !important;
+            }
+
+            #user-dropdown a {
+                color: #374151 !important;
+            }
+
+                #user-dropdown a:hover {
+                    background-color: #f3f4f6 !important;
+                    color: #111827 !important;
+                }
+
+                #user-dropdown a.text-red-600 {
+                    color: #dc2626 !important;
+                }
+
+        #mobile-menu {
+            background: #ffffff !important;
+            border-color: #e5e7eb !important;
+        }
+
+            #mobile-menu a {
+                color: #374151 !important;
+            }
+
+                #mobile-menu a:hover {
+                    background-color: #f9fafb !important;
+                }
+
+        #navbar-user a {
+            color: #374151 !important;
+        }
+
+            #navbar-user a:hover {
+                color: #2563eb !important;
+            }
+
+        #mobile-menu-button {
+            color: #6b7280 !important;
+        }
+
+            #mobile-menu-button:hover {
+                color: #111827 !important;
+                background-color: #f3f4f6 !important;
+            }
+
+        #profile-img {
+            background-color: #e5e7eb !important;
+        }
 
         .dropdown-menu {
             transform-origin: top right;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: transform .2s, opacity .2s;
         }
 
-        /* Profile image */
         .profile-image {
             border: 2px solid #3b82f6;
-            transition: all 0.2s;
+            transition: all .2s;
         }
 
             .profile-image:hover {
@@ -67,7 +126,6 @@
             max-height: 500px;
         }
 
-        /* Desktop nav always visible on md+ */
         @@media (min-width: 768px) {
             [data-navbar-desktop]
 
@@ -77,11 +135,11 @@
 
         }
 
-        /* ── SITE FOOTER (navy/gold theme) ──────────────────── */
+        /* ── FOOTER ── */
         .site-footer {
             background: #0B1F3A;
             color: #8A9BB5;
-            font-family: 'DM Sans', 'Segoe UI', sans-serif;
+            font-family: 'DM Sans','Segoe UI',sans-serif;
             position: relative;
             overflow: hidden;
         }
@@ -90,7 +148,7 @@
                 content: '';
                 position: absolute;
                 inset: 0;
-                background-image: linear-gradient(rgba(200,150,12,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(200,150,12,.04) 1px, transparent 1px);
+                background-image: linear-gradient(rgba(200,150,12,.04) 1px,transparent 1px), linear-gradient(90deg,rgba(200,150,12,.04) 1px,transparent 1px);
                 background-size: 60px 60px;
                 pointer-events: none;
             }
@@ -102,7 +160,7 @@
                 left: 0;
                 right: 0;
                 height: 2px;
-                background: linear-gradient(90deg, transparent, #C8960C 30%, #E8B84B 50%, #C8960C 70%, transparent);
+                background: linear-gradient(90deg,transparent,#C8960C 30%,#E8B84B 50%,#C8960C 70%,transparent);
             }
 
         .footer-inner {
@@ -120,8 +178,7 @@
             padding-bottom: 3rem;
             border-bottom: 1px solid rgba(200,150,12,.15);
         }
-
-        @@media (max-width: 768px) {
+        @@media (max-width:768px) {
             .footer-top
 
         {
@@ -135,7 +192,6 @@
             height: 52px;
             width: auto;
             margin-bottom: 1.2rem;
-            filter: brightness(0) invert(1) opacity(.85);
         }
 
         .footer-brand-tagline {
@@ -162,7 +218,7 @@
                 color: #8A9BB5;
                 font-size: .9rem;
                 text-decoration: none;
-                transition: border-color .25s, color .25s, background .25s;
+                transition: border-color .25s,color .25s,background .25s;
             }
 
                 .footer-social a:hover {
@@ -205,7 +261,7 @@
                 color: #8A9BB5;
                 text-decoration: none;
                 font-size: .9rem;
-                transition: color .2s, padding-left .2s;
+                transition: color .2s,padding-left .2s;
                 display: inline-block;
             }
 
@@ -272,70 +328,73 @@
 <body>
     @if (User.Identity.IsAuthenticated)
     {
-        <header class="navbar-fixed bg-white dark:bg-gray-900">
+        <header class="navbar-fixed" style="background:#ffffff !important; position:sticky !important; top:0 !important;">
             <nav class="container mx-auto">
                 <div class="flex flex-wrap items-center justify-between py-3">
+
                     <!-- Logo -->
                     <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="~/Images/Logo.png" class="h-12 w-auto" alt=" Logo" />
+                        <img src="~/Images/logo_cropped.png" class="w-auto" style="height:44px;" alt="Portal Logo" />
                     </a>
 
-                    <!-- Mobile menu button and profile -->
+                    <!-- Right side: profile + mobile toggle -->
                     <div class="flex items-center md:order-2">
-                        <!-- Profile Image Ajax Link -->
-                        <!-- data-ajax-update targets #profile-img-inner (span inside the button)
-                             so the button element itself is never replaced and our click handler survives -->
-                        <a data-ajax="true" data-ajax-method="get" data-ajax-update="#profile-img-inner" class="btn-profile-img hidden" asp-action="ProfileImage" asp-controller="Home"></a>
+                        <a data-ajax="true" data-ajax-method="get" data-ajax-update="#profile-img-inner"
+                           class="btn-profile-img hidden" asp-action="ProfileImage" asp-controller="Home"></a>
 
-                        <!-- Profile Dropdown -->
                         <div class="relative ml-3">
-                            <button id="profile-img" type="button" class="profile-image flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-expanded="false">
+                            <button id="profile-img" type="button"
+                                    class="profile-image flex items-center justify-center h-10 w-10 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    style="background-color:#e5e7eb;" aria-expanded="false">
                                 <span id="profile-img-inner"></span>
-                                <!-- Profile image loaded into #profile-img-inner via Ajax -->
                             </button>
 
-                            <!-- Dropdown menu -->
-                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-50 border border-gray-200 dark:bg-gray-700 dark:border-gray-600" id="user-dropdown">
-                                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-600">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">@User.FindFirst("FullName")?.Value</p>
-                                    <p class="text-xs text-gray-500 truncate dark:text-gray-400">@User.FindFirst("email")?.Value</p>
+                            <div class="dropdown-menu absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden z-50"
+                                 id="user-dropdown" style="background:#ffffff;border:1px solid #e5e7eb;">
+                                <div class="px-4 py-3" style="border-bottom:1px solid #e5e7eb;">
+                                    <p class="text-sm font-medium" style="color:#111827;">@User.FindFirst("FullName")?.Value</p>
+                                    <p class="text-xs truncate" style="color:#6b7280;">@User.FindFirst("email")?.Value</p>
                                 </div>
-                                <ul class="py-1" aria-labelledby="user-menu-button">
+                                <ul class="py-1">
                                     <li>
-                                        <a asp-action="ProfilePage" asp-controller="Home" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        <a asp-action="ProfilePage" asp-controller="Home" class="block px-4 py-2 text-sm"
+                                           style="color:#374151;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                             Profile
                                         </a>
                                     </li>
                                     @if (User.IsInRole("Bidder"))
                                     {
                                         <li>
-                                            <a asp-action="KycDetails" asp-controller="Kyc" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a asp-action="KycDetails" asp-controller="Kyc" class="block px-4 py-2 text-sm"
+                                               style="color:#374151;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                                 Kyc Details
                                             </a>
                                         </li>
-
                                         <li>
-                                            <a asp-action="Index" asp-controller="Transaction" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a asp-action="Index" asp-controller="Transaction" class="block px-4 py-2 text-sm"
+                                               style="color:#374151;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                                 Earnings
                                             </a>
                                         </li>
                                     }
                                     <li>
-                                        <a asp-action="ChangePassword" asp-controller="Account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        <a asp-action="ChangePassword" asp-controller="Account" class="block px-4 py-2 text-sm"
+                                           style="color:#374151;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                             Change Password
                                         </a>
                                     </li>
                                     @if (User.IsInRole("Publisher"))
                                     {
-
                                         <li>
-                                            <a asp-action="Index" asp-controller="Transaction" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a asp-action="Index" asp-controller="Transaction" class="block px-4 py-2 text-sm"
+                                               style="color:#374151;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                                 Earnings
                                             </a>
                                         </li>
                                     }
-                                    <li class="border-t border-gray-200 dark:border-gray-600">
-                                        <a asp-action="Logout" asp-controller="Account" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-600 dark:hover:text-red-300">
+                                    <li style="border-top:1px solid #e5e7eb;">
+                                        <a asp-action="Logout" asp-controller="Account" class="block px-4 py-2 text-sm"
+                                           style="color:#dc2626;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                                             Sign out
                                         </a>
                                     </li>
@@ -343,176 +402,80 @@
                             </div>
                         </div>
 
-                        <!-- Mobile menu toggle -->
-                        <button id="mobile-menu-button" type="button" class="ml-2 md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <button id="mobile-menu-button" type="button"
+                                class="ml-2 md:hidden inline-flex items-center justify-center p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                style="color:#6b7280;" aria-controls="mobile-menu" aria-expanded="false">
                             <span class="sr-only">Open main menu</span>
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                     </div>
 
-                    <!-- Desktop Navigation Menu -->
+                    <!-- Desktop Nav -->
                     <div class="w-full md:w-auto md:order-1" id="navbar-user" style="display:none;" data-navbar-desktop>
                         <ul class="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:font-medium">
                             @if (User.IsInRole("Admin"))
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="Admin"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderList" asp-controller="Admin"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Tender
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="Admin" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "600" : "400");">Home</a></li>
+                                <li><a asp-action="TenderList" asp-controller="Admin" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "600" : "400");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "600" : "400");">Blog</a></li>
                             }
                             else if (User.IsInRole("Publisher"))
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="PublisherTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Tender
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="PublisherTender" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "600" : "400");">Home</a></li>
+                                <li><a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "600" : "400");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "600" : "400");">Blog</a></li>
                             }
                             else
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="BidTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Tender
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="BidTender" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "600" : "400");">Home</a></li>
+                                <li><a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "600" : "400");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 md:p-0 transition-colors duration-200" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "600" : "400");">Blog</a></li>
                             }
                         </ul>
                     </div>
 
-                    <!-- Mobile Navigation Menu -->
-                    <div class="mobile-menu w-full md:hidden mt-3 border-t border-gray-200 pt-3 hidden" id="mobile-menu">
+                    <!-- Mobile Nav -->
+                    <div class="mobile-menu w-full md:hidden mt-3 pt-3 hidden" id="mobile-menu"
+                         style="border-top:1px solid #e5e7eb;background:#ffffff;">
                         <ul class="flex flex-col space-y-2">
                             @if (User.IsInRole("Admin"))
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="Admin"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderList" asp-controller="Admin"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Tender
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="Admin" class="block py-2 px-3 rounded-md font-medium" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#eff6ff" : "transparent");">Home</a></li>
+                                <li><a asp-action="TenderList" asp-controller="Admin" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" && ViewContext.RouteData.Values["Action"].ToString() == "TenderList" ? "#eff6ff" : "transparent");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#eff6ff" : "transparent");">Blog</a></li>
                             }
                             else if (User.IsInRole("Publisher"))
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="PublisherTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Tender
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="PublisherTender" class="block py-2 px-3 rounded-md font-medium" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#eff6ff" : "transparent");">Home</a></li>
+                                <li><a asp-action="TenderPage" asp-controller="PublisherTender" asp-route-activeTab="TenderList" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "PublisherTender" && ViewContext.RouteData.Values["Action"].ToString() == "TenderPage" ? "#eff6ff" : "transparent");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#eff6ff" : "transparent");">Blog</a></li>
                             }
                             else
                             {
-                                <li>
-                                    <a asp-action="Index" asp-controller="BidTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
-                                        Home
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Tender
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList"
-                                       class="block py-2 px-3 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md">
-                                        Blog
-                                    </a>
-                                </li>
+                                <li><a asp-action="Index" asp-controller="BidTender" class="block py-2 px-3 rounded-md font-medium" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#eff6ff" : "transparent");">Home</a></li>
+                                <li><a asp-action="TenderBidTab" asp-controller="BidTender" asp-route-activeTab="UpcomingTender" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "BidTender" && ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "#eff6ff" : "transparent");">Tender</a></li>
+                                <li><a asp-action="BlogPage" asp-controller="Blog" asp-route-activeTab="BlogList" class="block py-2 px-3 rounded-md" style="color:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "#eff6ff" : "transparent");">Blog</a></li>
                             }
                         </ul>
                     </div>
+
                 </div>
             </nav>
         </header>
 
         <div class="container mx-auto px-4 py-6">
-            <main role="main">
-                @RenderBody()
-            </main>
+            <main role="main">@RenderBody()</main>
         </div>
 
-        <!-- ══════════════════ FOOTER ══════════════════ -->
+        <!-- FOOTER -->
         <footer class="site-footer">
             <div class="footer-inner">
                 <div class="footer-top">
-
-                    <!-- Brand column -->
                     <div>
-                        <img src="~/Images/Logo.png" alt="Portal Logo" class="footer-brand-logo" />
-                        <p class="footer-brand-tagline">
-                            Nepal's unified public procurement portal — ensuring transparency, compliance, and equal opportunity for all registered vendors and government agencies.
-                        </p>
+                        <img src="~/Images/logo_dark_cropped.png" alt="Portal Logo" class="footer-brand-logo" />
+                        <p class="footer-brand-tagline">Nepal's unified public procurement portal — ensuring transparency, compliance, and equal opportunity for all registered vendors and government agencies.</p>
                         <div class="footer-social">
                             <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -520,8 +483,6 @@
                             <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
-
-                    <!-- Quick Links column -->
                     <div>
                         <p class="footer-col-heading">Quick Links</p>
                         <ul class="footer-links">
@@ -532,32 +493,15 @@
                             <li><a asp-action="Logout" asp-controller="Account">Sign Out</a></li>
                         </ul>
                     </div>
-
-                    <!-- Contact column -->
                     <div>
                         <p class="footer-col-heading">Contact</p>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>+977 01-XXXXXXX</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>info&#64;tendersystem.gov.np</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Singha Durbar, Kathmandu, Nepal</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Sun – Fri &nbsp;|&nbsp; 10:00 AM – 5:00 PM</span>
-                        </div>
+                        <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>+977 01-XXXXXXX</span></div>
+                        <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info&#64;tendersystem.gov.np</span></div>
+                        <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Singha Durbar, Kathmandu, Nepal</span></div>
+                        <div class="footer-contact-item"><i class="fas fa-clock"></i><span>Sun – Fri &nbsp;|&nbsp; 10:00 AM – 5:00 PM</span></div>
                     </div>
-
                 </div>
             </div>
-
-            <!-- Bottom bar -->
             <div class="footer-bottom">
                 <div class="footer-bottom-links">
                     <a asp-action="About" asp-controller="Static">About Us</a>
@@ -571,69 +515,41 @@
         </footer>
     }
 
-    <!-- Consolidated Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/flowbite/flowbite.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-
-    <!-- Validation Scripts -->
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
 
-    <!-- Custom Scripts -->
     <script>
         $(document).ready(function () {
-            // Load profile image via Ajax
             $('.btn-profile-img')[0].click();
 
-            // Show desktop nav (was hidden to prevent flash)
-            if ($(window).width() >= 768) {
-                $('#navbar-user').show();
-            }
-
-            $(window).on('resize', function() {
-                if ($(window).width() >= 768) {
-                    $('#navbar-user').show();
-                } else {
-                    if (!$('#mobile-menu').is(':visible')) {
-                        $('#navbar-user').hide();
-                    }
-                }
+            if ($(window).width() >= 768) { $('#navbar-user').show(); }
+            $(window).on('resize', function () {
+                if ($(window).width() >= 768) { $('#navbar-user').show(); }
+                else { if (!$('#mobile-menu').is(':visible')) { $('#navbar-user').hide(); } }
             });
 
-            // ── PROFILE DROPDOWN ──────────────────────────────────────
-            // Manual toggle - does not rely on Flowbite so it works
-            // even after Ajax replaces the button inner HTML.
             $(document).on('click', '#profile-img', function (e) {
                 e.stopPropagation();
                 var $dd = $('#user-dropdown');
-                if ($dd.hasClass('hidden')) {
-                    $dd.removeClass('hidden');
-                    $(this).attr('aria-expanded', 'true');
-                } else {
-                    $dd.addClass('hidden');
-                    $(this).attr('aria-expanded', 'false');
-                }
+                if ($dd.hasClass('hidden')) { $dd.removeClass('hidden'); $(this).attr('aria-expanded','true'); }
+                else { $dd.addClass('hidden'); $(this).attr('aria-expanded','false'); }
             });
 
-            // Close when clicking outside
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('#profile-img, #user-dropdown').length) {
                     $('#user-dropdown').addClass('hidden');
-                    $('#profile-img').attr('aria-expanded', 'false');
+                    $('#profile-img').attr('aria-expanded','false');
                 }
             });
 
-            // Stop clicks inside dropdown from bubbling up and closing it
-            $(document).on('click', '#user-dropdown', function (e) {
-                e.stopPropagation();
-            });
-            // ─────────────────────────────────────────────────────────
+            $(document).on('click', '#user-dropdown', function (e) { e.stopPropagation(); });
 
-            // Handle mobile menu toggle
             $('#mobile-menu-button').on('click', function () {
                 $('#mobile-menu').toggleClass('hidden');
                 const expanded = $(this).attr('aria-expanded') === 'true' || false;

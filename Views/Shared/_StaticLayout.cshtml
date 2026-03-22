@@ -8,7 +8,6 @@
     <!-- Consolidated CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TenderSystem.styles.css" asp-append-version="true" />
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
@@ -17,7 +16,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* Fix for navbar shifting */
         body {
             overflow-x: hidden;
             width: 100%;
@@ -31,14 +29,63 @@
             padding: 0 1rem;
         }
 
-        /* Navbar styles */
+        /* ── NAVBAR — always white, never dark ── */
         .navbar-fixed {
             position: sticky;
             top: 0;
             z-index: 50;
             width: 100%;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: #ffffff !important;
+            color-scheme: light !important;
         }
+
+            /* Force all children to stay light */
+            .navbar-fixed *,
+            #mobile-menu,
+            #mobile-menu * {
+                color-scheme: light !important;
+            }
+
+        #navbar-user a {
+            color: #374151 !important;
+        }
+
+            #navbar-user a:hover {
+                color: #2563eb !important;
+            }
+
+            #navbar-user a.active-link {
+                color: #2563eb !important;
+                font-weight: 600;
+            }
+
+        #mobile-menu {
+            background: #ffffff !important;
+            border-top: 1px solid #e5e7eb !important;
+        }
+
+            #mobile-menu a {
+                color: #374151 !important;
+            }
+
+                #mobile-menu a:hover {
+                    background-color: #f9fafb !important;
+                }
+
+                #mobile-menu a.active-link {
+                    color: #2563eb !important;
+                    background-color: #eff6ff !important;
+                }
+
+        #mobile-menu-button {
+            color: #6b7280 !important;
+        }
+
+            #mobile-menu-button:hover {
+                color: #111827 !important;
+                background-color: #f3f4f6 !important;
+            }
 
         .dropdown-menu {
             transform-origin: top right;
@@ -58,7 +105,7 @@
             max-height: 500px;
         }
 
-        /* ── SITE FOOTER (navy/gold theme) ──────────────────── */
+        /* ── SITE FOOTER (navy/gold theme) ── */
         .site-footer {
             background: #0B1F3A;
             color: #8A9BB5;
@@ -67,7 +114,6 @@
             overflow: hidden;
         }
 
-            /* subtle grid overlay matching the hero */
             .site-footer::before {
                 content: '';
                 position: absolute;
@@ -77,7 +123,6 @@
                 pointer-events: none;
             }
 
-            /* gold accent line at top */
             .site-footer::after {
                 content: '';
                 position: absolute;
@@ -96,7 +141,6 @@
             padding: 4rem 6vw 0;
         }
 
-        /* top grid: logo col + links col + contact col */
         .footer-top {
             display: grid;
             grid-template-columns: 1.4fr 1fr 1fr;
@@ -106,18 +150,20 @@
         }
 
         @@media (max-width: 768px) {
-            .footer-top {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
+            .footer-top
+
+        {
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
-        /* Brand column */
+        }
+
         .footer-brand-logo {
             height: 52px;
             width: auto;
             margin-bottom: 1.2rem;
-            filter: brightness(0) invert(1) opacity(.85);
+            
         }
 
         .footer-brand-tagline {
@@ -153,7 +199,6 @@
                     background: rgba(200,150,12,.08);
                 }
 
-        /* Column headings */
         .footer-col-heading {
             font-size: .7rem;
             font-weight: 500;
@@ -174,7 +219,6 @@
                 background: #C8960C;
             }
 
-        /* Quick links */
         .footer-links {
             list-style: none;
             padding: 0;
@@ -198,7 +242,6 @@
                     padding-left: 4px;
                 }
 
-        /* Contact items */
         .footer-contact-item {
             display: flex;
             align-items: flex-start;
@@ -215,7 +258,6 @@
                 flex-shrink: 0;
             }
 
-        /* Bottom bar */
         .footer-bottom {
             position: relative;
             z-index: 1;
@@ -256,67 +298,94 @@
 </head>
 
 <body>
-    <header class="navbar-fixed bg-white dark:bg-gray-900">
+    <!-- Force white background via inline style — immune to Tailwind dark: variants -->
+    <header class="navbar-fixed" style="background:#ffffff !important;">
         <nav class="container mx-auto">
-            <div class="flex flex-wrap items-center justify-between py-3">
+            <div class="flex flex-wrap items-center justify-between py-2">
+
                 <!-- Logo -->
                 <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="~/Images/Logo.png" class="h-12 w-auto" alt="Portal Logo" />
+                    <img src="~/Images/logo_cropped.png" class="w-auto" style="height:44px;" alt="Portal Logo" />
                 </a>
 
-                <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <a asp-action="Login" asp-controller="Account" class="py-2 px-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out">
+                <!-- Right side: Login button + mobile toggle -->
+                <div class="flex items-center md:order-2 space-x-3">
+                    <a asp-action="Login" asp-controller="Account"
+                       class="py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                       style="background:#3b82f6;color:#ffffff;"
+                       onmouseover="this.style.background='#2563eb'"
+                       onmouseout="this.style.background='#3b82f6'">
                         Login
                     </a>
+
+                    <!-- Mobile toggle -->
+                    <button id="mobile-menu-button" type="button"
+                            class="md:hidden inline-flex items-center justify-content p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            style="color:#6b7280;"
+                            aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- Desktop Navigation Menu -->
+                <!-- Desktop Navigation -->
                 <div class="hidden w-full md:block md:w-auto md:order-1" id="navbar-user">
                     <ul class="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:font-medium">
                         <li>
                             <a asp-action="Index" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                               class="block py-2 px-3 md:p-0 transition-colors duration-200"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "600" : "400");">
                                 Home
                             </a>
                         </li>
                         <li>
                             <a asp-action="About" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                               class="block py-2 px-3 md:p-0 transition-colors duration-200"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "600" : "400");">
                                 About Us
                             </a>
                         </li>
                         <li>
                             <a asp-action="BlogList" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "text-blue-600 font-medium" : "text-gray-700 hover:text-blue-600") md:p-0 transition-colors duration-200">
+                               class="block py-2 px-3 md:p-0 transition-colors duration-200"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "#2563eb" : "#374151");font-weight:@(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "600" : "400");">
                                 Blog
                             </a>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Mobile Navigation Menu -->
-                <div class="mobile-menu w-full md:hidden mt-3 border-t border-gray-200 pt-3 hidden" id="mobile-menu">
+                <!-- Mobile Navigation -->
+                <div class="w-full md:hidden mt-3 pt-3 hidden"
+                     id="mobile-menu"
+                     style="border-top:1px solid #e5e7eb;background:#ffffff;">
                     <ul class="flex flex-col space-y-2">
                         <li>
                             <a asp-action="Index" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                               class="block py-2 px-3 rounded-md font-medium"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "#eff6ff" : "transparent");">
                                 Home
                             </a>
                         </li>
                         <li>
                             <a asp-action="About" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                               class="block py-2 px-3 rounded-md font-medium"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "#eff6ff" : "transparent");">
                                 About Us
                             </a>
                         </li>
                         <li>
                             <a asp-action="BlogList" asp-controller="Static"
-                               class="block py-2 px-3 @(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:bg-gray-50") rounded-md font-medium">
+                               class="block py-2 px-3 rounded-md font-medium"
+                               style="color:@(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "#2563eb" : "#374151");background:@(ViewContext.RouteData.Values["Action"].ToString() == "BlogList" ? "#eff6ff" : "transparent");">
                                 Blog
                             </a>
                         </li>
                     </ul>
                 </div>
+
             </div>
         </nav>
     </header>
@@ -327,74 +396,60 @@
     </main>
 
     <!-- ══════════════════ FOOTER ══════════════════ -->
-  
-        <footer class="site-footer">
-            <div class="footer-inner">
-                <div class="footer-top">
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-top">
 
-                    <!-- Brand column -->
-                    <div>
-                        <img src="~/Images/Logo.png" alt="Portal Logo" class="footer-brand-logo" />
-                        <p class="footer-brand-tagline">
-                            Nepal's unified public procurement portal — ensuring transparency, compliance, and equal opportunity for all registered vendors and government agencies.
-                        </p>
-                        <div class="footer-social">
-                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                        </div>
+                <!-- Brand column -->
+                <div>
+                    <img src="~/Images/logo_dark_cropped.png" alt="Portal Logo" class="footer-brand-logo" />
+                    <p class="footer-brand-tagline">
+                        Nepal's unified public procurement portal — ensuring transparency, compliance, and equal opportunity for all registered vendors and government agencies.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
-
-                    <!-- Quick Links column -->
-                    <div>
-                        <p class="footer-col-heading">Quick Links</p>
-                        <ul class="footer-links">
-                            <li><a asp-action="Index" asp-controller="Static">Home</a></li>
-                            <li><a asp-action="About" asp-controller="Static">About Us</a></li>
-                            <li><a asp-action="BlogList" asp-controller="Static">Blog</a></li>
-                            <li><a asp-action="Login" asp-controller="Account">Browse Tenders</a></li>
-                            <li><a asp-action="Register" asp-controller="Account">Register as Bidder</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Contact column -->
-                    <div>
-                        <p class="footer-col-heading">Contact</p>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>+977 01-XXXXXXX</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>info&#64;tendersystem.gov.np</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Singha Durbar, Kathmandu, Nepal</span>
-                        </div>
-                        <div class="footer-contact-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Sun – Fri &nbsp;|&nbsp; 10:00 AM – 5:00 PM</span>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
-            <!-- Bottom bar -->
-            <div class="footer-bottom">
-                <div class="footer-bottom-links">
-                    <a href="#">About Us</a>
-                    <a href="#">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Disclaimer</a>
-                    <a href="#">Terms of Use</a>
+                <!-- Quick Links column -->
+                <div>
+                    <p class="footer-col-heading">Quick Links</p>
+                    <ul class="footer-links">
+                        <li><a asp-action="Index" asp-controller="Static">Home</a></li>
+                        <li><a asp-action="About" asp-controller="Static">About Us</a></li>
+                        <li><a asp-action="BlogList" asp-controller="Static">Blog</a></li>
+                        <li><a asp-action="Login" asp-controller="Account">Browse Tenders</a></li>
+                        <li><a asp-action="Register" asp-controller="Account">Register as Bidder</a></li>
+                    </ul>
                 </div>
-                <p class="footer-copyright">Copyright &copy; @DateTime.Now.Year &mdash; Nepal Public Procurement Portal. All rights reserved.</p>
+
+                <!-- Contact column -->
+                <div>
+                    <p class="footer-col-heading">Contact</p>
+                    <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>+977 01-XXXXXXX</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info&#64;tendersystem.gov.np</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Singha Durbar, Kathmandu, Nepal</span></div>
+                    <div class="footer-contact-item"><i class="fas fa-clock"></i><span>Sun – Fri &nbsp;|&nbsp; 10:00 AM – 5:00 PM</span></div>
+                </div>
+
             </div>
-        </footer>
-    
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Disclaimer</a>
+                <a href="#">Terms of Use</a>
+            </div>
+            <p class="footer-copyright">Copyright &copy; @DateTime.Now.Year &mdash; Nepal Public Procurement Portal. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Consolidated Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -402,11 +457,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-
-    <!-- Validation Scripts -->
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function () {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            var expanded = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', !expanded);
+        });
+    </script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
